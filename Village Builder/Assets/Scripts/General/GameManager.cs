@@ -5,7 +5,7 @@ public class GameManager : MonoBehaviour
 {
     //Booleans
     private bool gamePaused;
-    private bool cinematicModeEnabled;
+    public bool cinematicModeEnabled;
 
     //Hotkeys
     [Header("Hotkeys")]
@@ -32,9 +32,21 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        //Toggle cinematicModeEnabled variable on 'C' keypress.
-        if (Input.GetKeyDown(KeyCode.C))
+        //Toggle cinematicModeEnabled variable on 'LeftAlt' keypress.
+        if (Input.GetKeyDown(KeyCode.LeftAlt) && !gamePaused)
+        {
             cinematicModeEnabled = cinematicModeEnabled ? cinematicModeEnabled = false : cinematicModeEnabled = true;
+
+            if (cinematicModeEnabled)
+            {
+                selectScript.DeselectAll();
+
+                UIManagerScript.CloseAllPanels(false);
+                UIManagerScript.HideMiscUI();
+            }
+            else if (!UIManagerScript.anyPanelsOpen)
+                UIManagerScript.OpenStaticUI();
+        }
 
         //If the deselect/pause key was pressed, pause the game.
         if (Input.GetKeyDown(pauseKey) || Input.GetKeyDown(deselect_and_pauseKey))
@@ -54,11 +66,6 @@ public class GameManager : MonoBehaviour
                 UIManagerScript.OpenPanel("BuildingPanel");
             }
         }
-
-        if (cinematicModeEnabled)
-            UIManagerScript.CloseAllPanels(false);
-        else if (!UIManagerScript.anyPanelsOpen)
-            UIManagerScript.OpenPanels(new string[] { "TopBar" });
     }
 
     public void PauseGame()
@@ -91,14 +98,20 @@ public class GameManager : MonoBehaviour
         UIManagerScript.ClosePanel("PauseMenu");
 
         //Open panels that were closed on pause
-        UIManagerScript.OpenPanels(new string[] { "TopBar" });
+        UIManagerScript.OpenStaticUI();
 
         Time.timeScale = 1;
     }
 
     private bool ElementsLeftToClose()
     {
-        if (selectScript.anythingSelected)
+        if (UIManagerScript.UIElementOpen("JobsPanel", "MainPanel"))
+        {
+            UIManagerScript.ClosePanel("JobsPanel");
+            UIManagerScript.OpenPanel("SelectionDescriptionPanel");
+            return true;
+        }
+        else if (selectScript.anythingSelected)
         {
             selectScript.DeselectAll();
             return true;
@@ -112,6 +125,13 @@ public class GameManager : MonoBehaviour
         {
             //If any panels are open, close them.
             UIManagerScript.CloseAllPanels(true);
+
+            UIManagerScript.ShowMiscUI("BuildingPanelOpenButton");
+            return true;
+        }
+        else if (UIManagerScript.UIElementOpen("BuildingPanelOpenButton", "MiscUI"))
+        {
+            UIManagerScript.HideMiscUI("BuildingPanelOpenButton");
             return true;
         }
 

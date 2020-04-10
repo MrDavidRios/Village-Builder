@@ -105,7 +105,7 @@ public class CameraMovement : MonoBehaviour
             }
 
             //If the 'Shift' key is pressed and the camera's y position isn't out of minimum bounds, move the camera downward.
-            if (Input.GetKey(KeyCode.LeftShift) && !(transform.position.y <= MIN_Y))
+            if (Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.Space) && !(transform.position.y <= MIN_Y))
             {
                 yValue = -speed * Time.deltaTime / Time.timeScale;
                 transform.position = new Vector3(transform.position.x, transform.position.y + yValue, transform.position.z);
@@ -119,7 +119,7 @@ public class CameraMovement : MonoBehaviour
             }
 
             //If the 'Space' key is pressed and the camera's y position isn't out of maximum bounds, move the camera upward.
-            if (Input.GetKey(KeyCode.Space) && !(transform.position.y >= MAX_Y))
+            if (Input.GetKey(KeyCode.Space) && !Input.GetKey(KeyCode.LeftShift) && !(transform.position.y >= MAX_Y))
             {
                 yValue = speed * Time.deltaTime / Time.timeScale;
                 transform.position = new Vector3(transform.position.x, transform.position.y + yValue, transform.position.z);

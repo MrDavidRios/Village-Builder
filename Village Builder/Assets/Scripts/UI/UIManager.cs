@@ -7,10 +7,10 @@ using UnityEngine;
 public class UIManager : MonoBehaviour
 {
     //Main Panels
-    [Header ("Main Panels")]
+    [Header("Main Panels")]
     public GameObject[] mainPanelGameObjects;
     public string[] mainPanelNames;
-    public string[] staticPanels;
+    public string[] staticUI;
 
     public bool anyPanelsOpen;
 
@@ -22,156 +22,191 @@ public class UIManager : MonoBehaviour
      *  You can see this in effect on line 54, for example.
      */
 
-    public Dictionary<string, GameObject> mainPanels = new Dictionary<string, GameObject> ();
+    public Dictionary<string, GameObject> mainPanels = new Dictionary<string, GameObject>();
 
     //Text fields
-    [Header ("Text Fields")]
+    [Header("Text Fields")]
     public GameObject[] textFieldGameObjects;
     public string[] textFieldNames;
 
-    public Dictionary<string, GameObject> textFields = new Dictionary<string, GameObject> ();
+    public Dictionary<string, GameObject> textFields = new Dictionary<string, GameObject>();
 
     //Miscellaneous (buttons, dropdowns, etc.)
-    [Header ("Miscellaneous UI Elements")]
+    [Header("Miscellaneous UI Elements")]
     public GameObject[] miscUIGameObjects;
     public string[] miscUINames;
 
-    public Dictionary<string, GameObject> miscUIElements = new Dictionary<string, GameObject> ();
+    public Dictionary<string, GameObject> miscUIElements = new Dictionary<string, GameObject>();
 
     #region Initialization
-    void Awake ()
+    void Awake()
     {
         //If the 'mainPanelGameObjects' array isn't equal to the 'mainPanelNames' array, return an error.
         if (mainPanelGameObjects.Length == mainPanelNames.Length)
         {
             for (int i = 0; i < mainPanelGameObjects.Length; i++)
             {
-                mainPanels.Add (mainPanelNames[i], mainPanelGameObjects[i]);
+                mainPanels.Add(mainPanelNames[i], mainPanelGameObjects[i]);
             }
         }
         else
-            Debug.LogError ("MainPanelGameObjects length is unequal to MainPanelNames' array length!");
+            Debug.LogError("MainPanelGameObjects length is unequal to MainPanelNames' array length!");
 
         //If the 'textFieldGameObjects' array isn't equal to the 'textFieldNames' array, return an error.
         if (textFieldGameObjects.Length == textFieldNames.Length)
         {
             for (int i = 0; i < textFieldGameObjects.Length; i++)
             {
-                textFields.Add (textFieldNames[i], textFieldGameObjects[i]);
+                textFields.Add(textFieldNames[i], textFieldGameObjects[i]);
             }
         }
         else
-            Debug.LogError ("TextFieldGameObjects length is unequal to TextFieldNames' array length!");
+            Debug.LogError("TextFieldGameObjects length is unequal to TextFieldNames' array length!");
 
         //If the 'miscUIGameObjects' array isn't equal to the 'textFieldNames' array, return an error.
         if (miscUIGameObjects.Length == miscUINames.Length)
         {
             for (int i = 0; i < miscUIGameObjects.Length; i++)
             {
-                miscUIElements.Add (miscUINames[i], miscUIGameObjects[i]);
+                miscUIElements.Add(miscUINames[i], miscUIGameObjects[i]);
             }
         }
         else
-            Debug.LogError ("MiscUIGameObjects length is unequal to MiscUINames' array length!");
+            Debug.LogError("MiscUIGameObjects length is unequal to MiscUINames' array length!");
     }
     #endregion
 
     #region Panels
     //Open a panel given its name in the mainPanels dictionary.
-    public void OpenPanel (string panelName)
+    public void OpenPanel(string panelName)
     {
         GameObject panel = mainPanels[panelName];
 
-        panel.SetActive (true);
+        panel.SetActive(true);
     }
 
-    public void OpenPanels (string[] panelNames)
+    public void OpenPanels(string[] panelNames)
     {
         for (int i = 0; i < panelNames.Length; i++)
         {
-            OpenPanel (panelNames[i]);
+            OpenPanel(panelNames[i]);
+        }
+    }
+
+    public void OpenStaticUI()
+    {
+        foreach (KeyValuePair<string, GameObject> entry in mainPanels)
+        {
+            if (staticUI.Contains(entry.Key))
+                OpenPanel(entry.Key);
+        }
+
+        foreach (KeyValuePair<string, GameObject> entry in miscUIElements)
+        {
+            if (staticUI.Contains(entry.Key))
+                ShowMiscUI(entry.Key);
+        }
+
+        foreach (KeyValuePair<string, GameObject> entry in textFields)
+        {
+            if (staticUI.Contains(entry.Key))
+                ShowText(entry.Key);
         }
     }
 
     //Close a panel given its name in the mainPanels dictionary.
-    public void ClosePanel (string panelName)
+    public void ClosePanel(string panelName)
     {
         GameObject panel = mainPanels[panelName];
 
-        panel.SetActive (false);
+        panel.SetActive(false);
     }
 
-    public void ClosePanels (string[] panelNames)
+    public void ClosePanels(string[] panelNames)
     {
         for (int i = 0; i < panelNames.Length; i++)
         {
-            ClosePanel (panelNames[i]);
+            ClosePanel(panelNames[i]);
         }
     }
 
-    public void CloseAllPanels (bool staticOnly)
+    public void CloseAllPanels(bool staticOnly)
     {
         foreach (KeyValuePair<string, GameObject> entry in mainPanels)
         {
             if (staticOnly)
             {
-                if (!staticPanels.Contains (entry.Key))
-                    ClosePanel (entry.Key);
+                if (!staticUI.Contains(entry.Key))
+                    ClosePanel(entry.Key);
             }
             else
-                ClosePanel (entry.Key);
+                ClosePanel(entry.Key);
         }
     }
     #endregion
 
     #region Text
     //Show text given its name in the textFields dictionary.
-    public void ShowText (string textName)
+    public void ShowText(string textName)
     {
         GameObject text = textFields[textName];
 
-        text.SetActive (true);
+        text.SetActive(true);
     }
 
     //Hide text given its name in the textFields dictionary.
-    public void HideText (string textName)
+    public void HideText(string textName)
     {
         GameObject text = textFields[textName];
 
-        text.SetActive (false);
+        text.SetActive(false);
     }
 
     //Change a text object's text value given its name in the textFields dictionary, the new text, and if whether or not its text is displayed using TextMeshPro (look it up).
-    public void ChangeText (string textName, string newText, bool TMP = true)
+    public void ChangeText(string textName, string newText, bool TMP = true)
     {
         GameObject text = textFields[textName];
 
         if (TMP)
         {
-            text.GetComponent<TextMeshProUGUI> ().text = newText;
+            text.GetComponent<TextMeshProUGUI>().text = newText;
         }
         else
         {
-            text.GetComponent<TextMesh> ().text = newText;
+            text.GetComponent<TextMesh>().text = newText;
         }
     }
     #endregion
 
     #region Misc
     //Show miscellaneous UI elements given its name in the miscUIElements dictionary.
-    public void ShowMiscUI (string elementName)
+    public void ShowMiscUI(string elementName)
     {
         GameObject element = miscUIElements[elementName];
 
-        element.SetActive (true);
+        element.SetActive(true);
     }
 
     //Hide miscellaneous UI elements given its name in the miscUIElements dictionary.
-    public void HideMiscUI (string elementName)
+    public void HideMiscUI(string elementName = "NaN")
     {
+        if (elementName == "NaN")
+        {
+            HideAllMiscUI();
+            return;
+        }
+
         GameObject element = miscUIElements[elementName];
 
-        element.SetActive (false);
+        element.SetActive(false);
+    }
+
+    private void HideAllMiscUI()
+    {
+        foreach (KeyValuePair<string, GameObject> entry in miscUIElements)
+        {
+            HideMiscUI(entry.Key);
+        }
     }
 
     public void ToggleUIObject(GameObject UIObject)
@@ -183,18 +218,18 @@ public class UIManager : MonoBehaviour
     }
     #endregion
 
-    private void Update ()
+    private void Update()
     {
-        anyPanelsOpen = CheckIfPanelsOpen ();
+        anyPanelsOpen = CheckIfPanelsOpen();
     }
 
-    private bool CheckIfPanelsOpen ()
+    private bool CheckIfPanelsOpen()
     {
         int openPanels = 0;
 
         foreach (KeyValuePair<string, GameObject> entry in mainPanels)
         {
-            if (entry.Value.activeInHierarchy && !staticPanels.Contains (entry.Key))
+            if (entry.Value.activeInHierarchy && !staticUI.Contains(entry.Key))
                 openPanels++;
         }
 
@@ -202,5 +237,23 @@ public class UIManager : MonoBehaviour
             return true;
         else
             return false;
+    }
+
+    public bool UIElementOpen(string elementName, string elementType)
+    {
+        elementType = elementType.ToLower();
+
+        switch (elementType)
+        {
+            case "mainpanel":
+                return mainPanels[elementName].activeInHierarchy;
+            case "textfield":
+                return textFields[elementName].activeInHierarchy;
+            case "miscui":
+                return miscUIElements[elementName].activeInHierarchy;
+            default:
+                Debug.LogError("Invalid element type provided: " + elementType);
+                return false;
+        }
     }
 }

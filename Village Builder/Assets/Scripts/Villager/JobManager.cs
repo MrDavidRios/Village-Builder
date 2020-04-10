@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TileOperations;
 using UnityEngine;
 
 public class JobManager : MonoBehaviour
@@ -13,7 +14,7 @@ public class JobManager : MonoBehaviour
         int i = 0;
 
         foreach (Transform villager in transform)
-        { 
+        {
             villagers.Add(villager.GetComponent<Villager>());
 
             villager.GetComponent<Villager>().index = i;
@@ -77,7 +78,7 @@ public class JobManager : MonoBehaviour
 
     private void Jobs_AssignJobGroups(object sender, AssignJobGroupArgs e) => AssignJobGroup(e.jobGroup, e.jobPosition, e.jobTransform, e.villagerIndex);
 
-    public void AssignJobGroup(string jobGroup, Vector3 jobPosition, Transform objectiveTransform, int villagerIndex) 
+    public void AssignJobGroup(string jobGroup, Vector3 jobPosition, Transform objectiveTransform, int villagerIndex)
     {
         switch (jobGroup)
         {
@@ -99,4 +100,6 @@ public class JobManager : MonoBehaviour
                 break;
         }
     }
+
+    public void ChopSelectedTree() => AssignJobGroup("HarvestTree", SelectTile.selectedObject.transform.position, SelectTile.selectedObject.transform, VillagerToAssignTo().index);
 }

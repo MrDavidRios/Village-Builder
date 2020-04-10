@@ -18,7 +18,7 @@ namespace TileOperations
         public float selectionCursorHeight;
 
         //GameObjects
-        public GameObject selectedObject;
+        public static GameObject selectedObject;
         public GameObject selectionCursor;
 
         public GameObject terrainMesh;
@@ -40,11 +40,9 @@ namespace TileOperations
         private PlacementGrid placementGrid;
         private UIManager UIManagerScript;
         private SelectionCursor selectionCursorScript;
+        private JobManager jobManager;
 
-        private void Start()
-        {
-            Initialize();
-        }
+        private void Start() => Initialize();
 
         private void Initialize()
         {
@@ -54,6 +52,7 @@ namespace TileOperations
             placementGrid = FindObjectOfType<PlacementGrid>();
             UIManagerScript = FindObjectOfType<UIManager>();
             selectionCursorScript = FindObjectOfType<SelectionCursor>();
+            jobManager = FindObjectOfType<JobManager>();
 
             selectionCursor = selectionCursorScript.gameObject;
 
@@ -79,6 +78,8 @@ namespace TileOperations
                     //Left-Click
                     if (Input.GetMouseButtonDown(0))
                     {
+                        CloseOpenedTempUI();
+
                         //Set the selected object equal to the object that was clicked on
                         selectedObject = hit.transform.gameObject;
 
@@ -139,8 +140,6 @@ namespace TileOperations
 
                             //Villagers Layer
                             case 11:
-                                Debug.Log("Villager selected.");
-
                                 StartCoroutine(FollowSelected(selectedObject));
 
                                 ScaleSelectionCursor(new Vector3(0.5f, 0.5f, 0.5f));
@@ -177,6 +176,10 @@ namespace TileOperations
 
             //Update the UI (User Interface)
             UpdateUI();
+
+            //Go through with keypress actions based on what's selected
+            if (anythingSelected)
+                Actions();
         }
 
         void UpdateUI()
@@ -231,8 +234,10 @@ namespace TileOperations
                         //Depending on the darkness of the water (uvY) the depth of the water can be found.
                         if (uvY < 0.8f && uvY >= 0.5f)
                             waterDepth = "Medium Depth";
-                        else if (uvY < 0.5f)
+                        else if (uvY < 0.5f && uvY >= 0.4f)
                             waterDepth = "Deep";
+                        else if (uvY < 0.4f)
+                            waterDepth = "Deeper";
 
                         //Change the selection panel's subtitle to the depth of the selected water tile
                         UIManagerScript.ChangeText("Subtitle1", waterDepth);
@@ -246,20 +251,22 @@ namespace TileOperations
                     if (Environment.fishingTile[tileIndex.x, tileIndex.y])
                         UIManagerScript.ChangeText("Subtitle1", "Good fishing spot");
 
-                    //Show the subtitle
-                    UIManagerScript.ShowText("Subtitle1");
+                    //Show the first subtitle
+                    ShowSubtitles(1);
                     break;
 
                 //Resource
                 case 9:
                     string resourceType = selectedObject.tag;
 
-                    UIManagerScript.HideText("Subtitle1");
+                    HideSubtitles(1);
                     UIManagerScript.ChangeText("SelectedTitle", resourceType);
 
                     switch (resourceType)
                     {
                         case "Tree":
+                            UIManagerScript.ShowMiscUI("ChopTreeButton");
+
                             if (selectedObject.transform.localScale.x > 1.0f)
                                 UIManagerScript.ChangeText("Subtitle1", "Medium Tree");
                             else
@@ -289,8 +296,7 @@ namespace TileOperations
                             break;
                     }
 
-                    UIManagerScript.ShowText("Subtitle1");
-                    UIManagerScript.ShowText("Subtitle2");
+                    ShowSubtitles(2);
                     break;
 
                 //Building
@@ -306,12 +312,69 @@ namespace TileOperations
                     UIManagerScript.ChangeText("Subtitle1", "Gender: " + villager._gender);
                     UIManagerScript.ChangeText("Subtitle2", "Currently " + VillagerPropertiesGenerator.CurrentJobDescription(villager));
 
-                    UIManagerScript.ShowText("Subtitle1");
-                    UIManagerScript.ShowText("Subtitle2");
+                    ShowSubtitles(2);
+
+                    UIManagerScript.ShowMiscUI("JobsViewButton");
                     break;
             }
 
             UIManagerScript.OpenPanel("SelectionPanel");
+        }
+
+        void Actions()
+        {
+            switch (selectedObject.layer)
+            {
+                //Terrain
+                case 8:
+                    break;
+
+                //Resource
+                case 9:
+                    switch (selectedObject.tag)
+                    {
+                        case "Tree":
+                            if (Input.GetKeyDown(KeyCode.C))
+                                jobManager.ChopSelectedTree();
+                            break;
+                        case "Stone":
+                            break;
+                    }
+                    break;
+
+                //Building
+                case 10:
+                    break;
+
+                //Vilager
+                case 11:
+                    break;
+            }
+        }
+
+        void ShowSubtitles(int subtitleAmount)
+        {
+            for (int i = 1; i < subtitleAmount; i++)
+            {
+                UIManagerScript.ShowText("Subtitle" + i);
+            }
+        }
+
+        void HideSubtitles(int subtitleAmount)
+        {
+            for (int i = 1; i < subtitleAmount; i++)
+            {
+                UIManagerScript.HideText("Subtitle" + i);
+            }
+        }
+
+        void CloseOpenedTempUI()
+        {
+            UIManagerScript.OpenPanel("SelectionDescriptionPanel");
+
+            UIManagerScript.ClosePanel("JobsPanel");
+            UIManagerScript.HideMiscUI("JobsViewButton");
+            UIManagerScript.HideMiscUI("ChopTreeButton");
         }
 
         //Change the position of the selection cursor based on the position passed through the function, and the fact of whether the selected object is a tile or not.
