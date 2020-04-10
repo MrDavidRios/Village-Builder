@@ -16,6 +16,8 @@ public class Jobs
 
     public static event EventHandler<VillagerArgs> InventoryUpdated;
 
+    private static bool ReachedDestination(Transform villagerToMove, Vector3 desiredPosition, float offset) => Vector3.Distance(villagerToMove.position, desiredPosition) <= villagerToMove.GetComponent<AIPath>().endReachedDistance + offset;
+
     public static IEnumerator Move(Transform villagerToMove, Vector3 desiredPosition)
     {
         var villagerAIPath = villagerToMove.GetComponent<AIPath>();
@@ -24,7 +26,9 @@ public class Jobs
 
         villagerAIPath.destination = desiredPosition;
 
-        yield return new WaitUntil(() => villagerAIPath.reachedEndOfPath);
+        yield return new WaitUntil(() => ReachedDestination(villagerToMove, desiredPosition, 0.2f));
+
+        yield return new WaitUntil(() => villagerAIPath.velocity == Vector3.zero);
 
         FinishJob(villagerToMove.GetComponent<Villager>());
     }
