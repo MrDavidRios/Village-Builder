@@ -16,8 +16,6 @@ public class Jobs
 
     public static event EventHandler<VillagerArgs> InventoryUpdated;
 
-    private static bool ReachedDestination(Transform villagerToMove, Vector3 desiredPosition, float offset) => Vector3.Distance(villagerToMove.position, desiredPosition) <= villagerToMove.GetComponent<AIPath>().endReachedDistance + offset;
-
     public static IEnumerator Move(Transform villagerToMove, Vector3 desiredPosition)
     {
         var villagerAIPath = villagerToMove.GetComponent<AIPath>();
@@ -26,9 +24,12 @@ public class Jobs
 
         villagerAIPath.destination = desiredPosition;
 
-        yield return new WaitUntil(() => ReachedDestination(villagerToMove, desiredPosition, 0.2f));
+        yield return new WaitUntil(() => villagerAIPath.velocity != Vector3.zero);
 
-        yield return new WaitUntil(() => villagerAIPath.velocity == Vector3.zero);
+        while (villagerAIPath.pathPending || !villagerAIPath.reachedEndOfPath)
+        {
+            yield return null;
+        }
 
         FinishJob(villagerToMove.GetComponent<Villager>());
     }
@@ -56,8 +57,6 @@ public class Jobs
             {
                 for (int i = 0; i < chopAmount; i++)
                 {
-                    Debug.Log(i);
-
                     villager.items.Add(log);
 
                     InventoryUpdated?.Invoke(villager, new VillagerArgs { villagerIndex = villager.index });

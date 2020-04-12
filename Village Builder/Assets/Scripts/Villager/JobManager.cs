@@ -101,5 +101,9 @@ public class JobManager : MonoBehaviour
         }
     }
 
-    public void ChopSelectedTree() => AssignJobGroup("HarvestTree", SelectTile.selectedObject.transform.position, SelectTile.selectedObject.transform, VillagerToAssignTo().index);
+    public void ChopSelectedTree()
+    {
+        if (!SelectTile.selectedObject.GetComponent<Resource>().beingHarvested)
+            AssignJobGroup("HarvestTree", SelectTile.selectedObject.transform.position, SelectTile.selectedObject.transform, VillagerToAssignTo().index);
+    }
 }

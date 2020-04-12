@@ -354,7 +354,7 @@ namespace TileOperations
 
         void ShowSubtitles(int subtitleAmount)
         {
-            for (int i = 1; i < subtitleAmount; i++)
+            for (int i = 1; i <= subtitleAmount; i++)
             {
                 UIManagerScript.ShowText("Subtitle" + i);
             }
