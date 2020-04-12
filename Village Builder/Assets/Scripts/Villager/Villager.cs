@@ -6,6 +6,7 @@ using UnityEngine;
 public class Villager : MonoBehaviour
 {
     //Identification
+    [Header("Identification")]
     public int index;
 
     public string _name;
@@ -13,22 +14,27 @@ public class Villager : MonoBehaviour
     public string _gender;
 
     //Inventory
+    [Header("Inventory")]
     public bool inventoryFull;
+
+    public int numberOfItems;
 
     public int inventoryCapacity;
 
     public List<Item> items = new List<Item>();
 
     //Jobs
+    [Header("Jobs")]
+    public bool performingJob = false;
+
     public List<Job> jobList = new List<Job>();
 
     [SerializeField] private int jobAmount;
 
-    public bool performingJob = false;
-
     public string unfinishedJob;
 
     //Stats
+    [Header("Stats")]
     public int harvestAmount;
     public int harvestRate;
 
@@ -53,7 +59,9 @@ public class Villager : MonoBehaviour
         #endregion
 
         #region Inventory
-        if (items.Count == inventoryCapacity)
+        numberOfItems = items.Count;
+
+        if (numberOfItems == inventoryCapacity)
             inventoryFull = true;
         else
             inventoryFull = false;

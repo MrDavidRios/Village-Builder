@@ -93,6 +93,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f184c810716e944f8dd02fa303a136a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  beingHarvested: 0
   resourceType: Wood
 --- !u!64 &5579382183879508632
 MeshCollider:

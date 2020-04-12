@@ -8,10 +8,14 @@ public class Resource : MonoBehaviour
 
     public bool beingHarvested;
 
+    private bool harvestIndicatorExists;
+
     public string resourceType;
 
     private void Start()
     {
+        harvestIndicatorExists = false;
+
         bool indeterminateScale = resourceType.ToLower() == "stone";
 
         resourceAmount = GlobalResourceSettings.ResourceAmount(resourceType);
@@ -33,4 +37,40 @@ public class Resource : MonoBehaviour
     }
 
     public void HarvestResource(int _resourceAmount) => resourceAmount -= _resourceAmount;
+
+    public void AddHarvestIndicator() 
+    {
+        if (harvestIndicatorExists)
+            return;
+
+        Vector3 posOffset = Vector3.zero;
+        Vector3 scaleFactor = Vector3.one;
+
+        //float rotateSpeed;
+
+        GameObject indicatorPrefab = null;
+
+        switch (resourceType.ToLower())
+        {
+            case "wood":
+                indicatorPrefab = Resources.Load("Prefabs/VFX/Axe") as GameObject;
+
+                posOffset = new Vector3(posOffset.x, posOffset.y + 4.5f, posOffset.z);
+                break;
+            case "stone":
+                indicatorPrefab = Resources.Load("Prefabs/VFX/Pickaxe") as GameObject;
+                break;
+            default:
+                return;
+        }
+
+        GameObject harvestIndicator = Instantiate(indicatorPrefab, transform);
+
+        harvestIndicator.transform.localPosition = posOffset;
+        harvestIndicator.transform.localScale = new Vector3(harvestIndicator.transform.localScale.x * scaleFactor.x, harvestIndicator.transform.localScale.y * scaleFactor.y, harvestIndicator.transform.localScale.z * scaleFactor.z);
+
+        harvestIndicator.name = indicatorPrefab.name;
+
+        harvestIndicatorExists = true;
+    }
 }

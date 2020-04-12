@@ -24,7 +24,10 @@ public class Jobs
 
         villagerAIPath.destination = desiredPosition;
 
-        yield return new WaitUntil(() => villagerAIPath.velocity != Vector3.zero);
+        while (villagerAIPath.velocity == Vector3.zero || villagerAIPath.remainingDistance <= villagerAIPath.endReachedDistance)
+        {
+            yield return null;
+        }
 
         while (villagerAIPath.pathPending || !villagerAIPath.reachedEndOfPath)
         {
@@ -52,7 +55,7 @@ public class Jobs
             else
                 tree.HarvestResource(chopAmount);
 
-            //Add 1 log to the villager's inventory for each log chopped
+            //Add a log to the villager's inventory for each log chopped
             if (!villager.inventoryFull)
             {
                 for (int i = 0; i < chopAmount; i++)

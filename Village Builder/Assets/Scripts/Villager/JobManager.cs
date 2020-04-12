@@ -85,6 +85,8 @@ public class JobManager : MonoBehaviour
             case "HarvestTree":
                 objectiveTransform.GetComponent<Resource>().beingHarvested = true;
 
+                objectiveTransform.GetComponent<Resource>().AddHarvestIndicator();
+
                 var nearestStorage = JobUtils.NearestStorage(jobPosition);
                 jobPosition = objectiveTransform.position;
 

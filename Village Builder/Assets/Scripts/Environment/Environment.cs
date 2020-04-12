@@ -332,6 +332,7 @@ public class Environment : MonoBehaviour
                         tree.material.color = new Color(r, g, b);
                         tree.gameObject.layer = LayerMask.NameToLayer("Resource");
                         tree.tag = "Tree";
+                        tree.name = tree.tag;
 
                         // Mark tile unwalkable
                         walkable[x, y] = false;
@@ -391,6 +392,7 @@ public class Environment : MonoBehaviour
                         //rock.material.color = new Color(r, g, b);
                         rock.gameObject.layer = LayerMask.NameToLayer("Resource");
                         rock.tag = "Stone";
+                        rock.name = rock.tag;
 
                         // Mark tile unwalkable
                         walkable[x, y] = false;
@@ -448,7 +450,7 @@ public class Environment : MonoBehaviour
             {
                 if (treeToRemove.position == tileCentres[x, y])
                 {
-                    treeToRemove.gameObject.SetActive(false);
+                    Destroy(treeToRemove.gameObject);
 
                     walkable[x, y] = true;
                 }
