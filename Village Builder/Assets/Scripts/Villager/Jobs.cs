@@ -38,13 +38,13 @@ public class Jobs
     }
 
     public static IEnumerator ChopTree(Villager villager, Transform treeToChop)
-    {
+    {        
         var log = new Item { itemObject = Resources.Load("Prefabs/Items/Log") as GameObject, itemType = "Log" };
 
         var tree = treeToChop.GetComponent<Resource>();
 
-        int chopRate = villager.harvestRate;
-        int chopAmount = villager.harvestAmount;
+        int chopRate = villager._harvestRate;
+        int chopAmount = villager._harvestAmount;
 
         while (tree.gameObject.activeInHierarchy)
         {

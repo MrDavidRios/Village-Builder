@@ -223,6 +223,13 @@ public class UIManager : MonoBehaviour
         anyPanelsOpen = CheckIfPanelsOpen();
     }
 
+    public void UpdateDropdown(string elementName, int choiceIndex) 
+    {
+        TMP_Dropdown dropdown = miscUIElements[elementName].GetComponent<TMP_Dropdown>();
+
+        dropdown.value = choiceIndex;
+    }
+
     private bool CheckIfPanelsOpen()
     {
         int openPanels = 0;

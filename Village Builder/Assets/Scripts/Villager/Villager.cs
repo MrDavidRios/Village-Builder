@@ -3,6 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum VillagerRoles
+{
+    Laborer = 1,
+    Carpenter,
+    Forester,
+    Blacksmith,
+    Baker,
+    Stonemason
+}
+
 public class Villager : MonoBehaviour
 {
     //Identification
@@ -11,7 +21,13 @@ public class Villager : MonoBehaviour
 
     public string _name;
 
-    public string _gender;
+    public string _sex;
+
+    [LabelOverride("Role")]
+    public VillagerRoles roleToAssign;
+
+    [HideInInspector]
+    public string _role;
 
     //Inventory
     [Header("Inventory")]
@@ -35,15 +51,16 @@ public class Villager : MonoBehaviour
 
     //Stats
     [Header("Stats")]
-    public int harvestAmount;
-    public int harvestRate;
+    public int _harvestAmount;
+    public int _harvestRate;
 
     private void Awake()
     {
         Jobs.InventoryUpdated += Jobs_DisplayItems;
 
-        _gender = VillagerPropertiesGenerator.GenerateGender(this);
+        _sex = VillagerPropertiesGenerator.GenerateSex(this);
         _name = VillagerPropertiesGenerator.GenerateName(this);
+        _role = VillagerPropertiesGenerator.ProcessRole((int)roleToAssign);
     }
 
     private void Update()

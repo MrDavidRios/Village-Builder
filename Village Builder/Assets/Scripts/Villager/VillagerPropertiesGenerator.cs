@@ -12,7 +12,7 @@ public class VillagerPropertiesGenerator
     {
         int nameIndex;
 
-        if (villager._gender == "Female")
+        if (villager._sex == "Female")
         {
             nameIndex = Mathf.RoundToInt(Random.Range(0, femaleNames.Length));
 
@@ -26,13 +26,13 @@ public class VillagerPropertiesGenerator
         }
     }
 
-    public static string GenerateGender(Villager villager)
+    public static string GenerateSex(Villager villager)
     {
         int genderDecider = Mathf.RoundToInt(Random.Range(0, 1));
 
-        if (genderDecider == 1) 
+        if (genderDecider == 1)
             return "Female";
-        else 
+        else
             return "Male";
     }
 
@@ -63,4 +63,6 @@ public class VillagerPropertiesGenerator
                 return "Who knows?";
         }
     }
+
+    public static string ProcessRole(int roleID) => System.Enum.GetName(typeof (VillagerRoles), roleID);
 }

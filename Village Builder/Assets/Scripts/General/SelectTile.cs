@@ -14,6 +14,8 @@ namespace TileOperations
         //Integers
         private Vector2Int tileIndex;
 
+        private int _villagerRole;
+
         //Floats
         public float selectionCursorHeight;
 
@@ -309,8 +311,16 @@ namespace TileOperations
 
                     UIManagerScript.ChangeText("SelectedTitle", villager._name);
 
-                    UIManagerScript.ChangeText("Subtitle1", "Gender: " + villager._gender);
+                    UIManagerScript.ChangeText("Subtitle1", "Gender: " + villager._sex);
                     UIManagerScript.ChangeText("Subtitle2", "Currently " + VillagerPropertiesGenerator.CurrentJobDescription(villager));
+
+                    //Only change dropdown value if the villager's role changes. Check later if this is necessary.
+                    if ((int)System.Enum.Parse(typeof(VillagerRoles), villager._role) != _villagerRole)
+                    {
+                        _villagerRole = (int)System.Enum.Parse(typeof(VillagerRoles), villager._role);
+
+                        UIManagerScript.UpdateDropdown("RoleSelector", _villagerRole - 1 /*VillagerRoles Enum begins at 1*/);
+                    }
 
                     ShowSubtitles(2);
 
@@ -458,6 +468,8 @@ namespace TileOperations
             //If the tile can't be found, return an impossible value, signaling an error.
             return new Vector2Int(-1, -1);
         }
+
+        public void UpdateVillagerRole(TMPro.TMP_Dropdown dropDown) => selectedObject.GetComponent<Villager>()._role = System.Enum.GetName(typeof(VillagerRoles), dropDown.value + 1 /*VillagerRoles Enum begins at 1*/);
 
         IEnumerator FollowSelected(GameObject gameObject)
         {

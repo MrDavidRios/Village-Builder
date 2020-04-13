@@ -26,11 +26,11 @@ public class JobManager : MonoBehaviour
         Jobs.JobGroupAssigned += Jobs_AssignJobGroups;
     }
 
-    public Villager VillagerToAssignTo() => villagers[JobUtils.VillagerToAssignTo(villagers)];
+    public Villager VillagerToAssignTo(string jobType) => villagers[JobUtils.VillagerToAssignTo(villagers, jobType)];
 
     public void AssignJob(Job job, int villagerIndex) => villagers[villagerIndex].jobList.Add(job);
 
-    public void AssignJob(Job job) => villagers[JobUtils.VillagerToAssignTo(villagers)].jobList.Add(job);
+    public void AssignJob(Job job) => villagers[JobUtils.VillagerToAssignTo(villagers, job.jobType)].jobList.Add(job);
 
     public void AssignJob(Vector3 position, Transform objectiveTransform, int amount, string jobType, int villagerIndex)
     {
@@ -53,7 +53,7 @@ public class JobManager : MonoBehaviour
         newJob.objectiveTransform = objectiveTransform;
         newJob.amount = amount;
 
-        villagers[JobUtils.VillagerToAssignTo(villagers)].jobList.Add(newJob);
+        villagers[JobUtils.VillagerToAssignTo(villagers, newJob.jobType)].jobList.Add(newJob);
     }
 
     public void RemoveJob(int villagerIndex, int jobIndex = -1)
@@ -67,9 +67,9 @@ public class JobManager : MonoBehaviour
     //Once villager job is finished, remove the first element (completed job).
     private void Jobs_FinishJob(object sender, VillagerArgs e)
     {
-        Debug.Log("Job for " + e.villagerIndex + " finished!");
-
         var villagerJobList = villagers[e.villagerIndex].jobList;
+
+        Debug.Log(villagerJobList[0].jobType + " job for " + e.villagerIndex + " finished!");
 
         villagerJobList.RemoveAt(0);
 
@@ -106,6 +106,6 @@ public class JobManager : MonoBehaviour
     public void ChopSelectedTree()
     {
         if (!SelectTile.selectedObject.GetComponent<Resource>().beingHarvested)
-            AssignJobGroup("HarvestTree", SelectTile.selectedObject.transform.position, SelectTile.selectedObject.transform, VillagerToAssignTo().index);
+            AssignJobGroup("HarvestTree", SelectTile.selectedObject.transform.position, SelectTile.selectedObject.transform, VillagerToAssignTo("Chop").index);
     }
 }

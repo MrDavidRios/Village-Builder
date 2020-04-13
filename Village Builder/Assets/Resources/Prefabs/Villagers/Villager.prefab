@@ -198,12 +198,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: 0
   _name: 
-  _gender: 
+  _sex: 
+  roleToAssign: 1
+  _role: 
   inventoryFull: 0
   numberOfItems: 0
   inventoryCapacity: 30
   performingJob: 0
   jobAmount: 0
   unfinishedJob: 
-  harvestAmount: 1
-  harvestRate: 1
+  _harvestAmount: 1
+  _harvestRate: 1

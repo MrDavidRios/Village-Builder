@@ -2,22 +2,42 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 public static class JobUtils
 {
     //Return the villager that has the least amount of jobs.
-    public static int VillagerToAssignTo(List<Villager> villagers)
+    public static int VillagerToAssignTo(List<Villager> villagers, string jobType)
     {
-        var jobAmount = new List<int>();
+        var eligibleVillagers = new List<Villager>();
 
         foreach (var villager in villagers)
         {
-            jobAmount.Add(villager.jobList.Count);
+            if (DetermineIfVillagerQualified(villager, jobType))
+                eligibleVillagers.Add(villager);
         }
 
-        int leastBusyVillagerIndex = jobAmount.IndexOf(jobAmount.Min());
+        //Get the villager with the least amount of jobs and return their index.
+        return eligibleVillagers.Aggregate((i1, i2) => i1.jobList.Count < i2.jobList.Count ? i1 : i2).index;
+    }
 
-        return leastBusyVillagerIndex;
+    public static bool DetermineIfVillagerQualified(Villager villager, string jobType)
+    {
+        switch (jobType)
+        {
+            case "Move":
+                return true;
+            case "Chop":
+                return villager._role == "Laborer";
+            case "Mine":
+                return villager._role == "Laborer";
+            case "Construct":
+                return villager._role == "Carpenter";
+            case "Deposit":
+                return true;
+            default:
+                return false;
+        }
     }
 
     public static Transform NearestTree(Transform villager)
