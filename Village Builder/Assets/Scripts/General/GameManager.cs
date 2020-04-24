@@ -40,12 +40,16 @@ public class GameManager : MonoBehaviour
             if (cinematicModeEnabled)
             {
                 selectScript.DeselectAll();
+                SelectTile.canSelect = false;
 
                 UIManagerScript.CloseAllPanels(false);
                 UIManagerScript.HideMiscUI();
             }
             else if (!UIManagerScript.anyPanelsOpen)
+            {
                 UIManagerScript.OpenStaticUI();
+                SelectTile.canSelect = true;
+            }
         }
 
         //If the deselect/pause key was pressed, pause the game.

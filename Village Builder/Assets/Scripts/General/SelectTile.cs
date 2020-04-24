@@ -11,6 +11,8 @@ namespace TileOperations
         //Booleans
         public bool anythingSelected;
 
+        public static bool canSelect;
+
         //Integers
         private Vector2Int tileIndex;
 
@@ -21,6 +23,10 @@ namespace TileOperations
 
         //GameObjects
         public static GameObject selectedObject;
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
         public GameObject selectionCursor;
 
         public GameObject terrainMesh;
@@ -68,11 +74,17 @@ namespace TileOperations
 
         private void Update()
         {
+<<<<<<< Updated upstream
+=======
+            if (!canSelect)
+                return;
+
+>>>>>>> Stashed changes
             //The ray goes from the camera's position on the screen to the mouse cursor's position
             ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 
             //This code won't run if the mouse is hovering over the UI or if a building is being placed
-            if (!EventSystem.current.IsPointerOverGameObject() && !PlaceBuilding._placingBuilding)
+            if (!EventSystem.current.IsPointerOverGameObject() && !PlaceBuilding._placingBuilding && !selectionLocked)
             {
                 //If the raycast hit something with a collider, run the code inside this 'if' statement
                 if (Physics.Raycast(ray, out hit, GlobalRules._maxRaycastDistance, selectable))
@@ -150,6 +162,12 @@ namespace TileOperations
                                 Debug.LogError("Error: Invalid Layer ID given: " + hit.transform.gameObject.layer);
                                 break;
                         }
+<<<<<<< Updated upstream
+=======
+
+                        if (!UIManagerScript.mainPanels["SelectionPanel"].activeInHierarchy)
+                            UIManagerScript.mainPanels["SelectionPanel"].SetActive(true);
+>>>>>>> Stashed changes
                     }
                 }
                 else
@@ -360,6 +378,29 @@ namespace TileOperations
                 case 11:
                     break;
             }
+<<<<<<< Updated upstream
+=======
+
+            //Lock
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                bool lockToggle = !selectionLocked;
+
+                LockSelection(lockToggle);
+            }
+        }
+
+        public void ActionInit()
+        {
+            if (selectedObject.GetComponent<Resource>() != null)
+            {
+                if (selectedObject.GetComponent<Resource>().beingHarvested)
+                    return;
+            }
+
+            if (selectedObject)
+                PositionSelectionCursor(selectedObject.transform.position, true);
+>>>>>>> Stashed changes
         }
 
         void ShowSubtitles(int subtitleAmount)
@@ -449,6 +490,8 @@ namespace TileOperations
         //Deselect everything by setting the 'selectedObject' to null, which basically means setting it to empty (nothing).
         public void DeselectAll()
         {
+            LockSelection(false);
+
             selectedObject = null;
         }
 
@@ -482,5 +525,19 @@ namespace TileOperations
 
             yield return null;
         }
+<<<<<<< Updated upstream
+=======
+
+        public void LockSelection(bool lockSelection)
+        {
+            if (selectionLocked != lockSelection)
+            {
+                UIManagerScript.ToggleUIObject(UIManagerScript.miscUIElements["LockButton"]);
+                UIManagerScript.ToggleUIObject(UIManagerScript.miscUIElements["UnlockButton"]);
+            }
+
+            selectionLocked = lockSelection;
+        }
+>>>>>>> Stashed changes
     }
 }
