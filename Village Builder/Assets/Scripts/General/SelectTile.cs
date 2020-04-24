@@ -10,6 +10,8 @@ namespace TileOperations
     {
         //Booleans
         public bool anythingSelected;
+        public bool selectionLocked;
+        public bool lockSelectionCursor;
 
         //Integers
         private Vector2Int tileIndex;
@@ -21,6 +23,10 @@ namespace TileOperations
 
         //GameObjects
         public static GameObject selectedObject;
+        public static GameObject selectedObjectToFocusOn;
+
+        private static GameObject lockedSelectedObject;
+
         public GameObject selectionCursor;
 
         public GameObject terrainMesh;
@@ -68,6 +74,9 @@ namespace TileOperations
 
         private void Update()
         {
+            if (selectedObject != null && selectedObjectToFocusOn != null && lockedSelectedObject != null)
+                Debug.Log(selectedObject.name + ", " + selectedObjectToFocusOn.name + ", " + lockedSelectedObject.name);
+
             //The ray goes from the camera's position on the screen to the mouse cursor's position
             ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 
@@ -84,6 +93,12 @@ namespace TileOperations
 
                         //Set the selected object equal to the object that was clicked on
                         selectedObject = hit.transform.gameObject;
+
+                        if (lockedSelectedObject != null)
+                        {
+                            if (selectedObject != lockedSelectedObject)
+                                selectedObject = lockedSelectedObject;
+                        }
 
                         //Check what kind of object was selected based on its layer
                         switch (selectedObject.layer)
@@ -119,7 +134,7 @@ namespace TileOperations
                                         ScaleSelectionCursor(new Vector3(0.75f, 0.75f, 0.75f));
                                         break;
                                     case "Stone":
-                                        ScaleSelectionCursor(selectedObject.transform.localScale);
+                                        ScaleSelectionCursor(hit.transform.localScale);
                                         break;
                                     case "Iron":
                                         break;
@@ -133,7 +148,7 @@ namespace TileOperations
                                 }
 
                                 //Make the selection cursor's position equal to the position of the selected resource
-                                PositionSelectionCursor(selectedObject.transform.position, true);
+                                PositionSelectionCursor(hit.transform.position, true);
                                 break;
 
                             //Buildings Layer
@@ -150,6 +165,9 @@ namespace TileOperations
                                 Debug.LogError("Error: Invalid Layer ID given: " + hit.transform.gameObject.layer);
                                 break;
                         }
+
+                        if (!UIManagerScript.mainPanels["SelectionPanel"].activeInHierarchy && lockedSelectedObject)
+                            UIManagerScript.mainPanels["SelectionPanel"].SetActive(true);
                     }
                 }
                 else
@@ -176,6 +194,14 @@ namespace TileOperations
                 anythingSelected = true;
             }
 
+            if (selectionLocked && lockedSelectedObject != null)
+                selectedObjectToFocusOn = lockedSelectedObject;
+            else
+            {
+                LockSelection(false);
+                selectedObjectToFocusOn = selectedObject;
+            }
+
             //Update the UI (User Interface)
             UpdateUI();
 
@@ -193,7 +219,7 @@ namespace TileOperations
                 return;
             }
 
-            switch (selectedObject.layer)
+            switch (selectedObjectToFocusOn.layer)
             {
                 //Terrain
                 case 8:
@@ -259,7 +285,7 @@ namespace TileOperations
 
                 //Resource
                 case 9:
-                    string resourceType = selectedObject.tag;
+                    string resourceType = selectedObjectToFocusOn.tag;
 
                     HideSubtitles(1);
                     UIManagerScript.ChangeText("SelectedTitle", resourceType);
@@ -269,26 +295,26 @@ namespace TileOperations
                         case "Tree":
                             UIManagerScript.ShowMiscUI("ChopTreeButton");
 
-                            if (selectedObject.transform.localScale.x > 1.0f)
+                            if (selectedObjectToFocusOn.transform.localScale.x > 1.0f)
                                 UIManagerScript.ChangeText("Subtitle1", "Medium Tree");
                             else
                                 UIManagerScript.ChangeText("Subtitle1", "Small Tree");
 
-                            if (selectedObject.transform.localScale.x > 1.2f)
+                            if (selectedObjectToFocusOn.transform.localScale.x > 1.2f)
                                 UIManagerScript.ChangeText("Subtitle1", "Large Tree");
 
-                            UIManagerScript.ChangeText("Subtitle2", "Wood amount: " + selectedObject.GetComponent<Resource>().resourceAmount);
+                            UIManagerScript.ChangeText("Subtitle2", "Wood amount: " + selectedObjectToFocusOn.GetComponent<Resource>().resourceAmount);
                             break;
                         case "Stone":
-                            if (selectedObject.transform.localScale.x > 0.6f)
+                            if (selectedObjectToFocusOn.transform.localScale.x > 0.6f)
                                 UIManagerScript.ChangeText("Subtitle1", "Medium Rock");
                             else
                                 UIManagerScript.ChangeText("Subtitle1", "Small Rock");
 
-                            if (selectedObject.transform.localScale.x > 0.7f)
+                            if (selectedObjectToFocusOn.transform.localScale.x > 0.7f)
                                 UIManagerScript.ChangeText("Subtitle1", "Large Rock");
 
-                            UIManagerScript.ChangeText("Subtitle2", "Stone amount: " + selectedObject.GetComponent<Resource>().resourceAmount);
+                            UIManagerScript.ChangeText("Subtitle2", "Stone amount: " + selectedObjectToFocusOn.GetComponent<Resource>().resourceAmount);
                             break;
                         case "Iron":
                             break;
@@ -307,7 +333,7 @@ namespace TileOperations
 
                 //Vilager
                 case 11:
-                    var villager = selectedObject.GetComponent<Villager>();
+                    var villager = selectedObjectToFocusOn.GetComponent<Villager>();
 
                     UIManagerScript.ChangeText("SelectedTitle", villager._name);
 
@@ -322,6 +348,46 @@ namespace TileOperations
                         UIManagerScript.UpdateDropdown("RoleSelector", _villagerRole - 1 /*VillagerRoles Enum begins at 1*/);
                     }
 
+                    //Display vilager's list of jobs
+                    #region Display Villager Job List
+                    string[] jobDisplayNames = new string[villager.jobList.Count];
+
+                    for (int i = 0; i < jobDisplayNames.Length; i++)
+                    {
+                        jobDisplayNames[i] = JobUtils.ReturnJobName(villager.jobList[i].jobType);
+                    }
+
+                    GameObject jobListDisplay = UIManagerScript.miscUIElements["JobsList"];
+
+                    int jobsOnDisplay = jobListDisplay.transform.childCount;
+
+                    //Delete existing job elements if any exist
+                    if (jobsOnDisplay > 0)
+                    {
+                        for (int i = 0; i < jobsOnDisplay; i++)
+                        {
+                            Destroy(jobListDisplay.transform.GetChild(i).gameObject);
+                        }
+                    }
+
+                    for (int i = 0; i < jobDisplayNames.Length; i++)
+                    {
+                        var jobElement = Instantiate(UIManager.jobPrefab, jobListDisplay.transform) as GameObject;
+
+                        jobElement.GetComponent<RectTransform>().anchoredPosition = new Vector3(0f, -20f - (37.5f * i), 0f);
+                        jobElement.GetComponentInChildren<TMPro.TMP_Text>().text = jobDisplayNames[i];
+                    }
+
+                    if (jobDisplayNames.Length == 0)
+                    {
+                        var jobElement = Instantiate(UIManager.jobPrefab, jobListDisplay.transform) as GameObject;
+
+                        jobElement.GetComponent<RectTransform>().anchoredPosition = new Vector3(0f, -20f, 0f);
+                        jobElement.GetComponentInChildren<TMPro.TMP_Text>().text = "Idle";
+                    }
+
+                    #endregion
+
                     ShowSubtitles(2);
 
                     UIManagerScript.ShowMiscUI("JobsViewButton");
@@ -333,7 +399,7 @@ namespace TileOperations
 
         void Actions()
         {
-            switch (selectedObject.layer)
+            switch (selectedObjectToFocusOn.layer)
             {
                 //Terrain
                 case 8:
@@ -341,11 +407,14 @@ namespace TileOperations
 
                 //Resource
                 case 9:
-                    switch (selectedObject.tag)
+                    switch (selectedObjectToFocusOn.tag)
                     {
                         case "Tree":
                             if (Input.GetKeyDown(KeyCode.C))
+                            {
                                 jobManager.ChopSelectedTree();
+                                ActionInit();
+                            }
                             break;
                         case "Stone":
                             break;
@@ -358,8 +427,36 @@ namespace TileOperations
 
                 //Vilager
                 case 11:
+                    if (Input.GetKeyDown(KeyCode.J))
+                    {
+                        var jobsPanel = UIManagerScript.mainPanels["JobsPanel"];
+                        var selectionDescriptionPanel = UIManagerScript.mainPanels["SelectionDescriptionPanel"];
+
+                        selectionDescriptionPanel.SetActive(jobsPanel.activeInHierarchy);
+                        jobsPanel.SetActive(!jobsPanel.activeInHierarchy);
+                    }
                     break;
             }
+
+            //Lock
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                bool lockToggle = !selectionLocked;
+
+                LockSelection(lockToggle);
+            }
+        }
+
+        public void ActionInit()
+        {
+            if (selectedObjectToFocusOn.GetComponent<Resource>() != null)
+            {
+                if (selectedObjectToFocusOn.GetComponent<Resource>().beingHarvested)
+                    return;
+            }
+
+            if (lockedSelectedObject)
+                PositionSelectionCursor(selectedObjectToFocusOn.transform.position, true);
         }
 
         void ShowSubtitles(int subtitleAmount)
@@ -469,7 +566,7 @@ namespace TileOperations
             return new Vector2Int(-1, -1);
         }
 
-        public void UpdateVillagerRole(TMPro.TMP_Dropdown dropDown) => selectedObject.GetComponent<Villager>()._role = System.Enum.GetName(typeof(VillagerRoles), dropDown.value + 1 /*VillagerRoles Enum begins at 1*/);
+        public void UpdateVillagerRole(TMPro.TMP_Dropdown dropDown) => selectedObjectToFocusOn.GetComponent<Villager>()._role = System.Enum.GetName(typeof(VillagerRoles), dropDown.value + 1 /*VillagerRoles Enum begins at 1*/);
 
         IEnumerator FollowSelected(GameObject gameObject)
         {
@@ -481,6 +578,20 @@ namespace TileOperations
             }
 
             yield return null;
+        }
+
+        public void LockSelection(bool lockSelection)
+        {
+            if (selectionLocked != lockSelection)
+            {
+                UIManagerScript.ToggleUIObject(UIManagerScript.miscUIElements["LockButton"]);
+                UIManagerScript.ToggleUIObject(UIManagerScript.miscUIElements["UnlockButton"]);
+            }
+
+            selectionLocked = lockSelection;
+
+            if (lockSelection)
+                lockedSelectedObject = selectedObject;
         }
     }
 }
