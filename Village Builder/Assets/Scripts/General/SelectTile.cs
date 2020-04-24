@@ -13,6 +13,8 @@ namespace TileOperations
 
         public static bool canSelect;
 
+        public static bool selectionLocked;
+
         //Integers
         private Vector2Int tileIndex;
 
@@ -23,10 +25,7 @@ namespace TileOperations
 
         //GameObjects
         public static GameObject selectedObject;
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
         public GameObject selectionCursor;
 
         public GameObject terrainMesh;
@@ -74,12 +73,9 @@ namespace TileOperations
 
         private void Update()
         {
-<<<<<<< Updated upstream
-=======
             if (!canSelect)
                 return;
 
->>>>>>> Stashed changes
             //The ray goes from the camera's position on the screen to the mouse cursor's position
             ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 
@@ -162,12 +158,9 @@ namespace TileOperations
                                 Debug.LogError("Error: Invalid Layer ID given: " + hit.transform.gameObject.layer);
                                 break;
                         }
-<<<<<<< Updated upstream
-=======
 
                         if (!UIManagerScript.mainPanels["SelectionPanel"].activeInHierarchy)
                             UIManagerScript.mainPanels["SelectionPanel"].SetActive(true);
->>>>>>> Stashed changes
                     }
                 }
                 else
@@ -378,8 +371,6 @@ namespace TileOperations
                 case 11:
                     break;
             }
-<<<<<<< Updated upstream
-=======
 
             //Lock
             if (Input.GetKeyDown(KeyCode.L))
@@ -400,7 +391,6 @@ namespace TileOperations
 
             if (selectedObject)
                 PositionSelectionCursor(selectedObject.transform.position, true);
->>>>>>> Stashed changes
         }
 
         void ShowSubtitles(int subtitleAmount)
@@ -525,8 +515,6 @@ namespace TileOperations
 
             yield return null;
         }
-<<<<<<< Updated upstream
-=======
 
         public void LockSelection(bool lockSelection)
         {
@@ -538,6 +526,5 @@ namespace TileOperations
 
             selectionLocked = lockSelection;
         }
->>>>>>> Stashed changes
     }
 }
