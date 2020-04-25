@@ -24,21 +24,36 @@ public class Jobs
 
         villagerAIPath.destination = desiredPosition;
 
-        while (villagerAIPath.velocity == Vector3.zero || villagerAIPath.remainingDistance <= villagerAIPath.endReachedDistance)
+        while (villagerAIPath.pathPending)
         {
+            Debug.Log("Path still pending");
+            yield return null;
+        }
+
+        while (villagerAIPath.velocity == Vector3.zero || villagerAIPath.remainingDistance >= villagerAIPath.endReachedDistance)
+        {
+            Debug.Log("Waiting for endreached difference and movement;" + " villager velocity: " + villagerAIPath.velocity + "; " + "Remaining distance vs. end reached distance:" + villagerAIPath.remainingDistance + " vs. End Reached Distance: " + villagerAIPath.endReachedDistance);
+            Debug.Log(Vector3.Distance(villagerToMove.position, desiredPosition) + "vs. " + villagerAIPath.remainingDistance);
+
+            if (villagerAIPath.remainingDistance <= villagerAIPath.endReachedDistance)
+                break;
+
             yield return null;
         }
 
         while (villagerAIPath.pathPending || !villagerAIPath.reachedEndOfPath)
         {
+            Debug.Log("Path still pending");
+
             yield return null;
         }
 
+        Debug.Log("Finished 2");
         FinishJob(villagerToMove.GetComponent<Villager>());
     }
 
     public static IEnumerator ChopTree(Villager villager, Transform treeToChop)
-    {        
+    {
         var log = new Item { itemObject = Resources.Load("Prefabs/Items/Log") as GameObject, itemType = "Log" };
 
         var tree = treeToChop.GetComponent<Resource>();

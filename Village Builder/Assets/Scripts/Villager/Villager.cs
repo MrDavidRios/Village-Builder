@@ -54,6 +54,10 @@ public class Villager : MonoBehaviour
     public int _harvestAmount;
     public int _harvestRate;
 
+    //Debug
+    [Header("Debug")]
+    public bool enableDebug;
+
     private void Awake()
     {
         Jobs.InventoryUpdated += Jobs_DisplayItems;
@@ -116,14 +120,27 @@ public class Villager : MonoBehaviour
     //Update items being shown every time the Jobs.InventoryUpdated event fires off.
     private void Jobs_DisplayItems(object sender, VillagerArgs e)
     {
+        numberOfItems = items.Count;
+
         if (e.villagerIndex != index)
             return;
 
-        Debug.Log("Villager " + index + " inventory item amount: " + items.Count);
+        if (enableDebug)
+            Debug.Log("Villager " + index + " inventory item amount: " + numberOfItems);
+
+        bool rightArmHold = numberOfItems % 2 == 0;
 
         GameObject itemObject = Instantiate(Resources.Load("Prefabs/Items/Log"), transform) as GameObject;
 
-        var objectPosition = new Vector3(-0.7f, 0.15f + (0.22f * items.Count), 0f);
+        Vector3 objectPosition;
+
+        if (rightArmHold)
+            objectPosition = new Vector3(-0.7f, 0.15f + (0.22f * (numberOfItems / 2)), 0f);
+        else
+        {
+            float numberOfItemsCalc = numberOfItems + 1;
+            objectPosition = new Vector3(0.7f, 0.15f + (0.22f * (numberOfItemsCalc / 2)), 0f);
+        }
 
         itemObject.transform.localPosition = objectPosition;
 

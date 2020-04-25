@@ -40,6 +40,25 @@ public static class JobUtils
         }
     }
 
+    public static string ReturnJobName(string jobType)
+    {
+        switch (jobType)
+        {
+            case "Move":
+                return "Walk";
+            case "Chop":
+                return "Chop Tree";
+            case "Mine":
+                return "Mine Rock";
+            case "Construct":
+                return "Construct Building";
+            case "Deposit":
+                return "Drop Materials Off";
+            default:
+                return jobType;
+        }
+    }
+
     public static Transform NearestTree(Transform villager)
     {
         //Get tree parent and then make a list from its children (the trees)

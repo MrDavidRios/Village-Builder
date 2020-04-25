@@ -38,9 +38,15 @@ public class UIManager : MonoBehaviour
 
     public Dictionary<string, GameObject> miscUIElements = new Dictionary<string, GameObject>();
 
+    #region Cached Common-Use Elements
+    public static GameObject jobPrefab;
+    #endregion
+
     #region Initialization
     void Awake()
     {
+        jobPrefab = Resources.Load("Prefabs/Job/Job") as GameObject;
+
         //If the 'mainPanelGameObjects' array isn't equal to the 'mainPanelNames' array, return an error.
         if (mainPanelGameObjects.Length == mainPanelNames.Length)
         {
