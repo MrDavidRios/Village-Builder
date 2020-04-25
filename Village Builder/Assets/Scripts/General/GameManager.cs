@@ -7,6 +7,9 @@ public class GameManager : MonoBehaviour
     private bool gamePaused;
     public bool cinematicModeEnabled;
 
+    //Integers
+    private int _timeSpeedBeforePause;
+
     //Hotkeys
     [Header("Hotkeys")]
     [LabelOverride("Deselect/Pause Key")]
@@ -23,11 +26,39 @@ public class GameManager : MonoBehaviour
     private SelectTile selectScript;
     private UIManager UIManagerScript;
 
+    //GameObjects
+    private GameObject villagerParent;
+
     private void Awake()
     {
         placeBuilding = GetComponent<PlaceBuilding>();
         selectScript = GetComponent<SelectTile>();
         UIManagerScript = FindObjectOfType<UIManager>();
+
+        villagerParent = GameObject.Find("Villagers");
+
+        #region Initialize Time Speed Controls
+        UIManagerScript.ActivateButton(UIManagerScript.miscUIElements["Paused"], false);
+        UIManagerScript.ActivateButton(UIManagerScript.miscUIElements["NormalSpeed"], false);
+        UIManagerScript.ActivateButton(UIManagerScript.miscUIElements["FastSpeed"], false);
+        UIManagerScript.ActivateButton(UIManagerScript.miscUIElements["MaxSpeed"], false);
+
+        switch (Time.timeScale)
+        {
+            case 0:
+                UIManagerScript.ActivateButton(UIManagerScript.miscUIElements["Paused"]);
+                break;
+            case 1:
+                UIManagerScript.ActivateButton(UIManagerScript.miscUIElements["NormalSpeed"]);
+                break;
+            case 2:
+                UIManagerScript.ActivateButton(UIManagerScript.miscUIElements["FastSpeed"]);
+                break;
+            case 3:
+                UIManagerScript.ActivateButton(UIManagerScript.miscUIElements["MaxSpeed"]);
+                break;
+        }
+        #endregion
     }
 
     private void Update()
@@ -70,6 +101,18 @@ public class GameManager : MonoBehaviour
                 UIManagerScript.OpenPanel("BuildingPanel");
             }
         }
+
+        //Time Speed Controls
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+            ChangeTimeSpeed(1);
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+            ChangeTimeSpeed(2);
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+            ChangeTimeSpeed(3);
+
+        UpdateUI();
     }
 
     public void PauseGame()
@@ -81,6 +124,8 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        _timeSpeedBeforePause = (int)Time.timeScale;
+
         if (ElementsLeftToClose())
             return;
 
@@ -91,7 +136,7 @@ public class GameManager : MonoBehaviour
         //Open the pause menu
         UIManagerScript.OpenPanel("PauseMenu");
 
-        Time.timeScale = 0;
+        ChangeTimeSpeed(0);
     }
 
     public void ResumeGame()
@@ -104,7 +149,20 @@ public class GameManager : MonoBehaviour
         //Open panels that were closed on pause
         UIManagerScript.OpenStaticUI();
 
-        Time.timeScale = 1;
+        ChangeTimeSpeed(_timeSpeedBeforePause);
+    }
+
+    public void ChangeTimeSpeed(int timeSpeed)
+    {
+        var timeControlButtons = new GameObject[4];
+        timeControlButtons = new[] { UIManagerScript.miscUIElements["Paused"], UIManagerScript.miscUIElements["NormalSpeed"], UIManagerScript.miscUIElements["FastSpeed"], UIManagerScript.miscUIElements["MaxSpeed"] };
+
+        int oldTimeSpeed = (int)Time.timeScale;
+
+        Time.timeScale = timeSpeed;
+
+        UIManagerScript.ActivateButton(timeControlButtons[oldTimeSpeed], false);
+        UIManagerScript.ActivateButton(timeControlButtons[timeSpeed]);
     }
 
     private bool ElementsLeftToClose()
@@ -140,5 +198,10 @@ public class GameManager : MonoBehaviour
         }
 
         return false;
+    }
+
+    private void UpdateUI()
+    {
+        UIManagerScript.textFields["PopulationCounter"].GetComponent<TMPro.TMP_Text>().text = villagerParent.transform.childCount.ToString();
     }
 }

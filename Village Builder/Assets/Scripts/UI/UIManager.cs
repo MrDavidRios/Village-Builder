@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
     //Main Panels
+    public bool anyPanelsOpen;
+
     [Header("Main Panels")]
     public GameObject[] mainPanelGameObjects;
     public string[] mainPanelNames;
     public string[] staticUI;
-
-    public bool anyPanelsOpen;
 
     /*  
      *  Dictionaries are like arrays (but they derive from hashsets, but idk a lot about those), but instead of using indexes, 
@@ -124,6 +125,11 @@ public class UIManager : MonoBehaviour
     public void ClosePanel(string panelName)
     {
         GameObject panel = mainPanels[panelName];
+
+        #region Manual UI Fixes
+        if (panelName == "CityDetailsPanel")
+            FlipImageYAxis(miscUIElements["CityDetailsButton"]);
+        #endregion
 
         panel.SetActive(false);
     }
@@ -268,5 +274,34 @@ public class UIManager : MonoBehaviour
                 Debug.LogError("Invalid element type provided: " + elementType);
                 return false;
         }
+    }
+
+    public void FlipImage(GameObject UIElement, bool xAxis)
+    {
+        var elementRotation = UIElement.GetComponent<RectTransform>().localEulerAngles;
+
+        if (xAxis)
+            elementRotation.z *= -1;
+        else
+            elementRotation.z *= -1;
+
+        UIElement.GetComponent<RectTransform>().localEulerAngles = elementRotation;
+    }
+
+    public void FlipImageXAxis(GameObject UIElement) => FlipImage(UIElement, true);
+    public void FlipImageYAxis(GameObject UIElement) => FlipImage(UIElement, false);
+
+    public void ActivateButton(GameObject button, bool activateButton = true, bool activateFunction = true) 
+    {
+        var buttonColor = button.GetComponent<Image>().color;
+
+        if (activateButton)
+            buttonColor.a = 1.0f;
+        else
+            buttonColor.a = 0.2f;
+
+        button.GetComponent<Image>().color = buttonColor;
+
+        button.GetComponent<Button>().interactable = activateFunction;
     }
 }

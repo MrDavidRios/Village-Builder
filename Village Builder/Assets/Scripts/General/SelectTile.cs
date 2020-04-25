@@ -69,6 +69,9 @@ namespace TileOperations
             var terrainCollider = terrainMesh.GetComponent<BoxCollider>();
             terrainCollider.center = new Vector3(terrainGenerator.worldSize / 2, -0.75f, terrainGenerator.worldSize / 2);
             terrainCollider.size = new Vector3(terrainGenerator.worldSize, 1.5f, terrainGenerator.worldSize);
+
+            //Set necessary variables
+            canSelect = true;
         }
 
         private void Update()
@@ -369,6 +372,12 @@ namespace TileOperations
 
                 //Vilager
                 case 11:
+                    //Open/Close Jobs panel if the 'J' key is pressed.
+                    if (Input.GetKeyDown(KeyCode.J))
+                    {
+                        UIManagerScript.ToggleUIObject(UIManagerScript.mainPanels["JobsPanel"]);
+                        UIManagerScript.ToggleUIObject(UIManagerScript.mainPanels["SelectionDescriptionPanel"]);
+                    }
                     break;
             }
 
