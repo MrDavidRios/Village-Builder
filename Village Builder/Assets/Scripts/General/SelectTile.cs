@@ -336,6 +336,45 @@ namespace TileOperations
                         UIManagerScript.UpdateDropdown("RoleSelector", _villagerRole - 1 /*VillagerRoles Enum begins at 1*/);
                     }
 
+                    //Display vilager's list of jobs
+                    #region Display Villager Job List
+                    string[] jobDisplayNames = new string[villager.jobList.Count];
+
+                    for (int i = 0; i < jobDisplayNames.Length; i++)
+                    {
+                        jobDisplayNames[i] = JobUtils.ReturnJobName(villager.jobList[i].jobType);
+                    }
+
+                    GameObject jobListDisplay = UIManagerScript.miscUIElements["JobsList"];
+
+                    int jobsOnDisplay = jobListDisplay.transform.childCount;
+
+                    //Delete existing job elements if any exist
+                    if (jobsOnDisplay > 0)
+                    {
+                        for (int i = 0; i < jobsOnDisplay; i++)
+                        {
+                            Destroy(jobListDisplay.transform.GetChild(i).gameObject);
+                        }
+                    }
+
+                    for (int i = 0; i < jobDisplayNames.Length; i++)
+                    {
+                        var jobElement = Instantiate(UIManager.jobPrefab, jobListDisplay.transform) as GameObject;
+
+                        jobElement.GetComponent<RectTransform>().anchoredPosition = new Vector3(0f, -20f - (37.5f * i), 0f);
+                        jobElement.GetComponentInChildren<TMPro.TMP_Text>().text = jobDisplayNames[i];
+                    }
+
+                    if (jobDisplayNames.Length == 0)
+                    {
+                        var jobElement = Instantiate(UIManager.jobPrefab, jobListDisplay.transform) as GameObject;
+
+                        jobElement.GetComponent<RectTransform>().anchoredPosition = new Vector3(0f, -20f, 0f);
+                        jobElement.GetComponentInChildren<TMPro.TMP_Text>().text = "Idle";
+                    }
+                    #endregion
+
                     ShowSubtitles(2);
 
                     UIManagerScript.ShowMiscUI("JobsViewButton");

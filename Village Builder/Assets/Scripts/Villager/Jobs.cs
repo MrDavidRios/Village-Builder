@@ -26,14 +26,18 @@ public class Jobs
 
         while (villagerAIPath.pathPending)
         {
-            Debug.Log("Path still pending");
+            if (villagerToMove.GetComponent<Villager>().debugLevel == VillagerDebugLevels.Detailed)
+                Debug.Log("Path still pending");
             yield return null;
         }
 
         while (villagerAIPath.velocity == Vector3.zero || villagerAIPath.remainingDistance >= villagerAIPath.endReachedDistance)
         {
-            Debug.Log("Waiting for endreached difference and movement;" + " villager velocity: " + villagerAIPath.velocity + "; " + "Remaining distance vs. end reached distance:" + villagerAIPath.remainingDistance + " vs. End Reached Distance: " + villagerAIPath.endReachedDistance);
-            Debug.Log(Vector3.Distance(villagerToMove.position, desiredPosition) + "vs. " + villagerAIPath.remainingDistance);
+            if (villagerToMove.GetComponent<Villager>().debugLevel == VillagerDebugLevels.Detailed)
+            {
+                Debug.Log("Waiting for endreached difference and movement;" + " villager velocity: " + villagerAIPath.velocity + "; " + "Remaining distance vs. end reached distance:" + villagerAIPath.remainingDistance + " vs. End Reached Distance: " + villagerAIPath.endReachedDistance);
+                Debug.Log(Vector3.Distance(villagerToMove.position, desiredPosition) + "vs. " + villagerAIPath.remainingDistance);
+            }
 
             if (villagerAIPath.remainingDistance <= villagerAIPath.endReachedDistance)
                 break;
@@ -43,7 +47,8 @@ public class Jobs
 
         while (villagerAIPath.pathPending || !villagerAIPath.reachedEndOfPath)
         {
-            Debug.Log("Path still pending");
+            if (villagerToMove.GetComponent<Villager>().debugLevel == VillagerDebugLevels.Detailed)
+                Debug.Log("Path still pending");
 
             yield return null;
         }

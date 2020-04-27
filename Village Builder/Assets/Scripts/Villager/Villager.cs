@@ -13,6 +13,14 @@ public enum VillagerRoles
     Stonemason
 }
 
+public enum VillagerDebugLevels
+{
+    None,
+    Basic,
+    Detailed,
+    OverlyDetailed
+}
+
 public class Villager : MonoBehaviour
 {
     //Identification
@@ -56,7 +64,7 @@ public class Villager : MonoBehaviour
 
     //Debug
     [Header("Debug")]
-    public bool enableDebug;
+    public VillagerDebugLevels debugLevel;
 
     private void Awake()
     {
@@ -125,7 +133,7 @@ public class Villager : MonoBehaviour
         if (e.villagerIndex != index)
             return;
 
-        if (enableDebug)
+        if (debugLevel == VillagerDebugLevels.OverlyDetailed)
             Debug.Log("Villager " + index + " inventory item amount: " + numberOfItems);
 
         bool rightArmHold = numberOfItems % 2 == 0;
