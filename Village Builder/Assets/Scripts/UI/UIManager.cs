@@ -126,11 +126,6 @@ public class UIManager : MonoBehaviour
     {
         GameObject panel = mainPanels[panelName];
 
-        #region Manual UI Fixes
-        if (panelName == "CityDetailsPanel")
-            FlipImageYAxis(miscUIElements["CityDetailsButton"]);
-        #endregion
-
         panel.SetActive(false);
     }
 

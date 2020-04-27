@@ -67,13 +67,14 @@ public class JobManager : MonoBehaviour
     //Once villager job is finished, remove the first element (completed job).
     private void Jobs_FinishJob(object sender, VillagerArgs e)
     {
-        var villagerJobList = villagers[e.villagerIndex].jobList;
+        var villager = villagers[e.villagerIndex];
 
-        Debug.Log(villagerJobList[0].jobType + " job for " + e.villagerIndex + " finished!");
+        if (villager.debugLevel == VillagerDebugLevels.Detailed)
+            Debug.Log(villager.jobList[0].jobType + " job for " + e.villagerIndex + " finished!");
 
-        villagerJobList.RemoveAt(0);
+        villager.jobList.RemoveAt(0);
 
-        villagers[e.villagerIndex].performingJob = false;
+        villager.performingJob = false;
     }
 
     private void Jobs_AssignJobGroups(object sender, AssignJobGroupArgs e) => AssignJobGroup(e.jobGroup, e.jobPosition, e.jobTransform, e.villagerIndex);

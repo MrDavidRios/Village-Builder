@@ -18,42 +18,27 @@ public class Jobs
 
     public static IEnumerator Move(Transform villagerToMove, Vector3 desiredPosition)
     {
+        var debugLevel = villagerToMove.GetComponent<Villager>().debugLevel;
+
         var villagerAIPath = villagerToMove.GetComponent<AIPath>();
 
         int villagerIndex = villagerToMove.GetComponent<Villager>().index;
 
         villagerAIPath.destination = desiredPosition;
 
-        while (villagerAIPath.pathPending)
-        {
-            if (villagerToMove.GetComponent<Villager>().debugLevel == VillagerDebugLevels.Detailed)
-                Debug.Log("Path still pending");
-            yield return null;
-        }
-
-        while (villagerAIPath.velocity == Vector3.zero || villagerAIPath.remainingDistance >= villagerAIPath.endReachedDistance)
-        {
-            if (villagerToMove.GetComponent<Villager>().debugLevel == VillagerDebugLevels.Detailed)
-            {
-                Debug.Log("Waiting for endreached difference and movement;" + " villager velocity: " + villagerAIPath.velocity + "; " + "Remaining distance vs. end reached distance:" + villagerAIPath.remainingDistance + " vs. End Reached Distance: " + villagerAIPath.endReachedDistance);
-                Debug.Log(Vector3.Distance(villagerToMove.position, desiredPosition) + "vs. " + villagerAIPath.remainingDistance);
-            }
-
-            if (villagerAIPath.remainingDistance <= villagerAIPath.endReachedDistance)
-                break;
-
-            yield return null;
-        }
+        villagerAIPath.SearchPath();
 
         while (villagerAIPath.pathPending || !villagerAIPath.reachedEndOfPath)
         {
-            if (villagerToMove.GetComponent<Villager>().debugLevel == VillagerDebugLevels.Detailed)
-                Debug.Log("Path still pending");
+            if (debugLevel == VillagerDebugLevels.OverlyDetailed)
+                Debug.Log("Not there yet. Remaining distance: " + villagerAIPath.remainingDistance);
 
             yield return null;
         }
 
-        Debug.Log("Finished 2");
+        if (debugLevel == VillagerDebugLevels.OverlyDetailed)
+            Debug.Log("Finished Path");
+
         FinishJob(villagerToMove.GetComponent<Villager>());
     }
 

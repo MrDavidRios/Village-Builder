@@ -91,15 +91,9 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(buildMenuKey))
         {
             if (UIManagerScript.mainPanels["BuildingPanel"].activeInHierarchy)
-            {
                 UIManagerScript.ClosePanel("BuildingPanel");
-                UIManagerScript.ShowMiscUI("BuildingPanelOpenButton");
-            }
             else
-            {
-                UIManagerScript.HideMiscUI("BuildingPanelOpenButton");
                 UIManagerScript.OpenPanel("BuildingPanel");
-            }
         }
 
         //Time Speed Controls
@@ -115,7 +109,7 @@ public class GameManager : MonoBehaviour
         UpdateUI();
     }
 
-    public void PauseGame()
+    public void PauseGame(bool onePress = false)
     {
         //If the pause key was pressed and the game is currently paused, resume the game.
         if (gamePaused)
@@ -126,7 +120,7 @@ public class GameManager : MonoBehaviour
 
         _timeSpeedBeforePause = (int)Time.timeScale;
 
-        if (ElementsLeftToClose())
+        if (ElementsLeftToClose() && !onePress)
             return;
 
         UIManagerScript.CloseAllPanels(false);
@@ -187,13 +181,6 @@ public class GameManager : MonoBehaviour
         {
             //If any panels are open, close them.
             UIManagerScript.CloseAllPanels(true);
-
-            UIManagerScript.ShowMiscUI("BuildingPanelOpenButton");
-            return true;
-        }
-        else if (UIManagerScript.UIElementOpen("BuildingPanelOpenButton", "MiscUI"))
-        {
-            UIManagerScript.HideMiscUI("BuildingPanelOpenButton");
             return true;
         }
 
