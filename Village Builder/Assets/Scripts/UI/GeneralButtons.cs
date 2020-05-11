@@ -14,13 +14,11 @@ public class GeneralButtons : MonoBehaviour
         UIManagerScript = FindObjectOfType<UIManager>();
     }
 
-    public void ResumeButton()
-    {
-        gameManager.ResumeGame();
-    }
+    public void ResumeButton() => gameManager.ResumeGame();
 
-    public void PauseButton()
-    {
-        gameManager.PauseGame();
-    }
+    public void PauseButton() => gameManager.PauseGame();
+
+    public void SettingsButton() => gameManager.ToggleSettingsMenu();
+
+    public void QuitButton() => gameManager.QuitGame();
 }

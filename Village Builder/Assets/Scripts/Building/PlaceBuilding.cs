@@ -422,7 +422,7 @@ public class PlaceBuilding : MonoBehaviour
         var fromAngle = templateBuilding.transform.rotation;
         var toAngle = Quaternion.Euler(templateBuilding.transform.eulerAngles + angle);
 
-        for (var t = 0f; t < 1; t += Time.deltaTime / rotTime)
+        for (var t = 0f; t < 1; t += Time.unscaledDeltaTime / rotTime)
         {
             templateBuilding.transform.rotation = Quaternion.Lerp(fromAngle, toAngle, t);
             yield return null;

@@ -36,6 +36,7 @@ public class UIManager : MonoBehaviour
     [Header("Miscellaneous UI Elements")]
     public GameObject[] miscUIGameObjects;
     public string[] miscUINames;
+    public string[] staticMiscUI;
 
     public Dictionary<string, GameObject> miscUIElements = new Dictionary<string, GameObject>();
 
@@ -208,11 +209,17 @@ public class UIManager : MonoBehaviour
         element.SetActive(false);
     }
 
-    private void HideAllMiscUI()
+    public void HideAllMiscUI(bool staticOnly = true)
     {
         foreach (KeyValuePair<string, GameObject> entry in miscUIElements)
         {
-            HideMiscUI(entry.Key);
+            if (staticOnly)
+            {
+                if (!staticMiscUI.Contains(entry.Key))
+                    HideMiscUI(entry.Key);
+            }
+            else
+                HideMiscUI(entry.Key);
         }
     }
 

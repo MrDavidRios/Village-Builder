@@ -97,6 +97,9 @@ public class GameManager : MonoBehaviour
         }
 
         //Time Speed Controls
+        if (Input.GetKeyDown(KeyCode.BackQuote))
+            ChangeTimeSpeed(0);
+
         if (Input.GetKeyDown(KeyCode.Alpha1))
             ChangeTimeSpeed(1);
 
@@ -144,6 +147,16 @@ public class GameManager : MonoBehaviour
         UIManagerScript.OpenStaticUI();
 
         ChangeTimeSpeed(_timeSpeedBeforePause);
+    }
+
+    public void ToggleSettingsMenu() 
+    {
+
+    }
+
+    public void QuitGame() 
+    {
+        Application.Quit();
     }
 
     public void ChangeTimeSpeed(int timeSpeed)

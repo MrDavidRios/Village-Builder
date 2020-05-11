@@ -17,25 +17,18 @@ public class Rotate : MonoBehaviour
 
     private void Update()
     {
-        float relativeDeltaTime;
-
-        if (Time.timeScale != 0)
-            relativeDeltaTime = Time.deltaTime / Time.timeScale;
-        else
-            relativeDeltaTime = 0f;
-
         switch (rotationAxis)
         {
             case RotationAxis.X_Axis:
-                transform.Rotate(speed * relativeDeltaTime, 0f, 0f);
+                transform.Rotate(speed * Time.unscaledDeltaTime, 0f, 0f);
                 break;
 
             case RotationAxis.Y_Axis:
-                transform.Rotate(0f, speed * relativeDeltaTime, 0f);
+                transform.Rotate(0f, speed * Time.unscaledDeltaTime, 0f);
                 break;
 
             case RotationAxis.Z_Axis:
-                transform.Rotate(0f, 0f, speed * relativeDeltaTime);
+                transform.Rotate(0f, 0f, speed * Time.unscaledDeltaTime);
                 break;
         }
     }

@@ -160,6 +160,22 @@ namespace TileOperations
                             default:
                                 Debug.LogError("Error: Invalid Layer ID given: " + hit.transform.gameObject.layer);
                                 break;
+
+                            //Piles Layer
+                            case 12:
+                                //Differentiate between different resource types
+                                switch (selectedObject.tag)
+                                {
+                                    case "Tree":
+                                        ScaleSelectionCursor(new Vector3(0.3f, 0.3f, 0.3f));
+                                        break;
+                                    default:
+                                        Debug.Log("Invalid tag specified: " + selectedObject.tag);
+                                        break;
+                                }
+
+                                PositionSelectionCursor(selectedObject.transform.position, true);
+                                break;
                         }
 
                         if (!UIManagerScript.mainPanels["SelectionPanel"].activeInHierarchy)
@@ -189,6 +205,9 @@ namespace TileOperations
             {
                 anythingSelected = true;
             }
+
+            if (selectionLocked && selectedObject == null)
+                LockSelection(false);
 
             //Update the UI (User Interface)
             UpdateUI();
@@ -378,6 +397,25 @@ namespace TileOperations
                     ShowSubtitles(2);
 
                     UIManagerScript.ShowMiscUI("JobsViewButton");
+                    break;
+
+                //Piles Layer
+                case 12:
+                    //Differentiate between different resource types
+                    switch (selectedObject.tag)
+                    {
+                        case "Tree":
+                            UIManagerScript.ChangeText("SelectedTitle", "Pile of Logs");
+
+                            UIManagerScript.ChangeText("Subtitle1", "It's a pile of logs.");
+                            UIManagerScript.ChangeText("Subtitle2", "Number of logs: " + selectedObject.transform.childCount);
+                            break;
+                        default:
+                            Debug.Log("Invalid tag specified: " + selectedObject.tag);
+                            break;
+                    }
+
+                    ShowSubtitles(2);
                     break;
             }
 

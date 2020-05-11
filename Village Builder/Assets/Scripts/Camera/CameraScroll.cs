@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class CameraScroll : MonoBehaviour
 {
@@ -24,7 +25,8 @@ public class CameraScroll : MonoBehaviour
 
     private void Update()
     {
-        if (!PlaceBuilding._placingBuilding)
+        //Make sure that zooming doesn't occur if the cursor is over UI or if the player is placing a building (because the scrollwheel is used to rotate the building)
+        if (!PlaceBuilding._placingBuilding && !EventSystem.current.IsPointerOverGameObject())
         {
             //Set 'fov' to the camera's 'fieldOfView' value; this is necessary to perform calculations and then set the camera's FOV to this value once all of the calculations are done.
             var fov = mainCamera.fieldOfView;
@@ -49,7 +51,7 @@ public class CameraScroll : MonoBehaviour
 
         if (mainCamera.fieldOfView != desiredPostFOV)
         {
-            mainCamera.fieldOfView += (cameraButtonZoomRate * Time.deltaTime);
+            mainCamera.fieldOfView += (cameraButtonZoomRate * Time.unscaledDeltaTime);
         }
     }
 

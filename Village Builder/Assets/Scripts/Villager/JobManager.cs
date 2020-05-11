@@ -88,15 +88,24 @@ public class JobManager : MonoBehaviour
 
                 objectiveTransform.GetComponent<Resource>().AddHarvestIndicator();
 
-                var nearestStorage = JobUtils.NearestStorage(jobPosition);
                 jobPosition = objectiveTransform.position;
 
                 AssignJob(jobPosition, objectiveTransform, 0, "Move", villagerIndex);
                 AssignJob(jobPosition, objectiveTransform, 0, "Chop", villagerIndex);
-                //AssignJob(nearestStorage.position, objectiveTransform, 0, "Move", villagerIndex);
-                //AssignJob(nearestStorage.position, objectiveTransform, 0, "Deposit", villagerIndex);
                 break;
             case "HarvestStone":
+                break;
+                //If the villager has too many items for one storage, deposit the items they can in that storage, and equally distribute items among the remaining storage spaces available.
+            case "Deposit":
+                var nearestStorages = JobUtils.GetNearestAvailableStorages(jobPosition);
+
+                for (int i = 0; i < nearestStorages.Length; i++)
+                {
+                    var nearestStorage = nearestStorages[i];
+
+                    AssignJob(nearestStorage.transform.position, objectiveTransform, 0, "Move", villagerIndex);
+                    AssignJob(nearestStorage.transform.position, objectiveTransform, nearestStorage.remaningApplicableAmount, "Deposit", villagerIndex);
+                }
                 break;
             default:
                 Debug.LogError("Undefined job group: " + jobGroup);

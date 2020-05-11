@@ -54,15 +54,19 @@ public class SelectionCursor : MonoBehaviour
 
     private void Update()
     {
+        //Debug.Log(Time.time + " vs. " + Time.unscaledTime);
+
         UpdateBracketPosition();
+
+        FixPos();
 
         //Change the distance that the brackets are apart if the selection cursor is being animated.
         if (animateBracketDistance)
             //The 'sideDist' variable is decreased until it reaches its lowest possible value, 'sideDistOriginal', and increased until it reaches its highest possible value, 'sideDistMax.'
-            sideDist = Mathf.Lerp(sideDistOriginal, sideDistMax, Mathf.PingPong(Time.time * bracketDistanceAnimationSpeed, 1));
+            sideDist = Mathf.Lerp(sideDistOriginal, sideDistMax, Mathf.PingPong(Time.unscaledTime * bracketDistanceAnimationSpeed, 1));
     }
 
-    private void FixedUpdate()
+    private void FixPos()
     {
         if (_isLerping)
         {
@@ -70,7 +74,8 @@ public class SelectionCursor : MonoBehaviour
             //and percentage = 1.0 when Time.time = _timeStartedLerping + timeTakenDuringLerp
             //In other words, we want to know what percentage of "timeTakenDuringLerp" the value
             //"Time.time - _timeStartedLerping" is.
-            float timeSinceStarted = Time.time - _timeStartedLerping;
+            float timeSinceStarted = Time.unscaledTime - _timeStartedLerping;
+
             float percentageComplete = timeSinceStarted / timeTakenDuringLerp;
 
             //Perform the actual lerping.  Notice that the first two parameters will always be the same
@@ -115,16 +120,13 @@ public class SelectionCursor : MonoBehaviour
         {
             endPos = pos;
             _isLerping = true;
-            _timeStartedLerping = Time.time;
+            _timeStartedLerping = Time.unscaledTime;
         }
         else
             transform.position = pos;
     }
 
-    public void UpdateCursorPosCustom(Vector3 pos)
-    {
-        transform.position = pos;
-    }
+    public void UpdateCursorPosCustom(Vector3 pos) => transform.position = pos;
 
     public IEnumerator UpdateScale(Vector3 newScale)
     {
@@ -142,7 +144,7 @@ public class SelectionCursor : MonoBehaviour
 
         while (t < 1)
         {
-            t += Time.deltaTime / bracketScaleAnimationSpeed;
+            t += Time.unscaledDeltaTime / bracketScaleAnimationSpeed;
             transform.localScale = Vector3.Lerp(currentScale, newScale, t);
 
             yield return null;

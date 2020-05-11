@@ -88,7 +88,8 @@ public static class JobUtils
         return trees[closestTreeIndex];
     }
 
-    public static Transform NearestStorage(Vector3 relativePosition)
+    //Return nearest storage that can handle villager's items.
+    public static StorageInfo[] GetNearestAvailableStorages(Vector3 relativePosition)
     {
         return null;
     }
@@ -97,4 +98,10 @@ public static class JobUtils
     {
         return null;
     }
+}
+
+public class StorageInfo
+{
+    public Transform transform;
+    public int remaningApplicableAmount;
 }

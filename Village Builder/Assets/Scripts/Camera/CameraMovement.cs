@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
+using System.Threading;
 
 public class CameraMovement : MonoBehaviour
 {
@@ -9,12 +10,15 @@ public class CameraMovement : MonoBehaviour
     /// </summary>
 
     //Floats
-    public float turnSpeed = 4.0f;      //Speed of camera turning when mouse moves in along an axis
-    public float panSpeed = 4.0f;       //Speed of the camera when being panned
-    public float zoomSpeed = 4.0f;      //Speed of the camera going back and forth
+    public float turnSpeed = 4.0f; //Speed of camera turning when mouse moves in along an axis
+    public float panSpeed = 4.0f;  //Speed of the camera when being panned
+    public float zoomSpeed = 4.0f; //Speed of the camera going back and forth
     public float speed = 5.0f;
     private float originalSpeed;
+
     public float sensitivity = 0.05f;
+    public float movementSmoothing;
+    public float maxSpeed;
 
     public float MIN_X = 1f; //Minimum x bound 
     public float MIN_Y = 2f; //Minimum y bound 
@@ -28,7 +32,8 @@ public class CameraMovement : MonoBehaviour
     private float j = 0f; //Z-Axis movement
 
     //Positions
-    private Vector3 mouseOrigin;    //Position of cursor when mouse dragging starts
+    private Vector3 mouseOrigin; //Position of cursor when mouse dragging starts
+    private Vector3 velocity = Vector3.zero;
 
     //Booleans
     private bool isPanning;     //Is the camera being panned?
@@ -81,172 +86,176 @@ public class CameraMovement : MonoBehaviour
         if (MAX_X == MAX_Z)
             MAX_Y = MAX_X;
         else
-            MAX_Y = ((MAX_X + MAX_Z) / 2);
+            MAX_Y = (MAX_X + MAX_Z) / 2;
 
-        //If the game isn't paused: Time.timeScale = 0 means that it's paused. Time.timeScale = 1 means that the game is running at normal speed, 2 is 2x speed, and so on.
-        if (Time.timeScale != 0)
+        //Bounds
+        transform.position = new Vector3
+        (
+            Mathf.Clamp(transform.position.x, MIN_X, MAX_X),
+            Mathf.Clamp(transform.position.y, MIN_Y, MAX_Y),
+            Mathf.Clamp(transform.position.z, MIN_Z, MAX_Z)
+        );
+
+        //Camera's new position on the y-axis
+        float yValue = 0f;
+
+        //If the 'Q' key is pressed and the camera's y position isn't out of minimum bounds, move the camera downward.
+        if (Input.GetKey(KeyCode.Q) && !(transform.position.y <= MIN_Y))
         {
-            //Bounds
-            transform.position = new Vector3
-            (
-                Mathf.Clamp(transform.position.x, MIN_X, MAX_X),
-                Mathf.Clamp(transform.position.y, MIN_Y, MAX_Y),
-                Mathf.Clamp(transform.position.z, MIN_Z, MAX_Z)
-            );
+            yValue = -speed / 30 * Time.unscaledDeltaTime;
+            transform.position = new Vector3(transform.position.x, transform.position.y + yValue, transform.position.z);
+        }
 
-            //Camera's new position on the y-axis
-            float yValue = 0f;
+        //If the 'Shift' key is pressed and the camera's y position isn't out of minimum bounds, move the camera downward.
+        if (Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.Space) && !(transform.position.y <= MIN_Y))
+        {
+            //var currentVelocity = 0f;
+            //Vector3.SmoothDamp(transform.localPosition, transform.localPosition + (RIGHT * h) + (FORWARD * j), ref velocity, movementSmoothing, maxSpeed, Time.unscaledDeltaTime);
 
-            //If the 'Q' key is pressed and the camera's y position isn't out of minimum bounds, move the camera downward.
-            if (Input.GetKey(KeyCode.Q) && !(transform.position.y <= MIN_Y))
-            {
-                yValue = -speed * Time.deltaTime / Time.timeScale;
-                transform.position = new Vector3(transform.position.x, transform.position.y + yValue, transform.position.z);
-            }
+            yValue = -speed / 30 * Time.unscaledDeltaTime;
 
-            //If the 'Shift' key is pressed and the camera's y position isn't out of minimum bounds, move the camera downward.
-            if (Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.Space) && !(transform.position.y <= MIN_Y))
-            {
-                yValue = -speed * Time.deltaTime / Time.timeScale;
-                transform.position = new Vector3(transform.position.x, transform.position.y + yValue, transform.position.z);
-            }
+            transform.position = new Vector3(transform.position.x, transform.position.y + yValue, transform.position.z);
+        }
 
-            //If the 'E' key is pressed and the camera's y position isn't out of maximum bounds, move the camera upward.
-            if (Input.GetKey(KeyCode.E) && !(transform.position.y >= MAX_Y))
-            {
-                yValue = speed * Time.deltaTime / Time.timeScale;
-                transform.position = new Vector3(transform.position.x, transform.position.y + yValue, transform.position.z);
-            }
+        //If the 'E' key is pressed and the camera's y position isn't out of maximum bounds, move the camera upward.
+        if (Input.GetKey(KeyCode.E) && !(transform.position.y >= MAX_Y))
+        {
+            yValue = speed / 30 * Time.unscaledDeltaTime;
+            transform.position = new Vector3(transform.position.x, transform.position.y + yValue, transform.position.z);
+        }
 
-            //If the 'Space' key is pressed and the camera's y position isn't out of maximum bounds, move the camera upward.
-            if (Input.GetKey(KeyCode.Space) && !Input.GetKey(KeyCode.LeftShift) && !(transform.position.y >= MAX_Y))
-            {
-                yValue = speed * Time.deltaTime / Time.timeScale;
-                transform.position = new Vector3(transform.position.x, transform.position.y + yValue, transform.position.z);
-            }
+        //If the 'Space' key is pressed and the camera's y position isn't out of maximum bounds, move the camera upward.
+        if (Input.GetKey(KeyCode.Space) && !Input.GetKey(KeyCode.LeftShift) && !(transform.position.y >= MAX_Y))
+        {
+            yValue = speed / 30 * Time.unscaledDeltaTime;
+            transform.position = new Vector3(transform.position.x, transform.position.y + yValue, transform.position.z);
+        }
 
-            //If the 'LeftCtrl' button is pressed, speed the camera up. Values are divided by Time.timeScale to equalize movement when the game is running at different speeds.
-            if (Input.GetKey(KeyCode.LeftControl))
-                speed = 45f / Time.timeScale;
-            else
-                speed = originalSpeed / Time.timeScale;
+        //If the 'LeftCtrl' button is pressed, speed the camera up. Values are divided by Time.timeScale to equalize movement when the game is running at different speeds.
+        if (Input.GetKey(KeyCode.LeftControl))
+            speed = originalSpeed * 2f;
+        else if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.Space))
+            speed = originalSpeed / 2f;
+        else
+            speed = originalSpeed;
 
-            //Camera's Horizontal Movement & Bounds
-            bool moveFreely = false;
+        maxSpeed = speed + 50;
 
-            //This is done by axis because rather than the y-axis, this is a 2-dimensional axis (x-axis and z-axis).
-            float xAxisMovementValue = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
-            float zAxisMovementValue = Input.GetAxis("Vertical") * speed * Time.deltaTime;
+        //Camera's Horizontal Movement & Bounds
+        bool moveFreely = false;
 
-            //Check if the camera is within bounds: if so, then the camera can move freely. If not, then the camera isn't allowed to move freely.
-            if (
-                   !(Mathf.Ceil(transform.position.x) > MAX_X) && !(Mathf.Ceil(transform.position.x) < MIN_X) &&
-                   !(Mathf.Ceil(transform.position.y) > MAX_Y) && !(Mathf.Ceil(transform.position.y) < MIN_Y) &&
-                   !(Mathf.Ceil(transform.position.z) > MAX_Z) && !(Mathf.Ceil(transform.position.z) < MIN_Z)
-               )
-                moveFreely = true;
-            else
-                moveFreely = false;
+        //This is done by axis because rather than the y-axis, this is a 2-dimensional axis (x-axis and z-axis).
+        float xAxisMovementValue = Input.GetAxisRaw("Horizontal") * speed * Time.unscaledDeltaTime;
+        float zAxisMovementValue = Input.GetAxisRaw("Vertical") * speed * Time.unscaledDeltaTime;
 
-            //If the camera is allowed to move freely, make the h and j variables equal to their movement axis values.
-            if (moveFreely)
-            {
-                h = xAxisMovementValue;
-                j = zAxisMovementValue;
-            }
-            else
-            {
-                h = 0;
-                j = 0;
-            }
+        //Check if the camera is within bounds: if so, then the camera can move freely. If not, then the camera isn't allowed to move freely.
+        if (
+               !(Mathf.Ceil(transform.position.x) > MAX_X) && !(Mathf.Ceil(transform.position.x) < MIN_X) &&
+               !(Mathf.Ceil(transform.position.y) > MAX_Y) && !(Mathf.Ceil(transform.position.y) < MIN_Y) &&
+               !(Mathf.Ceil(transform.position.z) > MAX_Z) && !(Mathf.Ceil(transform.position.z) < MIN_Z)
+           )
+            moveFreely = true;
+        else
+            moveFreely = false;
 
-            //Move the camera in directions (directions are expressed in Vector3s)
-            Vector3 RIGHT = transform.TransformDirection(Vector3.right);
-            Vector3 FORWARD = transform.TransformDirection(Vector3.forward);
+        //If the camera is allowed to move freely, make the h and j variables equal to their movement axis values.
+        if (moveFreely)
+        {
+            h = xAxisMovementValue;
+            j = zAxisMovementValue;
+        }
+        else
+        {
+            h = 0;
+            j = 0;
+        }
 
-            //Prevent camera glitching
+        //Move the camera in directions (directions are expressed in Vector3s)
+        Vector3 RIGHT = transform.TransformDirection(Vector3.right);
+        Vector3 FORWARD = transform.TransformDirection(Vector3.forward);
 
-            //Down Vertical
-            if (RIGHT.y < 0 && Mathf.Abs(transform.position.y - MIN_Y) <= 1f)
-                RIGHT.y = 0f;
+        //Prevent camera glitching
 
-            if (FORWARD.y < 0 && Mathf.Abs(transform.position.y - MIN_Y) <= 1f)
-                FORWARD.y = 0f;
+        //Down Vertical
+        if (RIGHT.y < 0 && Mathf.Abs(transform.position.y - MIN_Y) <= 1f)
+            RIGHT.y = 0f;
 
-            //Up Vertical
-            if (Input.anyKey && Mathf.Abs(transform.position.y - MAX_Y) <= 5f && transform.eulerAngles.x > 0)
-            {
-                RIGHT.y = 0f;
-                FORWARD.y = 0f;
-            }
+        if (FORWARD.y < 0 && Mathf.Abs(transform.position.y - MIN_Y) <= 1f)
+            FORWARD.y = 0f;
 
-            //Set the camera's new position to the camera's current position added by the new axis values multiplied by the orientation/direction of the camera.
-            Vector3 newPos = transform.localPosition + (RIGHT * h) + (FORWARD * j);
+        //Up Vertical
+        if (Input.anyKey && Mathf.Abs(transform.position.y - MAX_Y) <= 5f && transform.eulerAngles.x > 0)
+        {
+            RIGHT.y = 0f;
+            FORWARD.y = 0f;
+        }
 
-            //If the new position of the camera would be outside bounds, don't let the camera move by setting the new position to the camera's current position. (x-axis)
-            if (newPos.x >= MAX_X || newPos.x <= MIN_X)
-                newPos.x = transform.localPosition.x;
+        //Set the camera's new position to the camera's current position added by the new axis values multiplied by the orientation/direction of the camera.
+        Vector3 newPos = Vector3.SmoothDamp(transform.localPosition, transform.localPosition + (RIGHT * h) + (FORWARD * j), ref velocity, movementSmoothing, maxSpeed, Time.unscaledDeltaTime);
 
-            //If the new position of the camera would be outside bounds, don't let the camera move by setting the new position to the camera's current position. (z-axis)
-            if (newPos.z >= MAX_Z || newPos.z <= MIN_Z)
-                newPos.z = transform.localPosition.z;
+        //If the new position of the camera would be outside bounds, don't let the camera move by setting the new position to the camera's current position. (x-axis)
+        if (newPos.x >= MAX_X || newPos.x <= MIN_X)
+            newPos.x = transform.localPosition.x;
 
-            transform.localPosition = newPos;
+        //If the new position of the camera would be outside bounds, don't let the camera move by setting the new position to the camera's current position. (z-axis)
+        if (newPos.z >= MAX_Z || newPos.z <= MIN_Z)
+            newPos.z = transform.localPosition.z;
 
-            //Get the right mouse button
-            if (Input.GetMouseButtonDown(1))
-            {
-                // Get mouse origin
-                mouseOrigin = Input.mousePosition;
-                isRotating = true;
-            }
+        transform.localPosition = newPos;
 
-            //Get the left mouse button
-            if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && !PlaceBuilding._placingBuilding)
-            {
-                // Get mouse origin
-                mouseOrigin = Input.mousePosition;
-                isPanning = true;
-            }
+        //Get the right mouse button
+        if (Input.GetMouseButtonDown(1))
+        {
+            // Get mouse origin
+            mouseOrigin = Input.mousePosition;
+            isRotating = true;
+        }
 
-            //Get the middle mouse button
-            if (Input.GetMouseButtonDown(2))
-            {
-                // Get mouse origin
-                mouseOrigin = Input.mousePosition;
+        //Get the left mouse button
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && !PlaceBuilding._placingBuilding)
+        {
+            // Get mouse origin
+            mouseOrigin = Input.mousePosition;
+            isPanning = true;
+        }
 
-                isZooming = true;
-            }
+        //Get the middle mouse button
+        if (Input.GetMouseButtonDown(2))
+        {
+            // Get mouse origin
+            mouseOrigin = Input.mousePosition;
 
-            //Disable movements on button release
-            if (!Input.GetMouseButton(1))
-                isRotating = false;
-            if (!Input.GetMouseButton(0))
-                isPanning = false;
-            if (!Input.GetMouseButton(2))
-                isZooming = false;
+            isZooming = true;
+        }
 
-            //Rotate camera along X and Y axis
-            if (isRotating)
-                cameraRotationLimit.CameraRotate();
+        //Disable movements on button release
+        if (!Input.GetMouseButton(1))
+            isRotating = false;
+        if (!Input.GetMouseButton(0))
+            isPanning = false;
+        if (!Input.GetMouseButton(2))
+            isZooming = false;
 
-            //Move the camera on its XY plane
-            if (isPanning)
-            {
-                Vector3 pos = mainCamera.ScreenToViewportPoint(Input.mousePosition - mouseOrigin);
+        //Rotate camera along X and Y axis
+        if (isRotating)
+            cameraRotationLimit.CameraRotate();
 
-                Vector3 move = new Vector3(pos.x * panSpeed, pos.y * panSpeed, 0);
-                transform.Translate(move, Space.Self);
-            }
+        //Move the camera on its XY plane
+        if (isPanning)
+        {
+            Vector3 pos = mainCamera.ScreenToViewportPoint(Input.mousePosition - mouseOrigin);
 
-            //Move the camera linearly along Z-axis
-            if (isZooming)
-            {
-                Vector3 pos = mainCamera.ScreenToViewportPoint(Input.mousePosition - mouseOrigin);
+            Vector3 move = new Vector3(pos.x * panSpeed, pos.y * panSpeed, 0);
+            transform.Translate(move, Space.Self);
+        }
 
-                Vector3 move = pos.y * zoomSpeed * transform.forward;
-                transform.Translate(move, Space.World);
-            }
+        //Move the camera linearly along Z-axis
+        if (isZooming)
+        {
+            Vector3 pos = mainCamera.ScreenToViewportPoint(Input.mousePosition - mouseOrigin);
+
+            Vector3 move = pos.y * zoomSpeed * transform.forward;
+            transform.Translate(move, Space.World);
         }
     }
 }
