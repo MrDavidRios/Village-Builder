@@ -6,11 +6,11 @@ public class Resource : MonoBehaviour
 {
     public int resourceAmount { get; private set; }
 
+    public string resourceType;
+
     public bool beingHarvested;
 
     private bool harvestIndicatorExists;
-
-    public string resourceType;
 
     private void Start()
     {
@@ -26,14 +26,14 @@ public class Resource : MonoBehaviour
         {
             //0.7f is the original stone scale.
 
-            float scaleDifference = transform.localScale.x - 0.7f;
+            float scaleDifference = transform.parent.localScale.x - 0.7f;
 
             float percentIncrease = scaleDifference / 0.7f * 10f;
 
             resourceAmount += Mathf.RoundToInt(GlobalResourceSettings.resourceVariationAmount * percentIncrease);
         }
         else
-            resourceAmount = Mathf.RoundToInt(resourceAmountCalculatable * Mathf.Pow(transform.localScale.x, GlobalResourceSettings.resourceVariationAmount));
+            resourceAmount = Mathf.RoundToInt(resourceAmountCalculatable * Mathf.Pow(transform.parent.localScale.x, GlobalResourceSettings.resourceVariationAmount));
     }
 
     public void HarvestResource(int _resourceAmount) => resourceAmount -= _resourceAmount;

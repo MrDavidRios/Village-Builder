@@ -1,8 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
+using System.Reflection;
 using TerrainGeneration;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Tilemaps;
 
 public class PlaceBuilding : MonoBehaviour
 {
@@ -47,6 +51,9 @@ public class PlaceBuilding : MonoBehaviour
 
     //GameObjects
     public GameObject templateBuilding;
+    public GameObject constructionSitePrefab;
+
+    public GameObject buildingParent;
 
     //Camera
     private Camera mainCamera; 
@@ -171,6 +178,12 @@ public class PlaceBuilding : MonoBehaviour
 
             if (!rotating)
             {
+                if (Input.GetMouseButtonDown(0) && placeable)
+                {
+                    Debug.Log("Placing Building.");
+                    FinalizePlacement(templatePos, templateBuilding.transform.localEulerAngles);
+                }
+
                 if (Input.GetKeyDown(KeyCode.R) && !rotating)
                 {
                     StartCoroutine(RotateTemplate(90f, 0.5f));
@@ -196,9 +209,30 @@ public class PlaceBuilding : MonoBehaviour
         _placingBuilding = placingBuilding;
     }
 
-    private void FinalizePlacement(Vector3 newBuildingPos)
+    private void FinalizePlacement(Vector3 newBuildingPos, Vector3 newBuildingRotation)
     {
+        GameObject building = GameObject.Instantiate(templateBuilding);
 
+        building.transform.parent = buildingParent.transform;
+
+        building.transform.position = new Vector3(newBuildingPos.x, 0f, newBuildingPos.z) + building.GetComponent<BuildingTemplate>().positionOffset;
+
+        building.transform.localEulerAngles = new Vector3(newBuildingRotation.x, newBuildingRotation.y, newBuildingRotation.z);
+
+        building.layer = LayerMask.NameToLayer("Building");
+
+        building.AddComponent<BoxCollider>();
+
+        //Set all occupied tiles as unwalkable
+        for (int i = 0; i < occupiedTileCentres.Count; i++)
+        {
+            int tileX = Environment.tileCentresMap.Forward[occupiedTileCentres[i]].x;
+            int tileY = Environment.tileCentresMap.Forward[occupiedTileCentres[i]].y;
+
+            Environment.walkable[tileX, tileY] = false;
+        }
+
+        building.GetComponent<UnderConstruction>().PlaceTemplate();
     }
 
     //Get the positions of the tiles that the building will occupy when placed
@@ -334,9 +368,7 @@ public class PlaceBuilding : MonoBehaviour
             }
         }
         else
-        {
             return null;
-        }
     }
 
     //Check if the building is going to be placed over any obstructions. If so, return true. If it can be placed, return false.
@@ -356,8 +388,6 @@ public class PlaceBuilding : MonoBehaviour
 
             if (occupiedTiles[i].x > maxWorldBounds.x || occupiedTiles[i].z > maxWorldBounds.z)
                 return true;
-
-            var tileCentresMap = Environment.tileCentresMap;
 
             int tileX = Environment.tileCentresMap.Forward[occupiedTiles[i]].x;
             int tileY = Environment.tileCentresMap.Forward[occupiedTiles[i]].y;
@@ -383,7 +413,7 @@ public class PlaceBuilding : MonoBehaviour
 
         for (int i = 0; i < templateBuildingMaterials.Length; i++)
         {
-            newTemplateBuildingMaterials[i].SetColor("_TintColor", color);
+            newTemplateBuildingMaterials[i].SetColor("_BuildingColor", color);
         }
 
         templateBuilding.GetComponent<Renderer>().sharedMaterials = newTemplateBuildingMaterials;
@@ -402,8 +432,7 @@ public class PlaceBuilding : MonoBehaviour
         templateBuilding = Instantiate(_templateBuilding);
 
         //Removing the "(Clone)" part for added cleanliness and replacing it with "_Template"
-        templateBuilding.name = templateBuilding.name.Remove(templateBuilding.name.Length - 7);
-        templateBuilding.name = templateBuilding.name + "_Template";
+        templateBuilding.name = templateBuilding.name.Remove(templateBuilding.name.Length - 7) + "_Template";
     }
 
     public void ClearTemplate()

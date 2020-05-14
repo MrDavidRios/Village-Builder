@@ -62,6 +62,9 @@ public class Villager : MonoBehaviour
     public int _harvestAmount;
     public int _harvestRate;
 
+    public int _buildAmount;
+    public int _buildRate;
+
     //Debug
     [Header("Debug")]
     public VillagerDebugLevels debugLevel;
@@ -114,7 +117,8 @@ public class Villager : MonoBehaviour
                 break;
             case "Mine":
                 break;
-            case "Construct":
+            case "Build":
+                StartCoroutine(Jobs.Build(this, job.objectiveTransform));
                 break;
             case "Deposit":
                 StartCoroutine(Jobs.Deposit(this, job.objectiveTransform));

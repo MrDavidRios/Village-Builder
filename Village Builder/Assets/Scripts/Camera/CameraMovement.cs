@@ -99,11 +99,19 @@ public class CameraMovement : MonoBehaviour
         //Camera's new position on the y-axis
         float yValue = 0f;
 
-        //If the 'Q' key is pressed and the camera's y position isn't out of minimum bounds, move the camera downward.
-        if (Input.GetKey(KeyCode.Q) && !(transform.position.y <= MIN_Y))
+        //Camera's new rotation position
+        float yRotValue = 0f;
+
+        if (Input.GetKey(KeyCode.Q))
         {
-            yValue = -speed / 30 * Time.unscaledDeltaTime;
-            transform.position = new Vector3(transform.position.x, transform.position.y + yValue, transform.position.z);
+            yRotValue = -turnSpeed * Time.unscaledDeltaTime;
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + yRotValue, transform.eulerAngles.z);
+        }
+
+        if (Input.GetKey(KeyCode.E))
+        {
+            yRotValue = turnSpeed * Time.unscaledDeltaTime;
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + yRotValue, transform.eulerAngles.z);
         }
 
         //If the 'Shift' key is pressed and the camera's y position isn't out of minimum bounds, move the camera downward.
@@ -114,13 +122,6 @@ public class CameraMovement : MonoBehaviour
 
             yValue = -speed / 30 * Time.unscaledDeltaTime;
 
-            transform.position = new Vector3(transform.position.x, transform.position.y + yValue, transform.position.z);
-        }
-
-        //If the 'E' key is pressed and the camera's y position isn't out of maximum bounds, move the camera upward.
-        if (Input.GetKey(KeyCode.E) && !(transform.position.y >= MAX_Y))
-        {
-            yValue = speed / 30 * Time.unscaledDeltaTime;
             transform.position = new Vector3(transform.position.x, transform.position.y + yValue, transform.position.z);
         }
 

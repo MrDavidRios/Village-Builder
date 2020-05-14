@@ -28,11 +28,13 @@ public static class JobUtils
             case "Move":
                 return true;
             case "Chop":
+            case "HarvestTree":
                 return villager._role == "Laborer";
+            case "HarvestStone":
             case "Mine":
                 return villager._role == "Laborer";
-            case "Construct":
-                return villager._role == "Carpenter";
+            case "Build":
+                return villager._role == "Laborer" || villager._role == "Carpenter";
             case "Deposit":
                 return true;
             default:

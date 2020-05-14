@@ -79,8 +79,11 @@ public class JobManager : MonoBehaviour
 
     private void Jobs_AssignJobGroups(object sender, AssignJobGroupArgs e) => AssignJobGroup(e.jobGroup, e.jobPosition, e.jobTransform, e.villagerIndex);
 
-    public void AssignJobGroup(string jobGroup, Vector3 jobPosition, Transform objectiveTransform, int villagerIndex)
+    public void AssignJobGroup(string jobGroup, Vector3 jobPosition, Transform objectiveTransform, int villagerIndex = -1)
     {
+        if (villagerIndex == -1)
+            villagerIndex = VillagerToAssignTo(jobGroup).index;
+
         switch (jobGroup)
         {
             case "HarvestTree":
@@ -107,6 +110,10 @@ public class JobManager : MonoBehaviour
                     AssignJob(nearestStorage.transform.position, objectiveTransform, nearestStorage.remaningApplicableAmount, "Deposit", villagerIndex);
                 }
                 break;
+            case "Build":
+                AssignJob(jobPosition, objectiveTransform, 0, "Move", villagerIndex);
+                AssignJob(jobPosition, objectiveTransform, 0, "Build", villagerIndex);
+                break;
             default:
                 Debug.LogError("Undefined job group: " + jobGroup);
                 break;
@@ -116,6 +123,6 @@ public class JobManager : MonoBehaviour
     public void ChopSelectedTree()
     {
         if (!SelectTile.selectedObject.GetComponent<Resource>().beingHarvested)
-            AssignJobGroup("HarvestTree", SelectTile.selectedObject.transform.position, SelectTile.selectedObject.transform, VillagerToAssignTo("Chop").index);
+            AssignJobGroup("HarvestTree", SelectTile.selectedObject.transform.position, SelectTile.selectedObject.transform);
     }
 }

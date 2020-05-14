@@ -54,7 +54,7 @@ public class VillagerPropertiesGenerator
                 return "chopping tree.";
             case "Mine":
                 return "mining mine.";
-            case "Construct":
+            case "Build":
                 return "building something.";
             case "Deposit":
                 return "transferring " + job.amount + " items to storage.";

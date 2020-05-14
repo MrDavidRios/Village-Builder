@@ -9,7 +9,7 @@ public class Environment : MonoBehaviour
     public int seed;
 
     [Header("Trees")]
-    public MeshRenderer treePrefab;
+    public GameObject treePrefab;
     public GameObject treeContainer;
 
     [Range(0, 1)] public float treePlacementProbability;
@@ -302,7 +302,7 @@ public class Environment : MonoBehaviour
                         float rotX = Mathf.Lerp(-maxRot, maxRot, (float)spawnPrng.NextDouble());
                         float rotZ = Mathf.Lerp(-maxRot, maxRot, (float)spawnPrng.NextDouble());
                         float rotY = (float)spawnPrng.NextDouble() * 360f;
-                        Quaternion rot = Quaternion.Euler(rotX, rotY, rotZ);
+                        Vector3 rot = new Vector3(rotX, rotY, rotZ);
 
                         float scaleDeviation = ((float)spawnPrng.NextDouble() * 2 - 1) * maxScaleDeviation;
 
@@ -324,23 +324,24 @@ public class Environment : MonoBehaviour
                         float b = col + ((float)spawnPrng.NextDouble() * 2 - 1) * colVariationFactor;
 
                         // Spawn
-                        MeshRenderer tree = Instantiate(treePrefab, tileCentres[x, y], rot);
+                        GameObject tree = Instantiate(treePrefab);
+                        MeshRenderer treeMesh = tree.transform.GetChild(0).GetComponent<MeshRenderer>();
 
                         //Initialize
                         tree.transform.parent = treeHolder;
+                        tree.transform.position = tileCentres[x, y];
                         tree.transform.localScale = Vector3.one * scale;
-                        tree.material.color = new Color(r, g, b);
-                        tree.gameObject.layer = LayerMask.NameToLayer("Resource");
-                        tree.tag = "Tree";
+                        tree.GetComponent<Animator>().enabled = false;
                         tree.name = tree.tag;
 
-                        // Mark tile unwalkable
+                        treeMesh.transform.eulerAngles = rot;
+                        treeMesh.material.color = new Color(r, g, b);
+
+                        //Mark tile as unwalkable
                         walkable[x, y] = false;
                     }
                     else
-                    {
                         walkableCoords.Add(new Coord(x, y));
-                    }
                 }
             }
         }

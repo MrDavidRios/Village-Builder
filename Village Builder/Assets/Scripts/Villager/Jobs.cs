@@ -66,6 +66,9 @@ public class Jobs
         int logNumber = 0;
         int logYMultiplier = 0;
 
+        //Reactivate tree animator component to display animations
+        tree.transform.parent.GetComponent<Animator>().enabled = true;
+
         while (tree.gameObject.activeInHierarchy)
         {
             yield return new WaitForSeconds(chopRate);
@@ -123,16 +126,17 @@ public class Jobs
             #endregion
 
             //Add tree shake animation every time it is chopped
+            tree.transform.parent.GetComponent<Animator>().SetTrigger("Hit");
 
             if (tree.resourceAmount <= 0)
             {
-                Environment.RemoveTree(treeToChop);
-
                 pile.AddComponent<BoxCollider>();
                 pile.GetComponent<BoxCollider>().size = new Vector3(0.35f, 0.14f * logYMultiplier, 0.35f);
                 pile.GetComponent<BoxCollider>().center = new Vector3(0f, pile.GetComponent<BoxCollider>().size.y / 2f, 0f);
 
                 FinishJob(villager);
+
+                tree.transform.parent.GetComponent<Animator>().SetTrigger("Felled");
 
                 jobFinished = true;
 
@@ -157,6 +161,43 @@ public class Jobs
 
     public static IEnumerator Deposit(Villager villager, Transform storage)
     {
+        yield return null;
+    }
+
+    public static IEnumerator Build(Villager villager, Transform buildSite)
+    {
+        UnderConstruction buildingConstructionScript = buildSite.GetComponent<UnderConstruction>();
+
+        buildingConstructionScript.InitializeConstructionSite();
+
+        //Assuming that resources required are already there
+        Vector3 constructionSiteEndScale = new Vector3(buildSite.localScale.y, buildSite.localScale.y, buildSite.localScale.z);
+
+        //Clear Grass
+        while (buildingConstructionScript.currentStage == 0 && !buildingConstructionScript.currentlyProgressing)
+        {
+            buildingConstructionScript.ClearGrass(villager._buildAmount, constructionSiteEndScale);
+
+            yield return null;
+        }
+
+        if (buildingConstructionScript.stageAmount == 0)
+        {
+            buildingConstructionScript.DestroyScript();
+            FinishJob(villager);
+            yield break;
+        }
+
+        //Begin Construction
+        while (buildingConstructionScript != null)
+        {
+            yield return new WaitForSeconds(villager._buildRate);
+
+            buildingConstructionScript.WorkOnBuilding(villager._buildAmount);
+        }
+
+        FinishJob(villager);
+
         yield return null;
     }
 

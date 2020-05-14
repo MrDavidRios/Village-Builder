@@ -143,12 +143,14 @@ namespace TileOperations
                                         break;
                                 }
 
-                                //Make the selection cursor's position equal to the position of the selected resource
                                 PositionSelectionCursor(selectedObject.transform.position, true);
                                 break;
 
                             //Buildings Layer
                             case 10:
+                               // ScaleSelectionCursor(new)
+
+                                PositionSelectionCursor(selectedObject.transform.position, true);
                                 break;
 
                             //Villagers Layer
