@@ -46,8 +46,8 @@ public class VillagerPropertiesGenerator
         switch (job.jobType)
         {
             case "Move":
-                if (job.objectiveTransform != null)
-                    return "walking to " + job.objectiveTransform.name;
+                if (job.objectiveTransforms != null)
+                    return "walking to " + job.objectiveTransforms[0].name;
                 else
                     return "walking somewhere";
             case "Chop":
@@ -57,7 +57,7 @@ public class VillagerPropertiesGenerator
             case "Build":
                 return "building something.";
             case "Deposit":
-                return "transferring " + job.amount + " items to storage.";
+                return "transferring " + job.amounts + " items to storage.";
             default:
                 Debug.LogError("Invalid job type: " + job.jobType);
                 return "Who knows?";

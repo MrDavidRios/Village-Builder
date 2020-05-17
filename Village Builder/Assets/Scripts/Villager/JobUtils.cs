@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System;
+using Pathfinding.Util;
 
 public static class JobUtils
 {
@@ -91,14 +92,45 @@ public static class JobUtils
     }
 
     //Return nearest storage that can handle villager's items.
-    public static StorageInfo[] GetNearestAvailableStorages(Vector3 relativePosition)
+    public static Transform[] GetNearestAvailableStorages(Villager villager, string itemType, int itemAmount)
     {
-        return null;
-    }
+        int itemsLeftToDeposit = itemAmount;
 
-    public static Transform GetStorageWithPosition(Vector3 storagePos)
-    {
-        return null;
+        List<Transform> storages = StorageManager.storages;
+        List<Transform> matchingStorages = new List<Transform>();
+
+        //List<float> storageDistances = new List<float>();
+
+        //Find a way to incorporate distance?
+
+        for (int i = 0; i < storages.Count; i++)
+        {
+            int spaceForItemType = storages[i].GetComponent<Storage>().GetSpaceForItemsByItemType(itemType);
+
+            if (spaceForItemType > 0 && itemsLeftToDeposit > 0)
+            {
+                if (spaceForItemType < itemsLeftToDeposit)
+                    itemsLeftToDeposit -= spaceForItemType;
+                else if (spaceForItemType == itemsLeftToDeposit || spaceForItemType > itemsLeftToDeposit)
+                    itemsLeftToDeposit = 0;
+
+                matchingStorages.Add(storages[i]);
+            }
+        }
+
+        if (matchingStorages.Count > 0)
+            return matchingStorages.ToArray();
+        else
+            return null;
+
+        /*
+        int minDistIndex = storageDistances.IndexOf(storageDistances.Min());
+
+        if (storages[minDistIndex] != null)
+            return storages[minDistIndex];
+        else
+            return null;
+        */
     }
 }
 

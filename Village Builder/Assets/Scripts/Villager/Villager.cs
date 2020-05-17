@@ -50,6 +50,7 @@ public class Villager : MonoBehaviour
     //Jobs
     [Header("Jobs")]
     public bool performingJob = false;
+    public bool currentlyDepositing = false;
 
     public List<Job> jobList = new List<Job>();
 
@@ -64,6 +65,8 @@ public class Villager : MonoBehaviour
 
     public int _buildAmount;
     public int _buildRate;
+
+    public int _itemExchangeRate;
 
     //Debug
     [Header("Debug")]
@@ -86,7 +89,7 @@ public class Villager : MonoBehaviour
         //If there's a job to do and the villager currently isn't doing a job, start a new one.
         bool hasJob = jobAmount > 0;
 
-        if (hasJob && !performingJob)
+        if (hasJob && !performingJob && Time.timeScale != 0)
             StartJob();
         #endregion
 
@@ -113,15 +116,22 @@ public class Villager : MonoBehaviour
                 StartCoroutine(Jobs.Move(transform, job.position));
                 break;
             case "Chop":
-                StartCoroutine(Jobs.ChopTree(this, job.objectiveTransform));
+                StartCoroutine(Jobs.ChopTree(this, job.objectiveTransforms[0]));
                 break;
             case "Mine":
                 break;
             case "Build":
-                StartCoroutine(Jobs.Build(this, job.objectiveTransform));
+                StartCoroutine(Jobs.Build(this, job.objectiveTransforms[0]));
                 break;
             case "Deposit":
-                StartCoroutine(Jobs.Deposit(this, job.objectiveTransform));
+                //if (!currentlyDepositing)
+                StartCoroutine(Jobs.Deposit(this, job.objectiveTransforms, job.amounts[0]));
+                break;
+            case "Withdraw":
+                StartCoroutine(Jobs.Withdraw(this, job.amounts[0]));
+                break;
+            case "TakeFromItemPile":
+                StartCoroutine(Jobs.TakeFromItemPile(this, job.objectiveTransforms[0]));
                 break;
             default:
                 Debug.LogError("Invalid job type: " + job.jobType);

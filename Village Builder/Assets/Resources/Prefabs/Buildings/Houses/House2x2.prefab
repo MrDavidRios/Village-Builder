@@ -131,7 +131,7 @@ MonoBehaviour:
   - positionOffset: {x: 0, y: 0.02, z: 0}
     rotationOffset: {x: -90, y: 0, z: 180}
     scale: {x: 0, y: 1, z: 0.05}
-  - positionOffset: {x: 0, y: 0, z: 0}
+  - positionOffset: {x: 0, y: 0.5, z: 0}
     rotationOffset: {x: 0, y: 0, z: 0}
     scale: {x: 2, y: 2, z: 1}
   currentlyProgressing: 0

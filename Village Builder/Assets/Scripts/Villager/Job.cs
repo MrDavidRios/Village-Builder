@@ -5,7 +5,7 @@ using UnityEngine;
 public class Job
 {
     public Vector3 position;
-    public Transform objectiveTransform;
-    public int amount;
+    public Transform[] objectiveTransforms;
+    public int[] amounts;
     public string jobType;
 }

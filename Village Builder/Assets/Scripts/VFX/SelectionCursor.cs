@@ -10,11 +10,10 @@ public class SelectionCursor : MonoBehaviour
     public bool animateScaleChange;
 
     //Floats
-    [LabelOverride("Distance Apart (Side)")]
-    public float sideDist = 1f;
+    [LabelOverride("Side Distance Apart")] public float sideDist = 1f;
 
-    private float sideDistMax;
-    private float sideDistOriginal;
+    [LabelOverride("Maximum Side Distance Apart")] public float sideDistMax;
+    [LabelOverride("Minimum Side Distance Apart")] public float sideDistMin;
 
     public float bracketDistanceAnimationSpeed;
     public float positionChangeAnimationSpeed;
@@ -46,7 +45,7 @@ public class SelectionCursor : MonoBehaviour
     private void Start()
     {
         //Default, and minimum, side distance value.
-        sideDistOriginal = sideDist;
+        sideDistMin = sideDist;
 
         //Maximum side distance value.
         sideDistMax = sideDist * 1.25f;
@@ -63,7 +62,7 @@ public class SelectionCursor : MonoBehaviour
         //Change the distance that the brackets are apart if the selection cursor is being animated.
         if (animateBracketDistance)
             //The 'sideDist' variable is decreased until it reaches its lowest possible value, 'sideDistOriginal', and increased until it reaches its highest possible value, 'sideDistMax.'
-            sideDist = Mathf.Lerp(sideDistOriginal, sideDistMax, Mathf.PingPong(Time.unscaledTime * bracketDistanceAnimationSpeed, 1));
+            sideDist = Mathf.Lerp(sideDistMin, sideDistMax, Mathf.PingPong(Time.unscaledTime * bracketDistanceAnimationSpeed, 1));
     }
 
     private void FixPos()
@@ -105,7 +104,7 @@ public class SelectionCursor : MonoBehaviour
     {
         sideDist = newSideDist;
 
-        sideDistOriginal = newSideDist;
+        sideDistMin = newSideDist;
         sideDistMax = newSideDist * 1.25f;
     }
 

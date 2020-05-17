@@ -180,7 +180,6 @@ public class PlaceBuilding : MonoBehaviour
             {
                 if (Input.GetMouseButtonDown(0) && placeable)
                 {
-                    Debug.Log("Placing Building.");
                     FinalizePlacement(templatePos, templateBuilding.transform.localEulerAngles);
                 }
 
@@ -213,7 +212,10 @@ public class PlaceBuilding : MonoBehaviour
     {
         GameObject building = GameObject.Instantiate(templateBuilding);
 
-        building.transform.parent = buildingParent.transform;
+        if (templateBuilding.name.ToLower().Contains("storage"))
+            building.transform.parent = GameObject.Find("Storages").transform;
+        else
+            building.transform.parent = buildingParent.transform;
 
         building.transform.position = new Vector3(newBuildingPos.x, 0f, newBuildingPos.z) + building.GetComponent<BuildingTemplate>().positionOffset;
 
@@ -222,6 +224,14 @@ public class PlaceBuilding : MonoBehaviour
         building.layer = LayerMask.NameToLayer("Building");
 
         building.AddComponent<BoxCollider>();
+
+        building.GetComponent<BoxCollider>().center = Vector3.zero;
+        building.GetComponent<BoxCollider>().size = new Vector3(2f, 2f, 1f);
+
+        building.name = building.name.Split('_')[0];
+
+        if (building.name.Substring(building.name.Length - 3).Contains("x"))
+            building.name = building.name.Substring(0, building.name.Length - 3);
 
         //Set all occupied tiles as unwalkable
         for (int i = 0; i < occupiedTileCentres.Count; i++)

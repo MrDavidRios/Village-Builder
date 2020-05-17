@@ -23,6 +23,8 @@ namespace TileOperations
         //Floats
         public float selectionCursorHeight;
 
+        private Vector2 defaultSelectionCursorSideDistance;
+
         //GameObjects
         public static GameObject selectedObject;
 
@@ -49,6 +51,9 @@ namespace TileOperations
         private SelectionCursor selectionCursorScript;
         private JobManager jobManager;
 
+        //Building Info
+        private Building buildingInfo;
+
         private void Start() => Initialize();
 
         private void Initialize()
@@ -62,6 +67,8 @@ namespace TileOperations
             jobManager = FindObjectOfType<JobManager>();
 
             selectionCursor = selectionCursorScript.gameObject;
+
+            defaultSelectionCursorSideDistance = new Vector2(selectionCursorScript.sideDist, selectionCursorScript.sideDist * 1.25f);
 
             selectionCursor.SetActive(false);
 
@@ -91,6 +98,8 @@ namespace TileOperations
                     //Left-Click
                     if (Input.GetMouseButtonDown(0))
                     {
+                        RestoreSelectionCursorSideDistanceToDefault();
+
                         CloseOpenedTempUI();
 
                         //Set the selected object equal to the object that was clicked on
@@ -148,9 +157,28 @@ namespace TileOperations
 
                             //Buildings Layer
                             case 10:
-                               // ScaleSelectionCursor(new)
+                                PositionSelectionCursorCustom(selectedObject.transform.position, true);
 
-                                PositionSelectionCursor(selectedObject.transform.position, true);
+                                switch (selectedObject.tag)
+                                {
+                                    case "Infrastructure":
+                                        buildingInfo = selectedObject.GetComponent<InfrastructureBuilding>().building;
+                                        break;
+                                    case "Residential":
+                                        buildingInfo = selectedObject.GetComponent<ResidentialBuilding>().building;
+                                        break;
+                                    case "Industrial":
+                                        buildingInfo = selectedObject.GetComponent<IndustrialBuilding>().building;
+                                        break;
+                                    default:
+                                        Debug.LogWarning("Building Tag not found: " + tag);
+                                        break;
+                                }
+
+                                float buildingWidth = buildingInfo.width;
+
+                                ScaleSelectionCursor(new Vector3(buildingWidth / 2f, buildingWidth / 2f, buildingWidth / 2f));
+                                ModifySelectionCursorSideDistance(1.25f, 1.5f);
                                 break;
 
                             //Villagers Layer
@@ -338,9 +366,17 @@ namespace TileOperations
 
                 //Building
                 case 10:
+                    UIManagerScript.ChangeText("SelectedTitle", selectedObject.name);
+
+                    if (selectedObject.GetComponent<UnderConstruction>() == null)
+                        UIManagerScript.ChangeText("Subtitle1", "Good for storing things");
+                    else
+                        UIManagerScript.ChangeText("Subtitle1", "Under Construction");
+
+                    ShowSubtitles(1);
                     break;
 
-                //Vilager
+                //Villager
                 case 11:
                     var villager = selectedObject.GetComponent<Villager>();
 
@@ -540,9 +576,12 @@ namespace TileOperations
             selectionCursor.SetActive(true);
         }
 
-        void PositionSelectionCursorCustom(Vector3 position)
+        void PositionSelectionCursorCustom(Vector3 position, bool isAnimating)
         {
-            selectionCursorScript.UpdateCursorPosCustom(new Vector3(position.x, position.y + selectionCursorHeight, position.z));
+            if (isAnimating)
+                selectionCursorScript.UpdateCursorPos(new Vector3(position.x, selectedObject.transform.position.y + selectionCursorHeight, position.z));
+            else
+                selectionCursorScript.UpdateCursorPosCustom(new Vector3(position.x, position.y + selectionCursorHeight, position.z));
 
             //Activate the selection cursor (makes it visible)
             selectionCursor.SetActive(true);
@@ -563,6 +602,18 @@ namespace TileOperations
                 selectionCursorScript.updateScale = selectionCursorScript.UpdateScale(scale);
                 StartCoroutine(selectionCursorScript.updateScale);
             }
+        }
+
+        void ModifySelectionCursorSideDistance(float minSideDist, float maxSideDist)
+        {
+            selectionCursorScript.sideDistMin = minSideDist;
+            selectionCursorScript.sideDistMax = maxSideDist;
+        }
+
+        void RestoreSelectionCursorSideDistanceToDefault()
+        {
+            selectionCursorScript.sideDistMin = defaultSelectionCursorSideDistance.x;
+            selectionCursorScript.sideDistMax = defaultSelectionCursorSideDistance.y;
         }
 
         //Deselect everything by setting the 'selectedObject' to null, which basically means setting it to empty (nothing).
@@ -596,7 +647,7 @@ namespace TileOperations
         {
             while (selectedObject == gameObject)
             {
-                PositionSelectionCursorCustom(selectedObject.transform.position);
+                PositionSelectionCursorCustom(selectedObject.transform.position, false);
 
                 yield return null;
             }

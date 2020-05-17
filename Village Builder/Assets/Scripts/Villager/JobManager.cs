@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TileOperations;
+using Unity.Jobs.LowLevel.Unsafe;
 using UnityEngine;
 
 public class JobManager : MonoBehaviour
 {
-    private List<Villager> villagers = new List<Villager>();
+    private static List<Villager> villagers = new List<Villager>();
 
     //On awake, subscribe to the Jobs.cs FinishJob event handler. Might as well give the villagers their indexes while we're at it. Oh, and before you do that, initialize the villager list.
     private void Awake()
@@ -28,30 +30,31 @@ public class JobManager : MonoBehaviour
 
     public Villager VillagerToAssignTo(string jobType) => villagers[JobUtils.VillagerToAssignTo(villagers, jobType)];
 
-    public void AssignJob(Job job, int villagerIndex) => villagers[villagerIndex].jobList.Add(job);
+    public static void AssignJob(Job job, int villagerIndex, int jobIndex) => villagers[villagerIndex].jobList.Insert(jobIndex, job);
+    public static void AssignJob(Job job, int villagerIndex) => villagers[villagerIndex].jobList.Add(job);
 
     public void AssignJob(Job job) => villagers[JobUtils.VillagerToAssignTo(villagers, job.jobType)].jobList.Add(job);
 
-    public void AssignJob(Vector3 position, Transform objectiveTransform, int amount, string jobType, int villagerIndex)
+    public void AssignJob(Vector3 position, Transform[] objectiveTransforms, int[] amounts, string jobType, int villagerIndex)
     {
         var newJob = new Job();
 
         newJob.jobType = jobType;
         newJob.position = position;
-        newJob.objectiveTransform = objectiveTransform;
-        newJob.amount = amount;
+        newJob.objectiveTransforms = objectiveTransforms;
+        newJob.amounts = amounts;
 
         villagers[villagerIndex].jobList.Add(newJob);
     }
 
-    public void AssignJob(Vector3 position, Transform objectiveTransform, int amount, string jobType)
+    public void AssignJob(Vector3 position, Transform[] objectiveTransforms, int[] amounts, string jobType)
     {
         var newJob = new Job();
 
         newJob.jobType = jobType;
         newJob.position = position;
-        newJob.objectiveTransform = objectiveTransform;
-        newJob.amount = amount;
+        newJob.objectiveTransforms = objectiveTransforms;
+        newJob.amounts = amounts;
 
         villagers[JobUtils.VillagerToAssignTo(villagers, newJob.jobType)].jobList.Add(newJob);
     }
@@ -77,9 +80,9 @@ public class JobManager : MonoBehaviour
         villager.performingJob = false;
     }
 
-    private void Jobs_AssignJobGroups(object sender, AssignJobGroupArgs e) => AssignJobGroup(e.jobGroup, e.jobPosition, e.jobTransform, e.villagerIndex);
+    private void Jobs_AssignJobGroups(object sender, AssignJobGroupArgs e) => AssignJobGroup(e.jobGroup, e.jobPosition, e.jobTransforms, e.amounts, e.villagerIndex);
 
-    public void AssignJobGroup(string jobGroup, Vector3 jobPosition, Transform objectiveTransform, int villagerIndex = -1)
+    public void AssignJobGroup(string jobGroup, Vector3 jobPosition, Transform[] objectiveTransforms, int[] amounts = null, int villagerIndex = -1)
     {
         if (villagerIndex == -1)
             villagerIndex = VillagerToAssignTo(jobGroup).index;
@@ -87,32 +90,40 @@ public class JobManager : MonoBehaviour
         switch (jobGroup)
         {
             case "HarvestTree":
+                Transform objectiveTransform = objectiveTransforms[0];
+
                 objectiveTransform.GetComponent<Resource>().beingHarvested = true;
 
                 objectiveTransform.GetComponent<Resource>().AddHarvestIndicator();
 
                 jobPosition = objectiveTransform.position;
 
-                AssignJob(jobPosition, objectiveTransform, 0, "Move", villagerIndex);
-                AssignJob(jobPosition, objectiveTransform, 0, "Chop", villagerIndex);
+                AssignJob(jobPosition, objectiveTransforms, amounts, "Move", villagerIndex);
+                AssignJob(jobPosition, objectiveTransforms, amounts, "Chop", villagerIndex);
                 break;
             case "HarvestStone":
                 break;
-                //If the villager has too many items for one storage, deposit the items they can in that storage, and equally distribute items among the remaining storage spaces available.
+            //If the villager has too many items for one storage, deposit the items they can in that storage, and equally distribute items among the remaining storage spaces available.
             case "Deposit":
-                var nearestStorages = JobUtils.GetNearestAvailableStorages(jobPosition);
+                //Villager villager = villagers[villagerIndex];
 
-                for (int i = 0; i < nearestStorages.Length; i++)
-                {
-                    var nearestStorage = nearestStorages[i];
+                //Transform[] nearestStorages = JobUtils.GetNearestAvailableStorages(villager, objectiveTransforms[0].tag, amounts[0]);
 
-                    AssignJob(nearestStorage.transform.position, objectiveTransform, 0, "Move", villagerIndex);
-                    AssignJob(nearestStorage.transform.position, objectiveTransform, nearestStorage.remaningApplicableAmount, "Deposit", villagerIndex);
-                }
+                //for (int i = 0; i < nearestStorages.Length; i++)
+                //{
+                    AssignJob(jobPosition, objectiveTransforms, amounts, "Move", villagerIndex);
+                    AssignJob(/*nearestStorages[i].*/jobPosition, new Transform[1] { objectiveTransforms[0] } /*new Transform[1] { /*nearestStorages[i] }*/, amounts, "Deposit", villagerIndex);
+                //}
+                break;
+            case "PickUpPile":
+                AssignJob(jobPosition, objectiveTransforms, amounts, "Move", villagerIndex);
+                AssignJob(jobPosition, objectiveTransforms, amounts, "TakeFromItemPile", villagerIndex);
+
+                //AssignJobGroup("Deposit", jobPosition, objectiveTransforms, new int[1] { objectiveTransforms[0].GetComponent<ItemPile>().amountOfItems }, villagerIndex);
                 break;
             case "Build":
-                AssignJob(jobPosition, objectiveTransform, 0, "Move", villagerIndex);
-                AssignJob(jobPosition, objectiveTransform, 0, "Build", villagerIndex);
+                AssignJob(jobPosition, objectiveTransforms, amounts, "Move", villagerIndex);
+                AssignJob(jobPosition, objectiveTransforms, amounts, "Build", villagerIndex);
                 break;
             default:
                 Debug.LogError("Undefined job group: " + jobGroup);
@@ -120,9 +131,56 @@ public class JobManager : MonoBehaviour
         }
     }
 
+    public void CancelSelectedJob()
+    {
+        GameObject selectedObject = SelectTile.selectedObject;
+
+        Villager selectedVillager = null;
+        int jobIndex = -1;
+
+        for (int i = 0; i < villagers.Count; i++)
+        {
+            for (int j = 0; j < villagers[i].jobList.Count; j++)
+            {
+                var matches = villagers[i].jobList.Any(job => job.objectiveTransforms[0] == selectedObject.transform);
+
+                if (matches)
+                {
+                    selectedVillager = villagers[i];
+                    jobIndex = j;
+                }
+            }
+        }
+
+        if (jobIndex != -1)
+        {
+            string jobType = selectedVillager.jobList[jobIndex].jobType;
+
+            RemoveJob(selectedVillager.index, jobIndex);
+
+            switch (jobType)
+            {
+                case "Move":
+                    break;
+                case "Chop":
+                case "HarvestTree":
+                    break;
+                case "HarvestStone":
+                case "Mine":
+                    break;
+                case "Build":
+                    break;
+                case "Deposit":
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
     public void ChopSelectedTree()
     {
         if (!SelectTile.selectedObject.GetComponent<Resource>().beingHarvested)
-            AssignJobGroup("HarvestTree", SelectTile.selectedObject.transform.position, SelectTile.selectedObject.transform);
+            AssignJobGroup("HarvestTree", SelectTile.selectedObject.transform.position, new Transform[1] { SelectTile.selectedObject.transform });
     }
 }

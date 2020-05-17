@@ -22,9 +22,11 @@ public class UnderConstruction : MonoBehaviour
     [HideInInspector] public bool currentlyProgressing;
     public bool resetPosition;
 
+    private Vector3 templatePositionOffset;
+
     private GameObject constructionSitePrefab;
 
-    private Building buildingInfo;
+    public Building buildingInfo;
 
     private void Awake()
     {
@@ -61,6 +63,8 @@ public class UnderConstruction : MonoBehaviour
         }
 
         initialScale = stageSettings[0].scale;
+
+        templatePositionOffset = GetComponent<BuildingTemplate>().positionOffset;
     }
 
     //Places temporary template of building before the actual construction occurs. This is so that the user can better visualize their city.
@@ -75,20 +79,23 @@ public class UnderConstruction : MonoBehaviour
 
         GetComponent<Renderer>().material = cloneMaterial;
 
-        if (resetPosition)
-            transform.position -= GetComponent<BuildingTemplate>().positionOffset;
-
         GameObject.Destroy(GetComponent<BuildingTemplate>());
 
         //Add building job
-        FindObjectOfType<JobManager>().AssignJobGroup("Build", transform.position, transform);
+        FindObjectOfType<JobManager>().AssignJobGroup("Build", transform.position, new Transform[1] { transform });
     }
 
-    public void InitializeConstructionSite() => UpdateBuildingAppearance(0);
+    public void InitializeConstructionSite()
+    {
+        if (resetPosition)
+            transform.position -= templatePositionOffset;
+
+        UpdateBuildingAppearance(0);
+    }
 
     public void ClearGrass(float laborCoefficient, Vector3 endScale)
     {
-        float laborNeeded = Mathf.Pow(buildingInfo.width, 2) * 5f;
+        float laborNeeded = Mathf.Pow(buildingInfo.width, 2) * 10f;
 
         laborAmount += laborCoefficient * Time.deltaTime;
 
@@ -133,9 +140,11 @@ public class UnderConstruction : MonoBehaviour
         if (stageSettings[stage].scale != Vector3.zero)
             transform.localScale = stageSettings[stage].scale;
 
+        if (stage > 0)
+            GetComponent<BoxCollider>().size = Vector3.one;
+
         if (stage == stageAmount && stageAmount > 0)
         {
-            Debug.Log("Finished!");
             DestroyScript();
             return;
         }

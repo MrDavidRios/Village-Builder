@@ -9,6 +9,7 @@ TagManager:
   - Residential
   - Infrastructure
   - Industrial
+  - Log
   layers:
   - Default
   - TransparentFX

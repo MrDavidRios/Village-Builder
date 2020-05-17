@@ -11,15 +11,16 @@ GameObject:
   - component: {fileID: 9071760435183279161}
   - component: {fileID: 9071760435183279162}
   - component: {fileID: 9071760435183279163}
-  - component: {fileID: 9071760435183279160}
   - component: {fileID: 6233555819591336616}
   - component: {fileID: 3098388815566967381}
+  - component: {fileID: -7469355097200361214}
+  - component: {fileID: 7627361828792916386}
   m_Layer: 0
   m_Name: Storage2x2
-  m_TagString: Residential
+  m_TagString: Infrastructure
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &9071760435183279161
 Transform:
@@ -82,19 +83,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9071760435183279164}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &9071760435183279160
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9071760435183279164}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6283cd64cdd237b46bd9934956441acf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  building: {fileID: 11400000, guid: 4f84d9c9dba252d47995f41b7dcc0531, type: 2}
 --- !u!114 &6233555819591336616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,4 +119,50 @@ MonoBehaviour:
     rotationOffset: {x: -90, y: 0, z: 180}
     scale: {x: 0, y: 1, z: 0.05}
   currentlyProgressing: 0
-  resetPosition: 0
+  resetPosition: 1
+  buildingInfo: {fileID: 0}
+--- !u!114 &-7469355097200361214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9071760435183279164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8261a1d4aab2d44ca1bd3b36c1831b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  building: {fileID: 11400000, guid: 4f84d9c9dba252d47995f41b7dcc0531, type: 2}
+--- !u!114 &7627361828792916386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9071760435183279164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39c65b01103b11042a0aa06527413f5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  numberOfPlots: 0
+  plotCapacity: 48
+  totalCapacity: 0
+  plotPositions:
+  - {x: -0.75, y: 0, z: -0.75}
+  - {x: -0.75, y: 0, z: -0.25}
+  - {x: -0.75, y: 0, z: 0.25}
+  - {x: -0.75, y: 0, z: 0.75}
+  - {x: -0.25, y: 0, z: -0.75}
+  - {x: -0.25, y: 0, z: -0.25}
+  - {x: -0.25, y: 0, z: 0.25}
+  - {x: -0.25, y: 0, z: 0.75}
+  - {x: 0.25, y: 0, z: -0.75}
+  - {x: 0.25, y: 0, z: -0.25}
+  - {x: 0.25, y: 0, z: 0.25}
+  - {x: 0.25, y: 0, z: 0.75}
+  - {x: 0.75, y: 0, z: -0.75}
+  - {x: 0.75, y: 0, z: -0.25}
+  - {x: 0.75, y: 0, z: 0.25}
+  - {x: 0.75, y: 0, z: 0.75}
