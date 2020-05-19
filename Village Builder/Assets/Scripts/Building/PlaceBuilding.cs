@@ -240,6 +240,7 @@ public class PlaceBuilding : MonoBehaviour
             int tileY = Environment.tileCentresMap.Forward[occupiedTileCentres[i]].y;
 
             Environment.walkable[tileX, tileY] = false;
+            Environment.ModifyWalkableTiles(tileX, tileY, false);
         }
 
         building.GetComponent<UnderConstruction>().PlaceTemplate();

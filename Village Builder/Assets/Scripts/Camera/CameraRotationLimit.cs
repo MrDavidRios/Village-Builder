@@ -24,6 +24,8 @@ public class CameraRotationLimit : MonoBehaviour {
 
 	public void CameraRotate()
 	{
+		euler = transform.localEulerAngles;
+
 		// Getting axes
 		RotLeftRight = Input.GetAxis("Mouse X") * RotSpeed * Time.unscaledDeltaTime;
 		RotUpDown = Input.GetAxis("Mouse Y") * -RotSpeed * Time.unscaledDeltaTime;

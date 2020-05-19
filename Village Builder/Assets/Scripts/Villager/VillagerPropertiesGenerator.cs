@@ -58,6 +58,8 @@ public class VillagerPropertiesGenerator
                 return "building something.";
             case "Deposit":
                 return "transferring " + job.amounts + " items to storage.";
+            case "TakeFromItemPile":
+                return "picking up a pile of items.";
             default:
                 Debug.LogError("Invalid job type: " + job.jobType);
                 return "Who knows?";

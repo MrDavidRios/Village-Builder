@@ -183,4 +183,19 @@ public class JobManager : MonoBehaviour
         if (!SelectTile.selectedObject.GetComponent<Resource>().beingHarvested)
             AssignJobGroup("HarvestTree", SelectTile.selectedObject.transform.position, new Transform[1] { SelectTile.selectedObject.transform });
     }
+
+    //Returns true if any job of any villager contains the selected transform.
+    public bool JobContainsTransform(Transform selectedTransform)
+    {
+        for (int i = 0; i < villagers.Count; i++)
+        {
+            for (int j = 0; j < villagers[i].jobList.Count; j++)
+            {
+                if (villagers[i].jobList[j].objectiveTransforms.Contains(selectedTransform))
+                    return true;
+            }
+        }
+
+        return false;
+    }
 }

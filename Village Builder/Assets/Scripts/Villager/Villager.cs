@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TileOperations;
 using UnityEngine;
 
 public enum VillagerRoles
@@ -68,12 +69,17 @@ public class Villager : MonoBehaviour
 
     public int _itemExchangeRate;
 
+    //Scripts
+    private SelectTile selectScript;
+
     //Debug
     [Header("Debug")]
     public VillagerDebugLevels debugLevel;
 
     private void Awake()
     {
+        selectScript = FindObjectOfType<SelectTile>();
+
         Jobs.InventoryUpdated += Jobs_DisplayItems;
 
         _sex = VillagerPropertiesGenerator.GenerateSex(this);
@@ -84,6 +90,9 @@ public class Villager : MonoBehaviour
     private void Update()
     {
         #region Jobs
+        if (jobAmount != jobList.Count)
+            selectScript.DisplayVillagerJobs();
+
         jobAmount = jobList.Count;
 
         //If there's a job to do and the villager currently isn't doing a job, start a new one.

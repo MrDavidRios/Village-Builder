@@ -1,5 +1,4 @@
 ﻿using Pathfinding;
-using System.Collections;
 using System.Collections.Generic;
 using TerrainGeneration;
 using UnityEngine;
@@ -54,7 +53,7 @@ public class Environment : MonoBehaviour
     static Coord[,] closestVisibleWaterMap;
 
     static System.Random prng;
-    TerrainGenerator.TerrainData terrainData;
+    static TerrainGenerator.TerrainData terrainData;
 
     void Start()
     {
@@ -244,7 +243,13 @@ public class Environment : MonoBehaviour
         Debug.Log("Init time: " + sw.ElapsedMilliseconds);
     }
 
-    public void ModifyWalkableTiles(int xIndex = -1, int zIndex = -1, bool walkable = true)
+    /// <summary>
+    /// Updates all the tiles in the GridGraph or only one selected tile.
+    /// </summary>
+    /// <param name="xIndex"></param>
+    /// <param name="zIndex"></param>
+    /// <param name="walkable"></param>
+    public static void ModifyWalkableTiles(int xIndex = -1, int zIndex = -1, bool walkable = true)
     {
         var gg = AstarPath.active.data.gridGraph;
 
@@ -266,9 +271,13 @@ public class Environment : MonoBehaviour
         }
         else if (xIndex != -1 && zIndex != -1)
         {
-            gg.GetNode(xIndex, zIndex).Walkable = walkable;
+            AstarPath.active.AddWorkItem(ctx =>
+            {
+                var grid = AstarPath.active.data.gridGraph;
 
-            gg.GetNodes(node => gg.CalculateConnectionsForCellAndNeighbours(xIndex, zIndex));
+                grid.GetNode(xIndex, zIndex).Walkable = false;
+                grid.CalculateConnectionsForCellAndNeighbours(xIndex, zIndex);
+            });
         }
 
         // If you are only updating one or a few nodes you may want to use
@@ -454,6 +463,7 @@ public class Environment : MonoBehaviour
                     Destroy(treeToRemove.gameObject);
 
                     walkable[x, y] = true;
+                    ModifyWalkableTiles(x, y, true);
                 }
             }
         }

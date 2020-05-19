@@ -258,5 +258,12 @@ public class CameraMovement : MonoBehaviour
             Vector3 move = pos.y * zoomSpeed * transform.forward;
             transform.Translate(move, Space.World);
         }
+
+        transform.position = new Vector3
+        (
+            Mathf.Clamp(transform.position.x, MIN_X, MAX_X),
+            Mathf.Clamp(transform.position.y, MIN_Y, MAX_Y),
+            Mathf.Clamp(transform.position.z, MIN_Z, MAX_Z)
+        );
     }
 }
