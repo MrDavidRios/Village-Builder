@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Boo.Lang;
 using TerrainGeneration;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -262,6 +263,8 @@ namespace TileOperations
 
         void UpdateUI()
         {
+            HideSubtitles(3);
+
             if (!anythingSelected)
             {
                 //Close the selection panel
@@ -274,8 +277,6 @@ namespace TileOperations
                 //Terrain
                 case 8:
                     {
-                        UIManagerScript.HideText("Subtitle2");
-
                         //Cached data
                         string tileType = Environment.tileType[tileIndex.x, tileIndex.y];
                         int fertility = Environment.fertility[tileIndex.x, tileIndex.y];
@@ -341,7 +342,6 @@ namespace TileOperations
                     {
                         string resourceType = selectedObject.tag;
 
-                        HideSubtitles(1);
                         UIManagerScript.ChangeText("SelectedTitle", resourceType);
 
                         switch (resourceType)
@@ -437,7 +437,15 @@ namespace TileOperations
                                 break;
                         }
 
-                        ShowSubtitles(2);
+                        ItemPile itemPileScript = selectedObject.GetComponent<ItemPile>();
+
+                        //Add a 0 before the minutes/seconds if they are less than 10 so the output is always xx:yy.
+                        string formattedMinutes = itemPileScript.despawnMinutes < 10 ? "0" + itemPileScript.despawnMinutes.ToString() : itemPileScript.despawnMinutes.ToString();
+                        string formattedSeconds = itemPileScript.despawnSeconds < 10 ? "0" + itemPileScript.despawnSeconds.ToString() : itemPileScript.despawnSeconds.ToString();
+
+                        UIManagerScript.ChangeText("ExtraDisplay", "Despawns in: " + formattedMinutes + ":" + formattedSeconds);
+
+                        ShowSubtitles(3);
                         break;
                     }
             }
@@ -467,6 +475,7 @@ namespace TileOperations
                             case "Stone":
                                 break;
                         }
+
                         break;
                     }
 
@@ -516,7 +525,11 @@ namespace TileOperations
         {
             for (int i = 1; i <= subtitleAmount; i++)
             {
-                UIManagerScript.ShowText("Subtitle" + i);
+                if (subtitleAmount > 2)
+                    UIManagerScript.ShowText("ExtraDisplay");
+                else
+                    UIManagerScript.ShowText("Subtitle" + i);
+
             }
         }
 
@@ -524,7 +537,10 @@ namespace TileOperations
         {
             for (int i = 1; i < subtitleAmount; i++)
             {
-                UIManagerScript.HideText("Subtitle" + i);
+                if (subtitleAmount > 2)
+                    UIManagerScript.HideText("ExtraDisplay");
+                else
+                    UIManagerScript.HideText("Subtitle" + i);
             }
         }
 

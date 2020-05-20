@@ -21,15 +21,22 @@ public class ItemPileManager : MonoBehaviour
 
         for (int i = 0; i < untendedPiles.Count; i++)
         {
-            if (untendedPiles[i].GetComponent<ItemPile>().beingPickedUp)
+            if (untendedPiles[i] == null)
+            {
+                untendedPiles.RemoveAt(i);
+            }
+            else if (untendedPiles[i].GetComponent<ItemPile>().beingPickedUp)
                 untendedPiles.RemoveAt(i);
         }
     }
 
-    public Transform GetNextAvailableItemPile() 
+    public Transform GetNextAvailableItemPile()
     {
         for (int i = 0; i < untendedPiles.Count; i++)
         {
+            if (untendedPiles[i] == null)
+                return null;
+
             if (!untendedPiles[i].GetComponent<ItemPile>().beingPickedUp)
                 return untendedPiles[i];
         }
