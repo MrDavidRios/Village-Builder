@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
 
     //Scripts
     private PlaceBuilding placeBuilding;
-    private SelectTile selectScript;
+    private Select selectScript;
     private UIManager UIManagerScript;
 
     //GameObjects
@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         placeBuilding = GetComponent<PlaceBuilding>();
-        selectScript = GetComponent<SelectTile>();
+        selectScript = GetComponent<Select>();
         UIManagerScript = FindObjectOfType<UIManager>();
 
         villagerParent = GameObject.Find("Villagers");
@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
             if (cinematicModeEnabled)
             {
                 selectScript.DeselectAll();
-                SelectTile.canSelect = false;
+                Select.canSelect = false;
 
                 UIManagerScript.CloseAllPanels(false);
                 UIManagerScript.HideMiscUI();
@@ -79,7 +79,7 @@ public class GameManager : MonoBehaviour
             else if (!UIManagerScript.anyPanelsOpen)
             {
                 UIManagerScript.OpenStaticUI();
-                SelectTile.canSelect = true;
+                Select.canSelect = true;
             }
         }
 

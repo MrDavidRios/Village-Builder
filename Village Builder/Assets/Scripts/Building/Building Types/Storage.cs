@@ -34,7 +34,7 @@ public class Storage : MonoBehaviour
 
     Dictionary<string, Item> items = new Dictionary<string, Item>();
 
-    Dictionary<int, ItemBundle> updateQueue = new Dictionary<int, ItemBundle>();
+    Dictionary<int, Queue<ItemBundle>> updateQueue = new Dictionary<int, Queue<ItemBundle>>();
 
     Dictionary<int, int> numberOfItemsSpawnedPerPlot = new Dictionary<int, int>();
 
@@ -83,7 +83,12 @@ public class Storage : MonoBehaviour
         items.Add("Log", new Item { itemObject = Resources.Load<GameObject>("Prefabs/Items/Log"), itemType = "Log" });
     }
 
-    public void DepositItem(ItemBundle itemsToDeposit, int villagerIndex)
+    /// <summary>
+    /// Updates the data for the storage's items. Adds to a dictionary that allows the storage to show the deposited items once the UpdateAppearance() function is called.
+    /// </summary>
+    /// <param name="itemsToDeposit"></param>
+    /// <param name="villagerIndex"></param>
+    public void QueueItemsForDeposit(ItemBundle itemsToDeposit, int villagerIndex)
     {
         string itemType = itemsToDeposit.item.itemType;
         int itemAmount = itemsToDeposit.amount;
@@ -150,10 +155,29 @@ public class Storage : MonoBehaviour
 
         ItemBundle itemsDeposited = new ItemBundle { item = items[itemType], amount = itemAmount };
 
+        Queue<ItemBundle> villagerItemQueue = new Queue<ItemBundle>();
+
+        if (updateQueue.ContainsKey(villagerIndex))
+        {
+            villagerItemQueue = updateQueue[villagerIndex];
+
+            villagerItemQueue.Enqueue(itemsDeposited);
+
+            updateQueue[villagerIndex] = villagerItemQueue;
+        }
+        else
+        {
+            villagerItemQueue.Enqueue(itemsDeposited);
+
+            updateQueue.Add(villagerIndex, villagerItemQueue);
+        }
+
+        /*
         if (updateQueue.ContainsKey(villagerIndex) && updateQueue[villagerIndex].item.itemType == itemType)
             updateQueue[villagerIndex] = new ItemBundle { item = updateQueue[villagerIndex].item, amount = updateQueue[villagerIndex].amount + itemAmount };
         else
             updateQueue.Add(villagerIndex, itemsDeposited);
+        */
     }
 
     public ItemBundle WithdrawItem(Item itemToTake, int itemAmount)
@@ -196,7 +220,7 @@ public class Storage : MonoBehaviour
     //Regenerate storage appearance based on new values (PLAN: UPDATE STORAGE APPEARANCE ONCE THE VILLAGER GETS THERE)
     public void UpdateAppearance(int villagerIndex)
     {
-        ItemBundle itemsToAdd = updateQueue[villagerIndex];
+        ItemBundle itemsToAdd = updateQueue[villagerIndex].Dequeue();
 
         string itemType = itemsToAdd.item.itemType;
         GameObject itemObject = itemsToAdd.item.itemObject;
@@ -269,8 +293,6 @@ public class Storage : MonoBehaviour
                     }
                 }
             }
-
-            updateQueue.Remove(villagerIndex);
         }
     }
 

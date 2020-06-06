@@ -56,7 +56,7 @@ public static class JobUtils
             case "Construct":
                 return "Construct Building";
             case "Deposit":
-                return "Drop Materials Off";
+                return "Deposit";
             default:
                 return jobType;
         }

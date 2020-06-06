@@ -11,6 +11,9 @@ public class Environment : MonoBehaviour
     public GameObject treePrefab;
     public GameObject treeContainer;
 
+    public Color lightestLeafColor;
+    public Color darkestLeafColor;
+
     [Range(0, 1)] public float treePlacementProbability;
     [Range(0, 5)] public float treeDensityCoefficient;
 
@@ -289,8 +292,6 @@ public class Environment : MonoBehaviour
         // Settings:
         float maxRot = 4;
         float maxScaleDeviation = .2f;
-        float colVariationFactor = 0.15f;
-        float minCol = .8f;
 
         var spawnPrng = new System.Random(seed);
         var treeHolder = treeContainer.transform;
@@ -326,12 +327,6 @@ public class Environment : MonoBehaviour
 
                         float scale = 1 + scaleDeviation;
 
-                        // Randomize colour
-                        float col = Mathf.Lerp(minCol, 1, (float)spawnPrng.NextDouble());
-                        float r = col + ((float)spawnPrng.NextDouble() * 2 - 1) * colVariationFactor;
-                        float g = col + ((float)spawnPrng.NextDouble() * 2 - 1) * colVariationFactor;
-                        float b = col + ((float)spawnPrng.NextDouble() * 2 - 1) * colVariationFactor;
-
                         // Spawn
                         GameObject tree = Instantiate(treePrefab);
                         MeshRenderer treeMesh = tree.transform.GetChild(0).GetComponent<MeshRenderer>();
@@ -343,8 +338,16 @@ public class Environment : MonoBehaviour
                         tree.GetComponent<Animator>().enabled = false;
                         tree.name = tree.tag;
 
+                        //Set the color of the tree's 'Leaves' material based on its scale.
+
+                        //Scale Percentage
+                        float scalePercentage = Mathf.Abs(scaleDeviation) / (maxScaleDeviation * 2);
+
+                        //Debug.Log(scaleDeviation + "; " + scalePercentage);
+
+                        treeMesh.materials[1].SetColor("_MainColor", Color.Lerp(lightestLeafColor, darkestLeafColor, scalePercentage));
+
                         treeMesh.transform.eulerAngles = rot;
-                        treeMesh.material.color = new Color(r, g, b);
 
                         //Mark tile as unwalkable
                         walkable[x, y] = false;
@@ -440,6 +443,9 @@ public class Environment : MonoBehaviour
                         fishingTileObject.transform.parent = fishingTileHolder;
                         fishingTileObject.transform.localScale = new Vector3(30, 30, 30);
                         fishingTileObject.material = fishingTileMaterial;
+
+                        //Make the gameobject static
+                        fishingTileObject.gameObject.isStatic = true;
 
                         fishingTileObject.transform.position = tileCentres[x, y];
                     }

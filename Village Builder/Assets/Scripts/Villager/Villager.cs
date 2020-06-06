@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Pathfinding;
 using TileOperations;
 using UnityEngine;
 
@@ -51,9 +52,13 @@ public class Villager : MonoBehaviour
     //Jobs
     [Header("Jobs")]
     public bool performingJob = false;
+    public bool moveJobCancelled = false;
     public bool currentlyDepositing = false;
 
     public List<Job> jobList = new List<Job>();
+
+    public Job lastAddedJob;
+    public Job lastRemovedJob;
 
     [SerializeField] private int jobAmount;
 
@@ -69,8 +74,11 @@ public class Villager : MonoBehaviour
 
     public int _itemExchangeRate;
 
+    public float _walkSpeed;
+    [SerializeField] private float _currentWalkSpeed;
+
     //Scripts
-    private SelectTile selectScript;
+    private DisplayJobsList displayJobsList;
 
     //Debug
     [Header("Debug")]
@@ -78,22 +86,37 @@ public class Villager : MonoBehaviour
 
     private void Awake()
     {
-        selectScript = FindObjectOfType<SelectTile>();
+        displayJobsList = FindObjectOfType<DisplayJobsList>();
 
         Jobs.InventoryUpdated += Jobs_DisplayItems;
 
         _sex = VillagerPropertiesGenerator.GenerateSex(this);
         _name = VillagerPropertiesGenerator.GenerateName(this);
         _role = VillagerPropertiesGenerator.ProcessRole((int)roleToAssign);
+
+        GetComponent<AIPath>().maxSpeed = _walkSpeed;
+
+        _currentWalkSpeed = _walkSpeed;
     }
 
     private void Update()
     {
         #region Jobs
         if (jobAmount != jobList.Count)
-            selectScript.DisplayVillagerJobs();
+        {
+            if (jobAmount > jobList.Count)
+                StartCoroutine(displayJobsList.DisplayVillagerJobs("Villager.cs", lastRemovedJob));
+            else
+                StartCoroutine(displayJobsList.DisplayVillagerJobs("Villager.cs", lastAddedJob));
+        }
 
         jobAmount = jobList.Count;
+
+        float inventoryFillPercentage = (float)items.Count / (float)inventoryCapacity;
+
+        _currentWalkSpeed = _walkSpeed * (1.50f - inventoryFillPercentage);
+
+        GetComponent<AIPath>().maxSpeed = _currentWalkSpeed;
 
         //If there's a job to do and the villager currently isn't doing a job, start a new one.
         bool hasJob = jobAmount > 0;
@@ -140,7 +163,7 @@ public class Villager : MonoBehaviour
                 StartCoroutine(Jobs.Withdraw(this, job.amounts[0]));
                 break;
             case "TakeFromItemPile":
-                StartCoroutine(Jobs.TakeFromItemPile(this, job.objectiveTransforms[0]));
+                StartCoroutine(Jobs.TakeFromItemPile(this, job.objectiveTransforms[0], job.amounts[0]));
                 break;
             default:
                 Debug.LogError("Invalid job type: " + job.jobType);

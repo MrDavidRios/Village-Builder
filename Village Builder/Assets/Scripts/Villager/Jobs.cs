@@ -18,11 +18,15 @@ public class Jobs
 
     public static IEnumerator Move(Transform villagerToMove, Vector3 desiredPosition)
     {
-        var debugLevel = villagerToMove.GetComponent<Villager>().debugLevel;
+        Villager villager = villagerToMove.GetComponent<Villager>();
 
-        var villagerAIPath = villagerToMove.GetComponent<AIPath>();
+        VillagerDebugLevels debugLevel = villager.debugLevel;
 
-        int villagerIndex = villagerToMove.GetComponent<Villager>().index;
+        AIPath villagerAIPath = villagerToMove.GetComponent<AIPath>();
+
+        int villagerIndex = villager.index;
+
+        villagerAIPath.canSearch = true;
 
         villagerAIPath.destination = desiredPosition;
 
@@ -32,6 +36,18 @@ public class Jobs
         {
             if (debugLevel == VillagerDebugLevels.OverlyDetailed)
                 Debug.Log("Not there yet. Remaining distance: " + villagerAIPath.remainingDistance);
+
+            if (villager.moveJobCancelled)
+            {
+                // This will clear the path
+                villagerAIPath.SetPath(null);
+                // This will prevent the agent from immediately recalculating a new path
+                villagerAIPath.canSearch = false;
+
+                villager.moveJobCancelled = false;
+
+                break;
+            }
 
             yield return null;
         }
@@ -226,11 +242,11 @@ public class Jobs
         yield return null;
     }
 
-    public static IEnumerator TakeFromItemPile(Villager villager, Transform itemPile)
+    public static IEnumerator TakeFromItemPile(Villager villager, Transform itemPile, int amount)
     {
         ItemPile itemPileScript = itemPile.GetComponent<ItemPile>();
 
-        while (!villager.inventoryFull && itemPileScript.amountOfItems > 0)
+        for (int i = 0; i < amount; i++)
         {
             yield return new WaitForSeconds(villager._itemExchangeRate);
 

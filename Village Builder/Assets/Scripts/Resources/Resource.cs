@@ -46,8 +46,6 @@ public class Resource : MonoBehaviour
         Vector3 posOffset = Vector3.zero;
         Vector3 scaleFactor = Vector3.one;
 
-        //float rotateSpeed;
-
         GameObject indicatorPrefab = null;
 
         switch (resourceType.ToLower())
@@ -72,5 +70,13 @@ public class Resource : MonoBehaviour
         harvestIndicator.name = indicatorPrefab.name;
 
         harvestIndicatorExists = true;
+    }
+
+    public void RemoveHarvestIndicator()
+    {
+        beingHarvested = false;
+        harvestIndicatorExists = false;
+
+        Destroy(transform.GetChild(0).gameObject);
     }
 }

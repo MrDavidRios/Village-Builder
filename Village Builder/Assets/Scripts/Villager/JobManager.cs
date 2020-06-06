@@ -30,10 +30,28 @@ public class JobManager : MonoBehaviour
 
     public Villager VillagerToAssignTo(string jobType) => villagers[JobUtils.VillagerToAssignTo(villagers, jobType)];
 
-    public static void AssignJob(Job job, int villagerIndex, int jobIndex) => villagers[villagerIndex].jobList.Insert(jobIndex, job);
-    public static void AssignJob(Job job, int villagerIndex) => villagers[villagerIndex].jobList.Add(job);
+    public static void AssignJob(Job job, int villagerIndex, int jobIndex)
+    {
+        villagers[villagerIndex].lastAddedJob = job;
 
-    public void AssignJob(Job job) => villagers[JobUtils.VillagerToAssignTo(villagers, job.jobType)].jobList.Add(job);
+        villagers[villagerIndex].jobList.Insert(jobIndex, job);
+    }
+
+    public static void AssignJob(Job job, int villagerIndex)
+    {
+        villagers[villagerIndex].lastAddedJob = job;
+
+        villagers[villagerIndex].jobList.Add(job);
+    }
+
+    public void AssignJob(Job job)
+    {
+        int villagerIndex = JobUtils.VillagerToAssignTo(villagers, job.jobType);
+
+        villagers[villagerIndex].lastAddedJob = job;
+
+        villagers[villagerIndex].jobList.Add(job);
+    }
 
     public void AssignJob(Vector3 position, Transform[] objectiveTransforms, int[] amounts, string jobType, int villagerIndex)
     {
@@ -43,6 +61,8 @@ public class JobManager : MonoBehaviour
         newJob.position = position;
         newJob.objectiveTransforms = objectiveTransforms;
         newJob.amounts = amounts;
+
+        villagers[villagerIndex].lastAddedJob = newJob;
 
         villagers[villagerIndex].jobList.Add(newJob);
     }
@@ -56,15 +76,27 @@ public class JobManager : MonoBehaviour
         newJob.objectiveTransforms = objectiveTransforms;
         newJob.amounts = amounts;
 
-        villagers[JobUtils.VillagerToAssignTo(villagers, newJob.jobType)].jobList.Add(newJob);
+        int villagerIndex = JobUtils.VillagerToAssignTo(villagers, jobType);
+
+        villagers[villagerIndex].lastAddedJob = newJob;
+
+        villagers[villagerIndex].jobList.Add(newJob);
     }
 
     public void RemoveJob(int villagerIndex, int jobIndex = -1)
     {
         if (jobIndex == -1)
+        {
+            villagers[villagerIndex].lastRemovedJob = null;
+
             villagers[villagerIndex].jobList.Clear();
+        }
         else
+        {
+            villagers[villagerIndex].lastRemovedJob = villagers[villagerIndex].jobList[jobIndex];
+
             villagers[villagerIndex].jobList.RemoveAt(jobIndex);
+        }
     }
 
     //Once villager job is finished, remove the first element (completed job).
@@ -75,7 +107,7 @@ public class JobManager : MonoBehaviour
         if (villager.debugLevel == VillagerDebugLevels.Detailed)
             Debug.Log(villager.jobList[0].jobType + " job for " + e.villagerIndex + " finished!");
 
-        villager.jobList.RemoveAt(0);
+        RemoveJob(villager.index, 0);
 
         villager.performingJob = false;
     }
@@ -105,15 +137,8 @@ public class JobManager : MonoBehaviour
                 break;
             //If the villager has too many items for one storage, deposit the items they can in that storage, and equally distribute items among the remaining storage spaces available.
             case "Deposit":
-                //Villager villager = villagers[villagerIndex];
-
-                //Transform[] nearestStorages = JobUtils.GetNearestAvailableStorages(villager, objectiveTransforms[0].tag, amounts[0]);
-
-                //for (int i = 0; i < nearestStorages.Length; i++)
-                //{
-                    AssignJob(jobPosition, objectiveTransforms, amounts, "Move", villagerIndex);
-                    AssignJob(/*nearestStorages[i].*/jobPosition, new Transform[1] { objectiveTransforms[0] } /*new Transform[1] { /*nearestStorages[i] }*/, amounts, "Deposit", villagerIndex);
-                //}
+                AssignJob(jobPosition, objectiveTransforms, amounts, "Move", villagerIndex);
+                AssignJob(jobPosition, new Transform[1] { objectiveTransforms[0] }, amounts, "Deposit", villagerIndex);
                 break;
             case "PickUpPile":
                 AssignJob(jobPosition, objectiveTransforms, amounts, "Move", villagerIndex);
@@ -133,7 +158,7 @@ public class JobManager : MonoBehaviour
 
     public void CancelSelectedJob()
     {
-        GameObject selectedObject = SelectTile.selectedObject;
+        GameObject selectedObject = Select.selectedObject;
 
         Villager selectedVillager = null;
         int jobIndex = -1;
@@ -180,8 +205,8 @@ public class JobManager : MonoBehaviour
 
     public void ChopSelectedTree()
     {
-        if (!SelectTile.selectedObject.GetComponent<Resource>().beingHarvested)
-            AssignJobGroup("HarvestTree", SelectTile.selectedObject.transform.position, new Transform[1] { SelectTile.selectedObject.transform });
+        if (!Select.selectedObject.GetComponent<Resource>().beingHarvested)
+            AssignJobGroup("HarvestTree", Select.selectedObject.transform.position, new Transform[1] { Select.selectedObject.transform });
     }
 
     //Returns true if any job of any villager contains the selected transform.

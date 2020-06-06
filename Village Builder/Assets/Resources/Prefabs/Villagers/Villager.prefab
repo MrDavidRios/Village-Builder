@@ -203,7 +203,7 @@ MonoBehaviour:
   _role: 
   inventoryFull: 0
   numberOfItems: 0
-  inventoryCapacity: 5
+  inventoryCapacity: 6
   items: []
   performingJob: 0
   currentlyDepositing: 0
@@ -211,7 +211,9 @@ MonoBehaviour:
   unfinishedJob: 
   _harvestAmount: 1
   _harvestRate: 1
-  _buildAmount: 0
-  _buildRate: 0
-  _itemExchangeRate: 0
+  _buildAmount: 5
+  _buildRate: 3
+  _itemExchangeRate: 1
+  _walkSpeed: 3
+  _currentWalkSpeed: 0
   debugLevel: 0

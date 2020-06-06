@@ -19,7 +19,7 @@ public class ItemPile : MonoBehaviour
     public int despawnMinutes;
 
     private void Awake()
-    { 
+    {
         amountOfItems = transform.childCount;
 
         switch (tag)
@@ -40,17 +40,14 @@ public class ItemPile : MonoBehaviour
     {
         amountOfItems--;
 
-        Transform itemToRemove = transform.GetChild(transform.childCount - 1);
+        Transform itemToRemove = transform.GetChild(amountOfItems);
 
         GameObject.Destroy(itemToRemove.gameObject);
-
-        if (lastTake && amountOfItems > 0)
-            beingPickedUp = false;
 
         return tag;
     }
 
-    IEnumerator UpdateTimeToDespawn() 
+    IEnumerator UpdateTimeToDespawn()
     {
         int timeInSeconds = minutesToDespawn * 60;
 
@@ -74,6 +71,7 @@ public class ItemPile : MonoBehaviour
             }
         }
 
-        GameObject.Destroy(gameObject);
+        if (!beingPickedUp)
+            GameObject.Destroy(gameObject);
     }
 }
