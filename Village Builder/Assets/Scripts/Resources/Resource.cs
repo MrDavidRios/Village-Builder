@@ -1,22 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Resource : MonoBehaviour
 {
-    public int resourceAmount { get; private set; }
-
     public string resourceType;
 
     public bool beingHarvested;
 
     private bool harvestIndicatorExists;
+    public int resourceAmount { get; private set; }
 
     private void Start()
     {
         harvestIndicatorExists = false;
 
-        bool indeterminateScale = resourceType.ToLower() == "stone";
+        var indeterminateScale = resourceType.ToLower() == "stone";
 
         resourceAmount = GlobalResourceSettings.ResourceAmount(resourceType);
 
@@ -26,25 +23,31 @@ public class Resource : MonoBehaviour
         {
             //0.7f is the original stone scale.
 
-            float scaleDifference = transform.parent.localScale.x - 0.7f;
+            var scaleDifference = transform.parent.localScale.x - 0.7f;
 
-            float percentIncrease = scaleDifference / 0.7f * 10f;
+            var percentIncrease = scaleDifference / 0.7f * 10f;
 
             resourceAmount += Mathf.RoundToInt(GlobalResourceSettings.resourceVariationAmount * percentIncrease);
         }
         else
-            resourceAmount = Mathf.RoundToInt(resourceAmountCalculatable * Mathf.Pow(transform.parent.localScale.x, GlobalResourceSettings.resourceVariationAmount));
+        {
+            resourceAmount = Mathf.RoundToInt(resourceAmountCalculatable * Mathf.Pow(transform.parent.localScale.x,
+                GlobalResourceSettings.resourceVariationAmount));
+        }
     }
 
-    public void HarvestResource(int _resourceAmount) => resourceAmount -= _resourceAmount;
+    public void HarvestResource(int _resourceAmount)
+    {
+        resourceAmount -= _resourceAmount;
+    }
 
-    public void AddHarvestIndicator() 
+    public void AddHarvestIndicator()
     {
         if (harvestIndicatorExists)
             return;
 
-        Vector3 posOffset = Vector3.zero;
-        Vector3 scaleFactor = Vector3.one;
+        var posOffset = Vector3.zero;
+        var scaleFactor = Vector3.one;
 
         GameObject indicatorPrefab = null;
 
@@ -62,10 +65,12 @@ public class Resource : MonoBehaviour
                 return;
         }
 
-        GameObject harvestIndicator = Instantiate(indicatorPrefab, transform);
+        var harvestIndicator = Instantiate(indicatorPrefab, transform);
 
         harvestIndicator.transform.localPosition = posOffset;
-        harvestIndicator.transform.localScale = new Vector3(harvestIndicator.transform.localScale.x * scaleFactor.x, harvestIndicator.transform.localScale.y * scaleFactor.y, harvestIndicator.transform.localScale.z * scaleFactor.z);
+        harvestIndicator.transform.localScale = new Vector3(harvestIndicator.transform.localScale.x * scaleFactor.x,
+            harvestIndicator.transform.localScale.y * scaleFactor.y,
+            harvestIndicator.transform.localScale.z * scaleFactor.z);
 
         harvestIndicator.name = indicatorPrefab.name;
 

@@ -1,15 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
-[System.Serializable]
+[Serializable]
 public class Item
 {
     public GameObject itemObject;
     public string itemType;
 }
 
-[System.Serializable]
+[Serializable]
 public class ItemBundle
 {
     public Item item;

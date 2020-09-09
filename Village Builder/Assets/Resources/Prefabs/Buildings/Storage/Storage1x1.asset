@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Storage1x1
   m_EditorClassIdentifier: 
   name: Storage1x1
+  buildingType: Storage
   width: 1
   length: 1
   requiredResources:

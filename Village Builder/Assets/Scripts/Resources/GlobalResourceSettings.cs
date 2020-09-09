@@ -1,15 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public static class GlobalResourceSettings
+﻿public static class GlobalResourceSettings
 {
     public static int defaultWoodAmount = 5;
     public static int defaultStoneAmount = 10;
 
     public static float resourceVariationAmount = 2;
 
-    public static int ResourceAmount(string resourceType = "wood") 
+    public static int ResourceAmount(string resourceType = "wood")
     {
         resourceType = resourceType.ToLower();
 

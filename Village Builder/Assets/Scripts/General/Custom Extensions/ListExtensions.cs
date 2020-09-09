@@ -7,4 +7,3 @@ public static class ListExtenstions
         list.AddRange(elements);
     }
 }
-

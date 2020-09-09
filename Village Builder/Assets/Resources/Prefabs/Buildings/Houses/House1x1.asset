@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: House1x1
   m_EditorClassIdentifier: 
   name: House1x1
+  buildingType: House
   width: 1
   length: 1
   requiredResources:

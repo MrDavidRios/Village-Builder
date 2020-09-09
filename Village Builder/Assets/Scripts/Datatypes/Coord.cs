@@ -1,10 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 // Replacement for Vector2Int, which was causing slowdowns in big loops due to x,y accessor overhead
 // A struct is a collection of variables and functions, used to simplify code.
 public struct Coord
 {
-
     //x and y values of the coordinate.
     public readonly int x;
     public readonly int y;
@@ -25,59 +25,29 @@ public struct Coord
     //Returns the distance between two coordinate values (direct)
     public static float Distance(Coord a, Coord b)
     {
-        return (float)System.Math.Sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+        return (float) Math.Sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
     }
 
     //Checks if two coordinate values are neighbors
     public static bool AreNeighbours(Coord a, Coord b)
     {
-        return System.Math.Abs(a.x - b.x) <= 1 && System.Math.Abs(a.y - b.y) <= 1;
+        return Math.Abs(a.x - b.x) <= 1 && Math.Abs(a.y - b.y) <= 1;
     }
 
     //The invalid coordinate value
-    public static Coord invalid
-    {
-        get
-        {
-            return new Coord(-1, -1);
-        }
-    }
+    public static Coord invalid => new Coord(-1, -1);
 
     //The 'up' coordinate direction
-    public static Coord up
-    {
-        get
-        {
-            return new Coord(0, 1);
-        }
-    }
+    public static Coord up => new Coord(0, 1);
 
     //The 'down' coordinate direction
-    public static Coord down
-    {
-        get
-        {
-            return new Coord(0, -1);
-        }
-    }
+    public static Coord down => new Coord(0, -1);
 
     //The 'left' coordinate direction
-    public static Coord left
-    {
-        get
-        {
-            return new Coord(-1, 0);
-        }
-    }
+    public static Coord left => new Coord(-1, 0);
 
     //The 'right' coordinate direction
-    public static Coord right
-    {
-        get
-        {
-            return new Coord(1, 0);
-        }
-    }
+    public static Coord right => new Coord(1, 0);
 
     //Different operators, making sure that Coords can be added, subtracted, and checked against each other
     public static Coord operator +(Coord a, Coord b)
@@ -112,7 +82,7 @@ public struct Coord
 
     public override bool Equals(object other)
     {
-        return (Coord)other == this;
+        return (Coord) other == this;
     }
 
     public override int GetHashCode()

@@ -1,25 +1,22 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using TileOperations;
-using Unity.Jobs.LowLevel.Unsafe;
 using UnityEngine;
 
 public class JobManager : MonoBehaviour
 {
-    private static List<Villager> villagers = new List<Villager>();
+    public static List<Villager> villagers = new List<Villager>();
 
     //On awake, subscribe to the Jobs.cs FinishJob event handler. Might as well give the villagers their indexes while we're at it. Oh, and before you do that, initialize the villager list.
     private void Awake()
     {
-        int i = 0;
+        var i = 0;
 
         foreach (Transform villager in transform)
         {
             villagers.Add(villager.GetComponent<Villager>());
 
-            villager.GetComponent<Villager>().index = i;
+            villager.GetComponent<Villager>()._index = i;
 
             i++;
         }
@@ -28,7 +25,10 @@ public class JobManager : MonoBehaviour
         Jobs.JobGroupAssigned += Jobs_AssignJobGroups;
     }
 
-    public Villager VillagerToAssignTo(string jobType) => villagers[JobUtils.VillagerToAssignTo(villagers, jobType)];
+    public Villager VillagerToAssignTo(string jobType)
+    {
+        return villagers[JobUtils.VillagerToAssignTo(villagers, jobType)];
+    }
 
     public static void AssignJob(Job job, int villagerIndex, int jobIndex)
     {
@@ -46,14 +46,15 @@ public class JobManager : MonoBehaviour
 
     public void AssignJob(Job job)
     {
-        int villagerIndex = JobUtils.VillagerToAssignTo(villagers, job.jobType);
+        var villagerIndex = JobUtils.VillagerToAssignTo(villagers, job.jobType);
 
         villagers[villagerIndex].lastAddedJob = job;
 
         villagers[villagerIndex].jobList.Add(job);
     }
 
-    public void AssignJob(Vector3 position, Transform[] objectiveTransforms, int[] amounts, string jobType, int villagerIndex)
+    public void AssignJob(Vector3 position, Transform[] objectiveTransforms, int[] amounts, string jobType,
+        int villagerIndex)
     {
         var newJob = new Job();
 
@@ -76,7 +77,7 @@ public class JobManager : MonoBehaviour
         newJob.objectiveTransforms = objectiveTransforms;
         newJob.amounts = amounts;
 
-        int villagerIndex = JobUtils.VillagerToAssignTo(villagers, jobType);
+        var villagerIndex = JobUtils.VillagerToAssignTo(villagers, jobType);
 
         villagers[villagerIndex].lastAddedJob = newJob;
 
@@ -107,22 +108,26 @@ public class JobManager : MonoBehaviour
         if (villager.debugLevel == VillagerDebugLevels.Detailed)
             Debug.Log(villager.jobList[0].jobType + " job for " + e.villagerIndex + " finished!");
 
-        RemoveJob(villager.index, 0);
+        RemoveJob(villager._index, 0);
 
         villager.performingJob = false;
     }
 
-    private void Jobs_AssignJobGroups(object sender, AssignJobGroupArgs e) => AssignJobGroup(e.jobGroup, e.jobPosition, e.jobTransforms, e.amounts, e.villagerIndex);
+    private void Jobs_AssignJobGroups(object sender, AssignJobGroupArgs e)
+    {
+        AssignJobGroup(e.jobGroup, e.jobPosition, e.jobTransforms, e.amounts, e.villagerIndex);
+    }
 
-    public void AssignJobGroup(string jobGroup, Vector3 jobPosition, Transform[] objectiveTransforms, int[] amounts = null, int villagerIndex = -1)
+    public void AssignJobGroup(string jobGroup, Vector3 jobPosition, Transform[] objectiveTransforms,
+        int[] amounts = null, int villagerIndex = -1)
     {
         if (villagerIndex == -1)
-            villagerIndex = VillagerToAssignTo(jobGroup).index;
+            villagerIndex = VillagerToAssignTo(jobGroup)._index;
 
         switch (jobGroup)
         {
             case "HarvestTree":
-                Transform objectiveTransform = objectiveTransforms[0];
+                var objectiveTransform = objectiveTransforms[0];
 
                 objectiveTransform.GetComponent<Resource>().beingHarvested = true;
 
@@ -138,13 +143,20 @@ public class JobManager : MonoBehaviour
             //If the villager has too many items for one storage, deposit the items they can in that storage, and equally distribute items among the remaining storage spaces available.
             case "Deposit":
                 AssignJob(jobPosition, objectiveTransforms, amounts, "Move", villagerIndex);
-                AssignJob(jobPosition, new Transform[1] { objectiveTransforms[0] }, amounts, "Deposit", villagerIndex);
+                AssignJob(jobPosition, new Transform[1] {objectiveTransforms[0]}, amounts, "Deposit", villagerIndex);
+                break;
+            case "Withdraw":
+                AssignJob(jobPosition, objectiveTransforms, amounts, "Move", villagerIndex);
+                AssignJob(jobPosition, new Transform[1] {objectiveTransforms[0]}, amounts, "Withdraw", villagerIndex);
+                break;
+            case "GetResourcesToBuildSite":
+                AssignJob(jobPosition, new Transform[1] {objectiveTransforms[0]}, amounts, "Move", villagerIndex);
+                AssignJob(jobPosition, new Transform[1] {objectiveTransforms[0]}, amounts, "DepositToBuildSite",
+                    villagerIndex);
                 break;
             case "PickUpPile":
                 AssignJob(jobPosition, objectiveTransforms, amounts, "Move", villagerIndex);
                 AssignJob(jobPosition, objectiveTransforms, amounts, "TakeFromItemPile", villagerIndex);
-
-                //AssignJobGroup("Deposit", jobPosition, objectiveTransforms, new int[1] { objectiveTransforms[0].GetComponent<ItemPile>().amountOfItems }, villagerIndex);
                 break;
             case "Build":
                 AssignJob(jobPosition, objectiveTransforms, amounts, "Move", villagerIndex);
@@ -158,30 +170,28 @@ public class JobManager : MonoBehaviour
 
     public void CancelSelectedJob()
     {
-        GameObject selectedObject = Select.selectedObject;
+        var selectedObject = Select.SelectedObject;
 
         Villager selectedVillager = null;
-        int jobIndex = -1;
+        var jobIndex = -1;
 
-        for (int i = 0; i < villagers.Count; i++)
+        for (var i = 0; i < villagers.Count; i++)
+        for (var j = 0; j < villagers[i].jobList.Count; j++)
         {
-            for (int j = 0; j < villagers[i].jobList.Count; j++)
-            {
-                var matches = villagers[i].jobList.Any(job => job.objectiveTransforms[0] == selectedObject.transform);
+            var matches = villagers[i].jobList.Any(job => job.objectiveTransforms[0] == selectedObject.transform);
 
-                if (matches)
-                {
-                    selectedVillager = villagers[i];
-                    jobIndex = j;
-                }
+            if (matches)
+            {
+                selectedVillager = villagers[i];
+                jobIndex = j;
             }
         }
 
         if (jobIndex != -1)
         {
-            string jobType = selectedVillager.jobList[jobIndex].jobType;
+            var jobType = selectedVillager.jobList[jobIndex].jobType;
 
-            RemoveJob(selectedVillager.index, jobIndex);
+            RemoveJob(selectedVillager._index, jobIndex);
 
             switch (jobType)
             {
@@ -197,29 +207,24 @@ public class JobManager : MonoBehaviour
                     break;
                 case "Deposit":
                     break;
-                default:
-                    break;
             }
         }
     }
 
     public void ChopSelectedTree()
     {
-        if (!Select.selectedObject.GetComponent<Resource>().beingHarvested)
-            AssignJobGroup("HarvestTree", Select.selectedObject.transform.position, new Transform[1] { Select.selectedObject.transform });
+        if (!Select.SelectedObject.GetComponent<Resource>().beingHarvested)
+            AssignJobGroup("HarvestTree", Select.SelectedObject.transform.position,
+                new Transform[1] {Select.SelectedObject.transform});
     }
 
     //Returns true if any job of any villager contains the selected transform.
     public bool JobContainsTransform(Transform selectedTransform)
     {
-        for (int i = 0; i < villagers.Count; i++)
-        {
-            for (int j = 0; j < villagers[i].jobList.Count; j++)
-            {
-                if (villagers[i].jobList[j].objectiveTransforms.Contains(selectedTransform))
-                    return true;
-            }
-        }
+        for (var i = 0; i < villagers.Count; i++)
+        for (var j = 0; j < villagers[i].jobList.Count; j++)
+            if (villagers[i].jobList[j].objectiveTransforms.Contains(selectedTransform))
+                return true;
 
         return false;
     }

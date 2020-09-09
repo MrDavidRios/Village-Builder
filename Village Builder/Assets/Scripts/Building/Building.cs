@@ -1,15 +1,29 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Building", menuName = "Building")]
-public class Building : ScriptableObject
+namespace DavidRios.Building
 {
-    public new string name;
+    [CreateAssetMenu(fileName = "New Building", menuName = "Building")]
+    public class Building : ScriptableObject
+    {
+        public new string name;
+        public string buildingType;
 
-    public int width;
-    public int length;
+        public int width;
+        public int length;
 
-    public ItemBundle[] requiredResources;
+        public bool walkable;
+
+        public ItemBundle[] requiredResources;
+    }
+
+    public interface IBuilding
+    {
+    }
+
+    public abstract class Structure : MonoBehaviour
+    {
+        public abstract Building _Building { get; set; }
+        public abstract List<Vector2> _occupiedIndices { get; set; }
+    }
 }

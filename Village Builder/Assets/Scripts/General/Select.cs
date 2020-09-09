@@ -1,35 +1,35 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using TerrainGeneration;
+﻿using System;
+using System.Collections;
+using DavidRios.Building;
+using DavidRios.Input;
+using Terrain;
 using TMPro;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 namespace TileOperations
 {
     public class Select : MonoBehaviour
     {
+        public static bool CanSelect;
+
+        public static bool SelectionLocked;
+
+        //GameObjects
+        public static GameObject SelectedObject;
+
+        private static UIManager _uiManagerScript;
+
         //Booleans
         public bool anythingSelected;
-
-        public static bool canSelect;
-
-        public static bool selectionLocked;
-
-        //Integers
-        private Vector2Int tileIndex;
-
-        private int _villagerRole;
 
         //Floats
         public float selectionCursorHeight;
 
-        private Vector2 defaultSelectionCursorSideDistance;
-
-        //GameObjects
-        public static GameObject selectedObject;
+        //Strings
+        public string[] tempMiscUINames;
 
         public GameObject selectionCursor;
 
@@ -38,211 +38,183 @@ namespace TileOperations
         //LayerMask
         public LayerMask selectable;
 
-        //Raycasting
-        private RaycastHit hit;
-        private Ray ray;
-
         public Vector2 selectionPos;
 
         public Camera mainCamera;
 
-        //Scripts
-        private TerrainData terrainData;
-        private TerrainGenerator terrainGenerator;
-        private PlacementGrid placementGrid;
-        private static UIManager UIManagerScript;
-        private SelectionCursor selectionCursorScript;
-        private JobManager jobManager;
-        private DisplayJobsList displayJobsList;
+        private int _villagerRole;
 
         //Building Info
-        private Building buildingInfo;
+        private Building _buildingInfo;
 
-        private void Start() => Initialize();
+        private Vector2 _defaultSelectionCursorSideDistance;
+        private DisplayJobsList _displayJobsList;
 
-        private void Initialize()
+        //Raycasting
+        private RaycastHit _hit;
+        private JobManager _jobManager;
+        private PlacementGrid _placementGrid;
+        private Ray _ray;
+        private SelectionCursor _selectionCursorScript;
+
+        //Scripts
+        private TerrainData _terrainData;
+        private TerrainGenerator _terrainGenerator;
+        
+        //Input
+        private PlayerController.DefaultActions _input;
+
+        //Integers
+        private Vector2Int _tileIndex;
+
+        private void Start()
         {
-            //Cache necessary scripts
-            terrainGenerator = FindObjectOfType<TerrainGenerator>();
-            terrainData = FindObjectOfType<TerrainData>();
-            placementGrid = FindObjectOfType<PlacementGrid>();
-            UIManagerScript = FindObjectOfType<UIManager>();
-            selectionCursorScript = FindObjectOfType<SelectionCursor>();
-            jobManager = FindObjectOfType<JobManager>();
-            displayJobsList = FindObjectOfType<DisplayJobsList>();
-
-            selectionCursor = selectionCursorScript.gameObject;
-
-            defaultSelectionCursorSideDistance = new Vector2(selectionCursorScript.sideDist, selectionCursorScript.sideDist * 1.25f);
-
-            selectionCursor.SetActive(false);
-
-            //Initialize Terrain Collider
-            var terrainCollider = terrainMesh.GetComponent<BoxCollider>();
-            terrainCollider.center = new Vector3(terrainGenerator.worldSize / 2, -0.75f, terrainGenerator.worldSize / 2);
-            terrainCollider.size = new Vector3(terrainGenerator.worldSize, 1.5f, terrainGenerator.worldSize);
-
-            //Set necessary variables
-            canSelect = true;
+            Initialize();
         }
 
         private void Update()
         {
-            if (!canSelect)
+            if (!CanSelect)
                 return;
 
             //The ray goes from the camera's position on the screen to the mouse cursor's position
-            ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            _ray = mainCamera.ScreenPointToRay(InputHandler.MousePosition);
 
             //This code won't run if the mouse is hovering over the UI or if a building is being placed
-            if (!EventSystem.current.IsPointerOverGameObject() && !PlaceBuilding._placingBuilding && !selectionLocked)
+            if (!EventSystem.current.IsPointerOverGameObject() && !PositionBuildingTemplate.PlacingBuilding &&
+                !SelectionLocked)
             {
                 //If the raycast hit something with a collider, run the code inside this 'if' statement
-                if (Physics.Raycast(ray, out hit, GlobalRules._maxRaycastDistance, selectable))
+                if (Physics.Raycast(_ray, out _hit, GlobalRules._maxRaycastDistance, selectable))
                 {
                     //Left-Click
-                    if (Input.GetMouseButtonDown(0))
+                    if (InputHandler.Pressed(_input.LeftClick))
                     {
                         RestoreSelectionCursorSideDistanceToDefault();
 
-                        CloseOpenedTempUI();
+                        InitializeTempUI();
 
                         //Set the selected object equal to the object that was clicked on
-                        selectedObject = hit.transform.gameObject;
+                        SelectedObject = _hit.transform.gameObject;
 
                         //Check what kind of object was selected based on its layer
-                        switch (selectedObject.layer)
+                        switch (SelectedObject.layer)
                         {
                             //Terrain Layer (Tiles)
                             case 8:
-                                {
-                                    var tilePos = placementGrid.GetNearestPointOnGrid(hit.point);
+                            {
+                                var tilePos = _placementGrid.GetNearestPointOnGrid(_hit.point);
 
-                                    //Find the x and y indexes of the tile
-                                    tileIndex = GetTileIndex(tilePos);
+                                //Find the x and y indexes of the tile
+                                _tileIndex = GetTileIndex(tilePos);
 
-                                    //Change the scale of the selection cursor
-                                    ScaleSelectionCursor(new Vector3(0.5f, 0.5f, 0.5f));
+                                //Change the scale of the selection cursor
+                                ScaleSelectionCursor(new Vector3(0.5f, 0.5f, 0.5f));
 
-                                    //Is this tile a water tile?
-                                    if (Environment.tileType[tileIndex.x, tileIndex.y] == "Water")
-                                    {
-                                        //If the tile is a water tile, move the cursor down 0.4 units because water tiles are lower than land tiles.
-                                        PositionSelectionCursor(tilePos + new Vector3(0f, -0.4f, 0f), tileIndex);
-                                    }
-                                    else
-                                        PositionSelectionCursor(tilePos, tileIndex);
+                                //Is this tile a water tile?
+                                if (Environment.tileType[_tileIndex.x, _tileIndex.y] == "Water")
+                                    //If the tile is a water tile, move the cursor down 0.4 units because water tiles are lower than land tiles.
+                                    PositionSelectionCursor(tilePos + new Vector3(0f, -0.4f, 0f), _tileIndex);
+                                else
+                                    PositionSelectionCursor(tilePos, _tileIndex);
 
-                                    selectedObject = terrainGenerator.gameObject;
-                                    break;
-                                }
+                                SelectedObject = _terrainGenerator.gameObject;
+                                break;
+                            }
 
                             //Resource Layer (Trees, rocks, etc.)
                             case 9:
+                            {
+                                //Differentiate between different resource types
+                                switch (SelectedObject.tag)
                                 {
-                                    //Differentiate between different resource types
-                                    switch (selectedObject.tag)
-                                    {
-                                        case "Tree":
-                                            ScaleSelectionCursor(new Vector3(0.75f, 0.75f, 0.75f));
-                                            break;
-                                        case "Stone":
-                                            ScaleSelectionCursor(selectedObject.transform.localScale);
-                                            break;
-                                        case "Iron":
-                                            break;
-                                        case "Bronze":
-                                            break;
-                                        case "Gold":
-                                            break;
-                                        default:
-                                            Debug.Log("Invalid tag specified: " + selectedObject.tag);
-                                            break;
-                                    }
-
-                                    PositionSelectionCursor(selectedObject.transform.position, true);
-                                    break;
+                                    case "Tree":
+                                        ScaleSelectionCursor(new Vector3(0.75f, 0.75f, 0.75f));
+                                        break;
+                                    case "Stone":
+                                        ScaleSelectionCursor(SelectedObject.transform.localScale);
+                                        break;
+                                    case "Iron":
+                                        break;
+                                    case "Bronze":
+                                        break;
+                                    case "Gold":
+                                        break;
+                                    default:
+                                        Debug.Log("Invalid tag specified: " + SelectedObject.tag);
+                                        break;
                                 }
+
+                                PositionSelectionCursor(SelectedObject.transform.position, true);
+                                break;
+                            }
 
                             //Buildings Layer
                             case 10:
-                                {
-                                    PositionSelectionCursorCustom(selectedObject.transform.position, true);
+                            {
+                                PositionSelectionCursorCustom(SelectedObject.transform.position, true);
 
-                                    switch (selectedObject.tag)
-                                    {
-                                        case "Infrastructure":
-                                            buildingInfo = selectedObject.GetComponent<InfrastructureBuilding>().building;
-                                            break;
-                                        case "Residential":
-                                            buildingInfo = selectedObject.GetComponent<ResidentialBuilding>().building;
-                                            break;
-                                        case "Industrial":
-                                            buildingInfo = selectedObject.GetComponent<IndustrialBuilding>().building;
-                                            break;
-                                        default:
-                                            Debug.LogWarning("Building Tag not found: " + tag);
-                                            break;
-                                    }
+                                _buildingInfo = BuildingOperations.GetBuildingScriptableObject(SelectedObject.transform);
 
-                                    float buildingWidth = buildingInfo.width;
+                                float buildingWidth = _buildingInfo.width;
 
-                                    ScaleSelectionCursor(new Vector3(buildingWidth / 2f, buildingWidth / 2f, buildingWidth / 2f));
-                                    ModifySelectionCursorSideDistance(1.25f, 1.5f);
-                                    break;
-                                }
+                                ScaleSelectionCursor(new Vector3(buildingWidth / 2f, buildingWidth / 2f,
+                                    buildingWidth / 2f));
+                                ModifySelectionCursorSideDistance(1.25f, 1.5f);
+                                break;
+                            }
 
                             //Villagers Layer
                             case 11:
-                                {
-                                    StartCoroutine(FollowSelected(selectedObject));
+                            {
+                                StartCoroutine(FollowSelected(SelectedObject));
 
-                                    ScaleSelectionCursor(new Vector3(0.5f, 0.5f, 0.5f));
-                                    break;
-                                }
+                                ScaleSelectionCursor(new Vector3(0.5f, 0.5f, 0.5f));
+                                break;
+                            }
 
                             //Piles Layer
                             case 12:
+                            {
+                                //Differentiate between different resource types
+                                switch (SelectedObject.tag)
                                 {
-                                    //Differentiate between different resource types
-                                    switch (selectedObject.tag)
-                                    {
-                                        case "Log":
-                                            ScaleSelectionCursor(new Vector3(0.3f, 0.3f, 0.3f));
-                                            break;
-                                        default:
-                                            Debug.Log("Invalid tag specified: " + selectedObject.tag);
-                                            break;
-                                    }
-
-                                    PositionSelectionCursor(selectedObject.transform.position, true);
-                                    break;
+                                    case "Log":
+                                        ScaleSelectionCursor(new Vector3(0.3f, 0.3f, 0.3f));
+                                        break;
+                                    default:
+                                        Debug.Log("Invalid tag specified: " + SelectedObject.tag);
+                                        break;
                                 }
+
+                                PositionSelectionCursor(SelectedObject.transform.position, true);
+                                break;
+                            }
 
                             default:
-                                {
-                                    Debug.LogError("Error: Invalid Layer ID given: " + hit.transform.gameObject.layer);
-                                    break;
-                                }
+                            {
+                                Debug.LogError("Error: Invalid Layer ID given: " + _hit.transform.gameObject.layer);
+                                break;
+                            }
                         }
 
-                        if (!UIManagerScript.mainPanels["SelectionPanel"].activeInHierarchy)
-                            UIManagerScript.mainPanels["SelectionPanel"].SetActive(true);
+                        if (!_uiManagerScript.mainPanels["SelectionPanel"].activeInHierarchy)
+                            _uiManagerScript.mainPanels["SelectionPanel"].SetActive(true);
                     }
                 }
                 else
                 {
                     //De-Select everything if the player clicked away
-                    if (Input.GetMouseButtonDown(0))
+                    if (InputHandler.Pressed(_input.LeftClick))
                         DeselectAll();
                 }
             }
 
-            if (PlaceBuilding._placingBuilding)
+            if (PositionBuildingTemplate.PlacingBuilding)
                 DeselectAll();
 
             //If nothing is selected
-            if (selectedObject == null)
+            if (SelectedObject == null)
             {
                 anythingSelected = false;
 
@@ -254,7 +226,7 @@ namespace TileOperations
                 anythingSelected = true;
             }
 
-            if (selectionLocked && selectedObject == null)
+            if (SelectionLocked && SelectedObject == null)
                 LockSelection(false);
 
             //Update the UI (User Interface)
@@ -265,253 +237,362 @@ namespace TileOperations
                 Actions();
         }
 
-        void UpdateUI()
+        private void Initialize()
+        {
+            //Cache necessary scripts
+            _terrainGenerator = FindObjectOfType<TerrainGenerator>();
+            _terrainData = FindObjectOfType<TerrainData>();
+            _placementGrid = FindObjectOfType<PlacementGrid>();
+            _uiManagerScript = FindObjectOfType<UIManager>();
+            _selectionCursorScript = FindObjectOfType<SelectionCursor>();
+            _jobManager = FindObjectOfType<JobManager>();
+            _displayJobsList = FindObjectOfType<DisplayJobsList>();
+
+            selectionCursor = _selectionCursorScript.gameObject;
+
+            _defaultSelectionCursorSideDistance =
+                new Vector2(_selectionCursorScript.sideDist, _selectionCursorScript.sideDist * 1.25f);
+
+            selectionCursor.SetActive(false);
+
+            //Initialize Terrain Collider
+            var terrainCollider = terrainMesh.GetComponent<BoxCollider>();
+            terrainCollider.center =
+                new Vector3(_terrainGenerator.worldSize / 2, -0.75f, _terrainGenerator.worldSize / 2);
+            terrainCollider.size = new Vector3(_terrainGenerator.worldSize, 1.5f, _terrainGenerator.worldSize);
+
+            _input = InputHandler.PlayerControllerInstance.Default;
+            
+            //Set necessary variables
+            CanSelect = true;
+        }
+
+        private void UpdateUI()
         {
             HideSubtitles(3);
 
             if (!anythingSelected)
             {
                 //Close the selection panel
-                UIManagerScript.ClosePanel("SelectionPanel");
+                _uiManagerScript.ClosePanel("SelectionPanel");
                 return;
             }
 
-            switch (selectedObject.layer)
+            switch (SelectedObject.layer)
             {
                 //Terrain
                 case 8:
+                {
+                    //Cached data
+                    var tileType = Environment.tileType[_tileIndex.x, _tileIndex.y];
+                    var fertility = Environment.fertility[_tileIndex.x, _tileIndex.y];
+
+                    string fertilityLevel;
+
+                    //Change the display of the tile's fertility based on the tile's actual fertility value
+                    switch (fertility)
                     {
-                        //Cached data
-                        string tileType = Environment.tileType[tileIndex.x, tileIndex.y];
-                        int fertility = Environment.fertility[tileIndex.x, tileIndex.y];
-
-                        string fertilityLevel;
-
-                        //Change the display of the tile's fertility based on the tile's actual fertility value
-                        switch (fertility)
-                        {
-                            case 0:
-                            default:
-                                fertilityLevel = "Infertile";
-                                break;
-                            case 1:
-                                fertilityLevel = "Low Fertility";
-                                break;
-                            case 2:
-                                fertilityLevel = "Fertile";
-                                break;
-                            case 3:
-                                fertilityLevel = "Very Fertile";
-                                break;
-                        }
-
-                        //Change the title of the selection panel to the type of tile that's selected.
-                        UIManagerScript.ChangeText("SelectedTitle", tileType);
-
-                        //If the tile is a water/shore tile, then find the depth. Once that's found, set the selection panel's subtitle to the depth of the water tile.
-                        if (tileType == "Water" || tileType == "Shore")
-                        {
-                            //UV basically represents the color of the tile and is represented by x and y values.
-                            float uvY = Environment.uvs[tileIndex.x, tileIndex.y].y;
-                            string waterDepth = "Shallow";
-
-                            //Depending on the darkness of the water (uvY) the depth of the water can be found.
-                            if (uvY < 0.8f && uvY >= 0.5f)
-                                waterDepth = "Medium Depth";
-                            else if (uvY < 0.5f && uvY >= 0.4f)
-                                waterDepth = "Deep";
-                            else if (uvY < 0.4f)
-                                waterDepth = "Deeper";
-
-                            //Change the selection panel's subtitle to the depth of the selected water tile
-                            UIManagerScript.ChangeText("Subtitle1", waterDepth);
-                        }
-
-                        //If the tile is grass or sand display the fertility of the tile
-                        if (tileType == "Grass" || tileType == "Sand")
-                            UIManagerScript.ChangeText("Subtitle1", fertilityLevel);
-
-                        //If the tile is a fishing tile, display the fact that it has fish
-                        if (Environment.fishingTile[tileIndex.x, tileIndex.y])
-                            UIManagerScript.ChangeText("Subtitle1", "Good fishing spot");
-
-                        //Show the first subtitle
-                        ShowSubtitles(1);
-
-                        break;
+                        case 0:
+                        default:
+                            fertilityLevel = "Infertile";
+                            break;
+                        case 1:
+                            fertilityLevel = "Low Fertility";
+                            break;
+                        case 2:
+                            fertilityLevel = "Fertile";
+                            break;
+                        case 3:
+                            fertilityLevel = "Very Fertile";
+                            break;
                     }
+
+                    //Change the title of the selection panel to the type of tile that's selected.
+                    _uiManagerScript.ChangeText("SelectedTitle", tileType);
+
+                    //If the tile is a water/shore tile, then find the depth. Once that's found, set the selection panel's subtitle to the depth of the water tile.
+                    if (tileType == "Water" || tileType == "Shore")
+                    {
+                        //UV basically represents the color of the tile and is represented by x and y values.
+                        var uvY = Environment.uvs[_tileIndex.x, _tileIndex.y].y;
+                        var waterDepth = "Shallow";
+
+                        //Depending on the darkness of the water (uvY) the depth of the water can be found.
+                        if (uvY < 0.8f && uvY >= 0.5f)
+                            waterDepth = "Medium Depth";
+                        else if (uvY < 0.5f && uvY >= 0.4f)
+                            waterDepth = "Deep";
+                        else if (uvY < 0.4f)
+                            waterDepth = "Deeper";
+
+                        //Change the selection panel's subtitle to the depth of the selected water tile
+                        _uiManagerScript.ChangeText("Subtitle1", waterDepth);
+                    }
+
+                    //If the tile is grass or sand display the fertility of the tile
+                    if (tileType == "Grass" || tileType == "Sand")
+                        _uiManagerScript.ChangeText("Subtitle1", fertilityLevel);
+
+                    //If the tile is a fishing tile, display the fact that it has fish
+                    if (Environment.fishingTile[_tileIndex.x, _tileIndex.y])
+                        _uiManagerScript.ChangeText("Subtitle1", "Good fishing spot");
+
+                    //Show the first subtitle
+                    ShowSubtitles(1);
+
+                    break;
+                }
 
                 //Resource
                 case 9:
+                {
+                    var resourceType = SelectedObject.tag;
+
+                    _uiManagerScript.ChangeText("SelectedTitle", resourceType);
+
+                    switch (resourceType)
                     {
-                        string resourceType = selectedObject.tag;
-
-                        UIManagerScript.ChangeText("SelectedTitle", resourceType);
-
-                        switch (resourceType)
+                        case "Tree":
                         {
-                            case "Tree":
-                                UIManagerScript.ShowMiscUI("ChopTreeButton");
+                            if (!SelectedObject.GetComponent<Resource>().beingHarvested)
+                                _uiManagerScript.ShowMiscUI("ChopTreeButton");
+                            else
+                                _uiManagerScript.HideMiscUI("ChopTreeButton");
 
-                                if (selectedObject.transform.localScale.x > 1.0f)
-                                    UIManagerScript.ChangeText("Subtitle1", "Medium Tree");
-                                else
-                                    UIManagerScript.ChangeText("Subtitle1", "Small Tree");
+                            if (SelectedObject.transform.localScale.x > 1.0f)
+                                _uiManagerScript.ChangeText("Subtitle1", "Medium Tree");
+                            else
+                                _uiManagerScript.ChangeText("Subtitle1", "Small Tree");
 
-                                if (selectedObject.transform.localScale.x > 1.2f)
-                                    UIManagerScript.ChangeText("Subtitle1", "Large Tree");
+                            if (SelectedObject.transform.localScale.x > 1.2f)
+                                _uiManagerScript.ChangeText("Subtitle1", "Large Tree");
 
-                                UIManagerScript.ChangeText("Subtitle2", "Wood amount: " + selectedObject.GetComponent<Resource>().resourceAmount);
-                                break;
-                            case "Stone":
-                                if (selectedObject.transform.localScale.x > 0.6f)
-                                    UIManagerScript.ChangeText("Subtitle1", "Medium Rock");
-                                else
-                                    UIManagerScript.ChangeText("Subtitle1", "Small Rock");
-
-                                if (selectedObject.transform.localScale.x > 0.7f)
-                                    UIManagerScript.ChangeText("Subtitle1", "Large Rock");
-
-                                UIManagerScript.ChangeText("Subtitle2", "Stone amount: " + selectedObject.GetComponent<Resource>().resourceAmount);
-                                break;
-                            case "Iron":
-                                break;
-                            case "Bronze":
-                                break;
-                            case "Gold":
-                                break;
+                            _uiManagerScript.ChangeText("Subtitle2",
+                                "Wood amount: " + SelectedObject.GetComponent<Resource>().resourceAmount);
+                            break;
                         }
+                        case "Stone":
+                        {
+                            if (SelectedObject.transform.localScale.x > 0.6f)
+                                _uiManagerScript.ChangeText("Subtitle1", "Medium Rock");
+                            else
+                                _uiManagerScript.ChangeText("Subtitle1", "Small Rock");
 
-                        ShowSubtitles(2);
-                        break;
+                            if (SelectedObject.transform.localScale.x > 0.7f)
+                                _uiManagerScript.ChangeText("Subtitle1", "Large Rock");
+
+                            _uiManagerScript.ChangeText("Subtitle2",
+                                "Stone amount: " + SelectedObject.GetComponent<Resource>().resourceAmount);
+                            break;
+                        }
+                        case "Iron":
+                        {
+                            break;
+                        }
+                        case "Bronze":
+                        {
+                            break;
+                        }
+                        case "Gold":
+                        {
+                            break;
+                        }
                     }
+
+                    ShowSubtitles(2);
+                    break;
+                }
 
                 //Building
                 case 10:
+                {
+                    _uiManagerScript.ChangeText("SelectedTitle", SelectedObject.name);
+
+                    if (SelectedObject.GetComponent<UnderConstruction>() == null)
                     {
-                        UIManagerScript.ChangeText("SelectedTitle", selectedObject.name);
+                        var buildingType = BuildingOperations.GetBuildingScriptableObject(SelectedObject.transform)
+                            .buildingType;
+                        string subtitle1Text;
 
-                        if (selectedObject.GetComponent<UnderConstruction>() == null)
-                            UIManagerScript.ChangeText("Subtitle1", "Good for storing things");
-                        else
-                            UIManagerScript.ChangeText("Subtitle1", "Under Construction");
+                        switch (buildingType)
+                        {
+                            case "Storage":
+                                subtitle1Text = "Good for storing things";
+                                break;
+                            case "House":
+                                subtitle1Text = "Good for villagers to live in";
+                                break;
+                            case "Road":
+                                subtitle1Text = "Helps villagers walk faster.";
+                                break;
+                            default:
+                                Debug.LogError("Invalid building type: " + buildingType);
+                                subtitle1Text = "?";
+                                break;
+                        }
 
-                        ShowSubtitles(1);
-                        break;
+                        _uiManagerScript.ChangeText("Subtitle1", subtitle1Text);
+
+                        _uiManagerScript.HideMiscUI("TemplateClearButton");
                     }
+                    else
+                    {
+                        var underConstructionScript = SelectedObject.GetComponent<UnderConstruction>();
+
+                        //If the building's current stage is 0, that means that it is still a template.
+                        if (underConstructionScript.currentStage == 0 && !underConstructionScript.grassCleared &&
+                            !underConstructionScript.beingDeposited && underConstructionScript.laborAmount == 0 &&
+                            !_uiManagerScript.miscUIElements["TemplateClearButton"].activeInHierarchy)
+                        {
+                            _uiManagerScript.miscUIElements["TemplateClearButton"].GetComponent<Button>().onClick
+                                .AddListener(() =>
+                                    StartCoroutine(PositionBuildingTemplate.RemoveTemplate(SelectedObject.transform,
+                                        _uiManagerScript.miscUIElements["TemplateClearButton"].GetComponent<Button>())));
+                            _uiManagerScript.ShowMiscUI("TemplateClearButton");
+                        }
+                        //If the current stage isn't 0 or the building's labor amount is greater than 0, then hide the template clear button.
+                        else if (underConstructionScript.currentStage != 0 || underConstructionScript.laborAmount > 0 ||
+                                 underConstructionScript.grassCleared || underConstructionScript.beingDeposited)
+                        {
+                            _uiManagerScript.HideMiscUI("TemplateClearButton");
+                        }
+
+                        _uiManagerScript.ChangeText("Subtitle1", "Under Construction");
+                    }
+
+                    ShowSubtitles(1);
+                    break;
+                }
 
                 //Villager
                 case 11:
+                {
+                    var villager = SelectedObject.GetComponent<Villager>();
+
+                    _uiManagerScript.ChangeText("SelectedTitle", villager._name);
+
+                    _uiManagerScript.ChangeText("Subtitle1", "Gender: " + villager._sex);
+
+                    if (villager.customJobDescription == "")
+                        _uiManagerScript.ChangeText("Subtitle2",
+                            "Currently " + VillagerPropertiesGenerator.CurrentJobDescription(villager));
+                    else
+                        _uiManagerScript.ChangeText("Subtitle2", villager.customJobDescription);
+
+                    //Only change dropdown value if the villager's role changes. Check later if this is necessary.
+                    if ((int) Enum.Parse(typeof(VillagerRoles), villager._role) != _villagerRole)
                     {
-                        var villager = selectedObject.GetComponent<Villager>();
+                        _villagerRole = (int) Enum.Parse(typeof(VillagerRoles), villager._role);
 
-                        UIManagerScript.ChangeText("SelectedTitle", villager._name);
-
-                        UIManagerScript.ChangeText("Subtitle1", "Gender: " + villager._sex);
-                        UIManagerScript.ChangeText("Subtitle2", "Currently " + VillagerPropertiesGenerator.CurrentJobDescription(villager));
-
-                        //Only change dropdown value if the villager's role changes. Check later if this is necessary.
-                        if ((int)System.Enum.Parse(typeof(VillagerRoles), villager._role) != _villagerRole)
-                        {
-                            _villagerRole = (int)System.Enum.Parse(typeof(VillagerRoles), villager._role);
-
-                            UIManagerScript.UpdateDropdown("RoleSelector", _villagerRole - 1 /*VillagerRoles Enum begins at 1*/);
-                        }
-
-                        ShowSubtitles(2);
-
-                        UIManagerScript.ShowMiscUI("JobsViewButton");
-                        break;
+                        _uiManagerScript.UpdateDropdown("RoleSelector",
+                            _villagerRole - 1 /*VillagerRoles Enum begins at 1*/);
                     }
+
+                    ShowSubtitles(2);
+
+                    _uiManagerScript.ShowMiscUI("JobsViewButton");
+                    break;
+                }
 
                 //Piles Layer
                 case 12:
+                {
+                    //Differentiate between different resource types
+                    switch (SelectedObject.tag)
                     {
-                        //Differentiate between different resource types
-                        switch (selectedObject.tag)
-                        {
-                            case "Log":
-                                UIManagerScript.ChangeText("SelectedTitle", "Pile of Logs");
+                        case "Log":
+                            _uiManagerScript.ChangeText("SelectedTitle", "Pile of Logs");
 
-                                UIManagerScript.ChangeText("Subtitle1", "It's a pile of logs.");
-                                UIManagerScript.ChangeText("Subtitle2", "Number of logs: " + selectedObject.GetComponent<ItemPile>().amountOfItems);
-                                break;
-                            default:
-                                Debug.Log("Invalid tag specified: " + selectedObject.tag);
-                                break;
-                        }
-
-                        ItemPile itemPileScript = selectedObject.GetComponent<ItemPile>();
-
-                        //Add a 0 before the minutes/seconds if they are less than 10 so the output is always xx:yy.
-                        string formattedMinutes = itemPileScript.despawnMinutes < 10 ? "0" + itemPileScript.despawnMinutes.ToString() : itemPileScript.despawnMinutes.ToString();
-                        string formattedSeconds = itemPileScript.despawnSeconds < 10 ? "0" + itemPileScript.despawnSeconds.ToString() : itemPileScript.despawnSeconds.ToString();
-
-                        UIManagerScript.ChangeText("ExtraDisplay", "Despawns in: " + formattedMinutes + ":" + formattedSeconds);
-
-                        if (itemPileScript.beingPickedUp)
-                            UIManagerScript.ChangeText("ExtraDisplay", "Being picked up.");
-
-                        ShowSubtitles(3);
-                        break;
+                            _uiManagerScript.ChangeText("Subtitle1", "It's a pile of logs.");
+                            _uiManagerScript.ChangeText("Subtitle2",
+                                "Number of logs: " + SelectedObject.GetComponent<ItemPile>().amountOfItems);
+                            break;
+                        default:
+                            Debug.Log("Invalid tag specified: " + SelectedObject.tag);
+                            break;
                     }
+
+                    var itemPileScript = SelectedObject.GetComponent<ItemPile>();
+
+                    //Add a 0 before the minutes/seconds if they are less than 10 so the output is always xx:yy.
+                    var formattedMinutes = itemPileScript.despawnMinutes < 10
+                        ? "0" + itemPileScript.despawnMinutes
+                        : itemPileScript.despawnMinutes.ToString();
+                    var formattedSeconds = itemPileScript.despawnSeconds < 10
+                        ? "0" + itemPileScript.despawnSeconds
+                        : itemPileScript.despawnSeconds.ToString();
+
+                    _uiManagerScript.ChangeText("ExtraDisplay",
+                        "Despawns in: " + formattedMinutes + ":" + formattedSeconds);
+
+                    if (itemPileScript.beingPickedUp)
+                        _uiManagerScript.ChangeText("ExtraDisplay", "Being picked up.");
+
+                    ShowSubtitles(3);
+                    break;
+                }
             }
 
-            UIManagerScript.OpenPanel("SelectionPanel");
+            _uiManagerScript.OpenPanel("SelectionPanel");
         }
 
-        void Actions()
+        private void Actions()
         {
-            switch (selectedObject.layer)
+            switch (SelectedObject.layer)
             {
                 //Terrain
                 case 8:
-                    {
-                        break;
-                    }
+                {
+                    break;
+                }
 
                 //Resource
                 case 9:
+                {
+                    switch (SelectedObject.tag)
                     {
-                        switch (selectedObject.tag)
-                        {
-                            case "Tree":
-                                if (Input.GetKeyDown(KeyCode.C))
-                                    jobManager.ChopSelectedTree();
-                                break;
-                            case "Stone":
-                                break;
-                        }
-
-                        break;
+                        case "Tree":
+                            if (InputHandler.Pressed(_input.ChopTree))
+                                _jobManager.ChopSelectedTree();
+                            break;
+                        case "Stone":
+                            break;
                     }
+
+                    break;
+                }
 
                 //Building
                 case 10:
-                    {
-                        break;
-                    }
+                {
+                    if (InputHandler.Pressed(_input.Delete))
+                        if (_uiManagerScript.miscUIElements["TemplateClearButton"].activeInHierarchy)
+                            _uiManagerScript.miscUIElements["TemplateClearButton"].GetComponent<Button>().onClick
+                                .Invoke();
+                    break;
+                }
 
                 //Villager
                 case 11:
+                {
+                    //Open/Close Jobs panel if the 'J' key is pressed.
+                    if (InputHandler.Pressed(_input.JobsMenuToggle))
                     {
-                        //Open/Close Jobs panel if the 'J' key is pressed.
-                        if (Input.GetKeyDown(KeyCode.J))
-                        {
-                            if (!UIManagerScript.mainPanels["JobsPanel"].activeInHierarchy)
-                                StartCoroutine(displayJobsList.DisplayVillagerJobs("SelectTile.cs"));
+                        if (!_uiManagerScript.mainPanels["JobsPanel"].activeInHierarchy)
+                            StartCoroutine(_displayJobsList.DisplayVillagerJobs("SelectTile.cs"));
 
-                            UIManagerScript.ToggleUIObject(UIManagerScript.mainPanels["JobsPanel"]);
-                            UIManagerScript.ToggleUIObject(UIManagerScript.mainPanels["SelectionDescriptionPanel"]);
-                        }
-                        break;
+                        _uiManagerScript.ToggleUIObject(_uiManagerScript.mainPanels["JobsPanel"]);
+                        _uiManagerScript.ToggleUIObject(_uiManagerScript.mainPanels["SelectionDescriptionPanel"]);
                     }
+
+                    break;
+                }
             }
 
             //Lock
-            if (Input.GetKeyDown(KeyCode.L))
+            if (InputHandler.Pressed(_input.LockBuilding))
             {
-                bool lockToggle = !selectionLocked;
+                var lockToggle = !SelectionLocked;
 
                 LockSelection(lockToggle);
             }
@@ -519,50 +600,46 @@ namespace TileOperations
 
         public void ActionInit()
         {
-            if (selectedObject.GetComponent<Resource>() != null)
-            {
-                if (selectedObject.GetComponent<Resource>().beingHarvested)
+            if (SelectedObject.GetComponent<Resource>() != null)
+                if (SelectedObject.GetComponent<Resource>().beingHarvested)
                     return;
-            }
 
-            if (selectedObject)
-                PositionSelectionCursor(selectedObject.transform.position, true);
+            if (SelectedObject)
+                PositionSelectionCursor(SelectedObject.transform.position, true);
         }
 
-        void ShowSubtitles(int subtitleAmount)
+        private void ShowSubtitles(int subtitleAmount)
         {
-            for (int i = 1; i <= subtitleAmount; i++)
-            {
-                if (subtitleAmount > 2)
-                    UIManagerScript.ShowText("ExtraDisplay");
+            for (var i = 1; i <= subtitleAmount; i++)
+                if (i > 2)
+                    _uiManagerScript.ShowText("ExtraDisplay");
                 else
-                    UIManagerScript.ShowText("Subtitle" + i);
-
-            }
+                    _uiManagerScript.ShowText("Subtitle" + i);
         }
 
-        void HideSubtitles(int subtitleAmount)
+        private void HideSubtitles(int subtitleAmount)
         {
-            for (int i = 1; i < subtitleAmount; i++)
-            {
-                if (subtitleAmount > 2)
-                    UIManagerScript.HideText("ExtraDisplay");
+            for (var i = 1; i <= subtitleAmount; i++)
+                if (i > 2)
+                    _uiManagerScript.HideText("ExtraDisplay");
                 else
-                    UIManagerScript.HideText("Subtitle" + i);
-            }
+                    _uiManagerScript.HideText("Subtitle" + i);
         }
 
-        void CloseOpenedTempUI()
+        /// <summary>
+        ///     Close the UI that is focused (jobs panel is only focused on villagers, chop button is focused on trees, etc.)
+        /// </summary>
+        private void InitializeTempUI()
         {
-            UIManagerScript.OpenPanel("SelectionDescriptionPanel");
+            _uiManagerScript.OpenPanel("SelectionDescriptionPanel");
 
-            UIManagerScript.ClosePanel("JobsPanel");
-            UIManagerScript.HideMiscUI("JobsViewButton");
-            UIManagerScript.HideMiscUI("ChopTreeButton");
+            _uiManagerScript.ClosePanel("JobsPanel");
+
+            for (var i = 0; i < tempMiscUINames.Length; i++) _uiManagerScript.HideMiscUI(tempMiscUINames[i]);
         }
 
         //Change the position of the selection cursor based on the position passed through the function, and the fact of whether the selected object is a tile or not.
-        void PositionSelectionCursor(Vector3 position, Vector2Int tileIndex = default)
+        private void PositionSelectionCursor(Vector3 position, Vector2Int tileIndex = default)
         {
             //Make a variable of the future position of the selection cursor so that calculations can be done without affecting the actual position of the selection cursor.
             Vector3 selectionCursorPos;
@@ -570,7 +647,7 @@ namespace TileOperations
             //Simply set the selection cursor's position to the position value passed through the function (Vector3 position).
             selectionCursorPos = position;
 
-            selectionCursorScript.UpdateCursorPos(selectionCursorPos);
+            _selectionCursorScript.UpdateCursorPos(selectionCursorPos);
 
 
             //Activate the selection cursor (makes it visible)
@@ -578,7 +655,7 @@ namespace TileOperations
         }
 
         //Change the position of the selection cursor based on the position passed through the function, and the fact of whether the selected object is a tile or not.
-        void PositionSelectionCursor(Vector3 position, bool isAnimating)
+        private void PositionSelectionCursor(Vector3 position, bool isAnimating)
         {
             //Make a variable of the future position of the selection cursor so that calculations can be done without affecting the actual position of the selection cursor.
             Vector3 selectionCursorPos;
@@ -587,52 +664,54 @@ namespace TileOperations
             selectionCursorPos = FindObjectOfType<PlacementGrid>().GetNearestPointOnGrid(position);
 
             if (isAnimating)
-                selectionCursorScript.UpdateCursorPos(new Vector3(selectionCursorPos.x, selectedObject.transform.position.y + selectionCursorHeight, selectionCursorPos.z));
+                _selectionCursorScript.UpdateCursorPos(new Vector3(selectionCursorPos.x,
+                    SelectedObject.transform.position.y + selectionCursorHeight, selectionCursorPos.z));
             else
-                selectionCursorScript.UpdateCursorPos(new Vector3(selectionCursorPos.x, selectedObject.transform.position.y + selectionCursorHeight, selectionCursorPos.z), false);
+                _selectionCursorScript.UpdateCursorPos(
+                    new Vector3(selectionCursorPos.x, SelectedObject.transform.position.y + selectionCursorHeight,
+                        selectionCursorPos.z), false);
 
             //Activate the selection cursor (makes it visible)
             selectionCursor.SetActive(true);
         }
 
-        void PositionSelectionCursorCustom(Vector3 position, bool isAnimating)
+        private void PositionSelectionCursorCustom(Vector3 position, bool isAnimating)
         {
             if (isAnimating)
-                selectionCursorScript.UpdateCursorPos(new Vector3(position.x, selectedObject.transform.position.y + selectionCursorHeight, position.z));
+                _selectionCursorScript.UpdateCursorPos(new Vector3(position.x,
+                    SelectedObject.transform.position.y + selectionCursorHeight, position.z));
             else
-                selectionCursorScript.UpdateCursorPosCustom(new Vector3(position.x, position.y + selectionCursorHeight, position.z));
+                _selectionCursorScript.UpdateCursorPosCustom(new Vector3(position.x, position.y + selectionCursorHeight,
+                    position.z));
 
             //Activate the selection cursor (makes it visible)
             selectionCursor.SetActive(true);
         }
 
         //Change the scale of the selection cursor based on the scale value passed through the function (entire scale values (Vector3)).
-        void ScaleSelectionCursor(Vector3 scale)
+        private void ScaleSelectionCursor(Vector3 scale)
         {
             if (selectionCursor)
             {
-                SelectionCursor selectionCursorScript = selectionCursor.GetComponent<SelectionCursor>();
+                var selectionCursorScript = selectionCursor.GetComponent<SelectionCursor>();
 
-                if (selectionCursorScript.updateScale != null)
-                {
-                    StopCoroutine(selectionCursorScript.updateScale);
-                }
+                if (selectionCursorScript.updateScale != null) StopCoroutine(selectionCursorScript.updateScale);
 
                 selectionCursorScript.updateScale = selectionCursorScript.UpdateScale(scale);
                 StartCoroutine(selectionCursorScript.updateScale);
             }
         }
 
-        void ModifySelectionCursorSideDistance(float minSideDist, float maxSideDist)
+        private void ModifySelectionCursorSideDistance(float minSideDist, float maxSideDist)
         {
-            selectionCursorScript.sideDistMin = minSideDist;
-            selectionCursorScript.sideDistMax = maxSideDist;
+            _selectionCursorScript.sideDistMin = minSideDist;
+            _selectionCursorScript.sideDistMax = maxSideDist;
         }
 
-        void RestoreSelectionCursorSideDistanceToDefault()
+        private void RestoreSelectionCursorSideDistanceToDefault()
         {
-            selectionCursorScript.sideDistMin = defaultSelectionCursorSideDistance.x;
-            selectionCursorScript.sideDistMax = defaultSelectionCursorSideDistance.y;
+            _selectionCursorScript.sideDistMin = _defaultSelectionCursorSideDistance.x;
+            _selectionCursorScript.sideDistMax = _defaultSelectionCursorSideDistance.y;
         }
 
         //Deselect everything by setting the 'selectedObject' to null, which basically means setting it to empty (nothing).
@@ -640,33 +719,33 @@ namespace TileOperations
         {
             LockSelection(false);
 
-            selectedObject = null;
+            SelectedObject = null;
         }
 
         //Get the index of the tile in the tileCentres[,] array given its position
         public Vector2Int GetTileIndex(Vector3 tilePos)
         {
-            for (int y = 0; y < terrainGenerator.worldSize; y++)
-            {
-                for (int x = 0; x < terrainGenerator.worldSize; x++)
-                {
-                    //Check if it's land
-                    if (Environment.tileCentres[x, y] == new Vector3(tilePos.x, Environment.tileCentres[x, y].y, tilePos.z))
-                        return new Vector2Int(x, y);
-                }
-            }
+            for (var y = 0; y < _terrainGenerator.worldSize; y++)
+            for (var x = 0; x < _terrainGenerator.worldSize; x++)
+                //Check if it's land
+                if (Environment.tileCentres[x, y] == new Vector3(tilePos.x, Environment.tileCentres[x, y].y, tilePos.z))
+                    return new Vector2Int(x, y);
 
             //If the tile can't be found, return an impossible value, signaling an error.
             return new Vector2Int(-1, -1);
         }
 
-        public void UpdateVillagerRole(TMP_Dropdown dropDown) => selectedObject.GetComponent<Villager>()._role = System.Enum.GetName(typeof(VillagerRoles), dropDown.value + 1 /*VillagerRoles Enum begins at 1*/);
-
-        IEnumerator FollowSelected(GameObject gameObject)
+        public void UpdateVillagerRole(TMP_Dropdown dropDown)
         {
-            while (selectedObject == gameObject)
+            SelectedObject.GetComponent<Villager>()._role = Enum.GetName(typeof(VillagerRoles),
+                dropDown.value + 1 /*VillagerRoles Enum begins at 1*/);
+        }
+
+        private IEnumerator FollowSelected(GameObject gameObject)
+        {
+            while (SelectedObject == gameObject)
             {
-                PositionSelectionCursorCustom(selectedObject.transform.position, false);
+                PositionSelectionCursorCustom(SelectedObject.transform.position, false);
 
                 yield return null;
             }
@@ -676,15 +755,18 @@ namespace TileOperations
 
         public void LockSelection(bool lockSelection)
         {
-            if (selectionLocked != lockSelection)
+            if (SelectionLocked != lockSelection)
             {
-                UIManagerScript.ToggleUIObject(UIManagerScript.miscUIElements["LockButton"]);
-                UIManagerScript.ToggleUIObject(UIManagerScript.miscUIElements["UnlockButton"]);
+                _uiManagerScript.ToggleUIObject(_uiManagerScript.miscUIElements["LockButton"]);
+                _uiManagerScript.ToggleUIObject(_uiManagerScript.miscUIElements["UnlockButton"]);
             }
 
-            selectionLocked = lockSelection;
+            SelectionLocked = lockSelection;
         }
 
-        public void DisplayVillagerJobsButton(string source) => StartCoroutine(displayJobsList.DisplayVillagerJobs(source));
+        public void DisplayVillagerJobsButton(string source)
+        {
+            StartCoroutine(_displayJobsList.DisplayVillagerJobs(source));
+        }
     }
 }

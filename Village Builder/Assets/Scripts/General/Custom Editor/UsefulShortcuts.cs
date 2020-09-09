@@ -1,8 +1,8 @@
 ﻿#if (UNITY_EDITOR)
-using UnityEditor;
 using System.Reflection;
+using UnityEditor;
 
-static class UsefulShortcuts
+internal static class UsefulShortcuts
 {
     public static void ClearConsole()
     {

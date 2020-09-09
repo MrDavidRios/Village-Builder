@@ -2,10 +2,10 @@
 
 public class GlobalRules : MonoBehaviour
 {
+    public static float _maxRaycastDistance = 75f;
+
     //Floats
     public float maxRaycastDistance;
-
-    public static float _maxRaycastDistance = 75f;
 
     private void Awake()
     {

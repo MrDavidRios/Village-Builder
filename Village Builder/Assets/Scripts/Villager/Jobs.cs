@@ -1,12 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
+using System.Collections;
+using DavidRios.Building;
+using DavidRios.Building.Building_Types;
 using Pathfinding;
-using System;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
-public class VillagerArgs { public int villagerIndex; }
+public class VillagerArgs
+{
+    public int villagerIndex;
+}
 
-public class AssignJobGroupArgs { public string jobGroup; public Vector3 jobPosition; public Transform[] jobTransforms; public int[] amounts; public int villagerIndex; }
+public class AssignJobGroupArgs
+{
+    public int[] amounts;
+    public string jobGroup;
+    public Vector3 jobPosition;
+    public Transform[] jobTransforms;
+    public int villagerIndex;
+}
 
 public class Jobs
 {
@@ -14,17 +26,15 @@ public class Jobs
 
     public static event EventHandler<AssignJobGroupArgs> JobGroupAssigned;
 
-    public static event EventHandler<VillagerArgs> InventoryUpdated;
-
     public static IEnumerator Move(Transform villagerToMove, Vector3 desiredPosition)
     {
-        Villager villager = villagerToMove.GetComponent<Villager>();
+        var villager = villagerToMove.GetComponent<Villager>();
 
-        VillagerDebugLevels debugLevel = villager.debugLevel;
+        var debugLevel = villager.debugLevel;
 
-        AIPath villagerAIPath = villagerToMove.GetComponent<AIPath>();
+        var villagerAIPath = villagerToMove.GetComponent<AIPath>();
 
-        int villagerIndex = villager.index;
+        var villagerIndex = villager._index;
 
         villagerAIPath.canSearch = true;
 
@@ -60,14 +70,12 @@ public class Jobs
 
     public static IEnumerator ChopTree(Villager villager, Transform treeToChop)
     {
-        //bool jobFinished = false;
-
-        var log = new Item { itemObject = Resources.Load("Prefabs/Items/Log") as GameObject, itemType = "Log" };
+        var log = new Item {itemObject = Resources.Load("Prefabs/Items/Log") as GameObject, itemType = "Log"};
 
         var tree = treeToChop.GetComponent<Resource>();
 
-        int chopRate = villager._harvestRate;
-        int chopAmount = villager._harvestAmount;
+        var chopRate = villager._harvestRate;
+        var chopAmount = villager._harvestAmount;
 
         //Generate Stockpile
         var pile = new GameObject();
@@ -79,8 +87,8 @@ public class Jobs
         pile.tag = "Tree";
         pile.transform.eulerAngles = villager.transform.eulerAngles;
 
-        int logNumber = 0;
-        int logYMultiplier = 0;
+        var logNumber = 0;
+        var logYMultiplier = 0;
 
         //Reactivate tree animator component to display animations
         tree.transform.parent.GetComponent<Animator>().enabled = true;
@@ -95,12 +103,14 @@ public class Jobs
                 tree.HarvestResource(chopAmount);
 
             //Add to pile
+
             #region Pile Code
-            for (int i = 0; i < chopAmount; i++)
+
+            for (var i = 0; i < chopAmount; i++)
             {
                 logNumber++;
 
-                var _log = GameObject.Instantiate(log.itemObject, pile.transform);
+                var _log = Object.Instantiate(log.itemObject, pile.transform);
 
                 //Position offset for correct log display
                 _log.transform.localEulerAngles = Vector3.zero;
@@ -119,9 +129,7 @@ public class Jobs
 
                 //Examples: 2, 6, 10, 14, 18, etc.
                 if ((logNumber - 2) % 4 == 0)
-                {
                     _log.transform.localPosition += new Vector3(0f, 0.14f * logYMultiplier, 0.08f);
-                }
 
                 //Examples: 3, 7, 11, 15, 19, etc.
                 if ((logNumber + 1) % 4 == 0)
@@ -139,6 +147,7 @@ public class Jobs
                     _log.transform.localEulerAngles = new Vector3(0f, 90f, 0f);
                 }
             }
+
             #endregion
 
             //Add tree shake animation every time it is chopped
@@ -148,105 +157,54 @@ public class Jobs
             {
                 pile.AddComponent<BoxCollider>();
                 pile.GetComponent<BoxCollider>().size = new Vector3(0.35f, 0.14f * logYMultiplier, 0.35f);
-                pile.GetComponent<BoxCollider>().center = new Vector3(0f, pile.GetComponent<BoxCollider>().size.y / 2f, 0f);
-
-                FinishJob(villager);
+                pile.GetComponent<BoxCollider>().center =
+                    new Vector3(0f, pile.GetComponent<BoxCollider>().size.y / 2f, 0f);
 
                 tree.transform.parent.GetComponent<Animator>().SetTrigger("Felled");
 
+                yield return new WaitForSeconds(2);
+
+                FinishJob(villager);
+
                 pile.AddComponent<ItemPile>();
 
-                //jobFinished = true;
-
                 yield break;
             }
-
-            /*
-            if (villager.inventoryFull)
-            {
-                if (!jobFinished)
-                {
-                    FinishJob(villager);
-
-                    JobGroupAssigned?.Invoke(villager, new AssignJobGroupArgs { jobGroup = "HarvestTree", jobPosition = Vector3.zero, jobTransforms = new Transform[1] { treeToChop }, amounts = new int[0], villagerIndex = villager.index });
-                }
-                else
-                    JobGroupAssigned?.Invoke(villager, new AssignJobGroupArgs { jobGroup = "Deposit", jobPosition = Vector3.zero, jobTransforms = null, amounts = new int[0], villagerIndex = villager.index });
-
-                yield break;
-            }
-            */
         }
     }
 
     public static IEnumerator Deposit(Villager villager, Transform[] storages, int amount)
     {
-        //villager.currentlyDepositing = true;
-
-        string itemType = villager.items[0].itemType;
-
-        //Transform[] storagesToUse = JobUtils.GetNearestAvailableStorages(villager, itemType, amount);
-        /*Move to storage unit
-        JobManager.AssignJob(new Job { position = storagesToUse[i].position, objectiveTransforms = storagesToUse, amounts = new int[0], jobType = "Move" }, villager.index, 0);
-        villager.performingJob = false;
-
-        yield return new WaitUntil(() => villager.jobList[0].jobType == "Deposit");
-        */
-
-        storages[0].GetComponent<Storage>().UpdateAppearance(villager.index);
+        storages[0].GetComponent<Storage>().UpdateAppearance(villager._index);
 
         if (villager.items.Count > 0)
-        {
-            for (int j = 0; j < amount; j++)
-            {
+            for (var j = 0; j < amount; j++)
                 villager.items.RemoveAt(villager.items.Count - 1);
-            }
-        }
 
         while (villager.transform.childCount > villager.items.Count)
         {
-            GameObject.Destroy(villager.transform.GetChild(villager.transform.childCount - 1).gameObject);
+            Object.Destroy(villager.transform.GetChild(villager.transform.childCount - 1).gameObject);
 
             yield return null;
         }
 
-        /*
-        int amountToDeposit = storagesToUse[i].GetComponent<Storage>().GetSpaceForItemsByItemType(itemType);
+        FinishJob(villager);
+    }
 
-        if (amountToDeposit > amount)
-            amountToDeposit = amount;
+    public static IEnumerator Withdraw(Villager villager, Transform[] storages, int amount)
+    {
+        storages[0].GetComponent<Storage>().UpdateAppearance(villager._index);
 
-        int amountDeposited = 0;
-
-        while (amountDeposited < amountToDeposit)
-        {
-            yield return new WaitForSeconds(villager._itemExchangeRate);
-
-            amountDeposited++;
-
-            storagesToUse[i].GetComponent<Storage>().UpdateAppearance();
-
-            villager.items.RemoveAt(villager.items.Count - 1);
-
-            InventoryUpdated?.Invoke(villager, new VillagerArgs { villagerIndex = villager.index });
-        }
-        */
-
-        villager.currentlyDepositing = false;
+        yield return new WaitUntil(() => villager.items.Count == amount);
 
         FinishJob(villager);
     }
 
-    public static IEnumerator Withdraw(Villager villager, int amount)
-    {
-        yield return null;
-    }
-
     public static IEnumerator TakeFromItemPile(Villager villager, Transform itemPile, int amount)
     {
-        ItemPile itemPileScript = itemPile.GetComponent<ItemPile>();
+        var itemPileScript = itemPile.GetComponent<ItemPile>();
 
-        for (int i = 0; i < amount; i++)
+        for (var i = 0; i < amount; i++)
         {
             yield return new WaitForSeconds(villager._itemExchangeRate);
 
@@ -254,11 +212,40 @@ public class Jobs
                 new Item
                 {
                     itemType = itemPileScript.TakeItem(villager.items.Count == villager.inventoryCapacity - 1),
-                    itemObject = Resources.Load<GameObject>("Prefabs/Items/Log") //Get Object based on type function would be nice here. 
+                    itemObject =
+                        Resources.Load<GameObject>(
+                            "Prefabs/Items/Log") //Get Object based on type function would be nice here. 
                 }
             );
 
-            InventoryUpdated?.Invoke(villager, new VillagerArgs { villagerIndex = villager.index });
+            villager.DisplayItems();
+        }
+
+        FinishJob(villager);
+    }
+
+    public static IEnumerator DepositToBuildSite(Villager villager, Transform buildSite, int amount)
+    {
+        buildSite.GetComponent<UnderConstruction>().beingDeposited = true;
+
+        var itemType = villager.items[0].itemType;
+        var itemIndex = ItemInfo.GetItemIndex(itemType);
+
+        while (villager.items.Count > 0)
+        {
+            yield return new WaitForSeconds(villager._itemExchangeRate);
+
+            if (buildSite == null)
+            {
+                FinishJob(villager);
+                yield break;
+            }
+
+            buildSite.GetComponent<UnderConstruction>().itemsOnSite[itemIndex].amount++;
+
+            Object.Destroy(villager.transform.GetChild(villager.transform.childCount - 1).gameObject);
+
+            villager.items.RemoveAt(villager.items.Count - 1);
         }
 
         FinishJob(villager);
@@ -266,12 +253,13 @@ public class Jobs
 
     public static IEnumerator Build(Villager villager, Transform buildSite)
     {
-        UnderConstruction buildingConstructionScript = buildSite.GetComponent<UnderConstruction>();
+        var buildingConstructionScript = buildSite.GetComponent<UnderConstruction>();
 
         buildingConstructionScript.InitializeConstructionSite();
 
         //Assuming that resources required are already there
-        Vector3 constructionSiteEndScale = new Vector3(buildSite.localScale.y, buildSite.localScale.y, buildSite.localScale.z);
+        var constructionSiteEndScale =
+            new Vector3(buildSite.localScale.y, buildSite.localScale.y, buildSite.localScale.z);
 
         //Clear Grass
         while (buildingConstructionScript.currentStage == 0 && !buildingConstructionScript.currentlyProgressing)
@@ -280,6 +268,9 @@ public class Jobs
 
             yield return null;
         }
+
+        //Wait until all of the necessary resources are at the building before continuing.
+        yield return new WaitUntil(() => buildingConstructionScript.sufficientItems);
 
         if (buildingConstructionScript.stageAmount == 0)
         {
@@ -301,5 +292,8 @@ public class Jobs
         yield return null;
     }
 
-    private static void FinishJob(Villager villager) => JobFinished?.Invoke(villager, new VillagerArgs { villagerIndex = villager.index });
+    private static void FinishJob(Villager villager)
+    {
+        JobFinished?.Invoke(villager, new VillagerArgs {villagerIndex = villager._index});
+    }
 }

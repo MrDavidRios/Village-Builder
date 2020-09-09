@@ -134,5 +134,18 @@ MonoBehaviour:
   - positionOffset: {x: 0, y: 0.5, z: 0}
     rotationOffset: {x: 0, y: 0, z: 0}
     scale: {x: 1, y: 1, z: 1}
+  requiredItems:
+  - item:
+      itemObject: {fileID: 0}
+      itemType: Log
+    amount: 5
+  itemsOnSite:
+  - item:
+      itemObject: {fileID: 0}
+      itemType: Log
+    amount: 0
+  sufficientItems: 0
+  grassCleared: 0
   currentlyProgressing: 0
   resetPosition: 1
+  buildingInfo: {fileID: 0}

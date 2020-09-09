@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using DavidRios.Building;
 using TileOperations;
 using TMPro;
 using UnityEngine;
@@ -11,19 +12,22 @@ public class DisplayJobsList : MonoBehaviour
     public List<string> jobsThatAreNotModifiable;
     [SerializeField] private List<Job> listedJobs = new List<Job>();
 
-    private Villager selectedVillager = null;
+    private Villager selectedVillager;
 
     private UIManager UIManagerScript;
 
-    private void Awake() => UIManagerScript = FindObjectOfType<UIManager>();
+    private void Awake()
+    {
+        UIManagerScript = FindObjectOfType<UIManager>();
+    }
 
     //On call, if just opened, redo everything. If not, then add/remove the last added/removed job.
-    public IEnumerator DisplayVillagerJobs(string source, Job lastJob = null)
+    public IEnumerator DisplayVillagerJobs(string source, Job lastJob = null, Villager sourceVillager = null)
     {
         //Initialize necessary variables
-        GameObject selectedObject = Select.selectedObject;
+        var selectedObject = Select.SelectedObject;
 
-        bool newlyOpened = !UIManagerScript.miscUIElements["JobsList"].activeInHierarchy;
+        var newlyOpened = !UIManagerScript.miscUIElements["JobsList"].activeInHierarchy;
 
         if (source == "Jobs Button")
             newlyOpened = true;
@@ -43,13 +47,19 @@ public class DisplayJobsList : MonoBehaviour
         }
 
         //Initialize necessary variables
-        Villager villager = selectedObject.GetComponent<Villager>();
-        GameObject jobListDisplay = UIManagerScript.miscUIElements["JobsList"];
+        var villager = selectedObject.GetComponent<Villager>();
+
+        //Make it so that the function exits if the villager is not the same as the selected villager.
+        if (sourceVillager != null)
+            if (sourceVillager != villager)
+                yield break;
+
+        var jobListDisplay = UIManagerScript.miscUIElements["JobsList"];
 
         selectedVillager = villager;
 
         //If the job is still in the villager's job list, then it hasn't been removed. 
-        bool jobAdded = villager.jobList.Contains(lastJob);
+        var jobAdded = villager.jobList.Contains(lastJob);
 
         //If the current listed jobs is equal to the villager's job list, then there is no need to change anything.
         if (listedJobs == villager.jobList && villager.jobList.Count > 0)
@@ -57,38 +67,32 @@ public class DisplayJobsList : MonoBehaviour
 
         if (newlyOpened)
         {
-            List<Job> jobsToList = villager.jobList;
+            var jobsToList = villager.jobList;
 
             //Clear everything and start anew
             if (listedJobs.Count > 0)
             {
                 //If the only listed job is idle and the villager is idle, then leave the idle job there.
                 if (listedJobs.Count == 1 && listedJobs[0].jobType == "Idle")
-                {
                     if (villager.jobList.Count == 0)
                         yield break;
-                }
 
-                for (int i = 0; i < listedJobs.Count; i++)
-                {
-                    Destroy(jobListDisplay.transform.GetChild(i).gameObject);
-                }
+                for (var i = 0; i < listedJobs.Count; i++) Destroy(jobListDisplay.transform.GetChild(i).gameObject);
 
                 listedJobs.Clear();
             }
-            else if (villager.jobList.Count == 0)
-                AddJobElement(jobListDisplay.transform, 1, new Job { jobType = "Idle" }, false);
 
-            int lastAddedJobIndex = 0;
-            for (int i = 0; i < villager.jobList.Count; i++)
-            {
+            if (villager.jobList.Count == 0)
+                AddJobElement(jobListDisplay.transform, 1, new Job {jobType = "Idle"}, false);
+
+            var lastAddedJobIndex = 0;
+            for (var i = 0; i < villager.jobList.Count; i++)
                 if (!jobsToIgnore.Contains(villager.jobList[i].jobType))
                 {
                     AddJobElement(jobListDisplay.transform, lastAddedJobIndex + 1, villager.jobList[i], true);
 
                     lastAddedJobIndex++;
                 }
-            }
         }
         else
         {
@@ -96,17 +100,14 @@ public class DisplayJobsList : MonoBehaviour
             if (jobAdded)
             {
                 if (listedJobs.Count > 0)
-                {
                     if (listedJobs[0].jobType == "Idle")
                     {
                         if (villager.jobList.Count == 0)
                             yield break;
-                        else
-                            RemoveJobElement(listedJobs[0]);
+                        RemoveJobElement(listedJobs[0]);
                     }
-                }
 
-                int jobIndex = listedJobs.Count + 1;
+                var jobIndex = listedJobs.Count + 1;
 
                 //Add new job.
                 if (listedJobs.Count == 0)
@@ -122,10 +123,9 @@ public class DisplayJobsList : MonoBehaviour
                     RemoveJobElement(lastJob);
 
                     //Reposition Jobs Here.
-                    for (int i = 0; i < listedJobs.Count; i++)
-                    {
-                        jobListDisplay.transform.GetChild(i).GetComponent<RectTransform>().anchoredPosition = new Vector3(0f, -20f - (37.5f * (listedJobs.Count - i - 1)), 0f);
-                    }
+                    for (var i = 0; i < listedJobs.Count; i++)
+                        jobListDisplay.transform.GetChild(i).GetComponent<RectTransform>().anchoredPosition =
+                            new Vector3(0f, -20f - 37.5f * (listedJobs.Count - i - 1), 0f);
                 }
             }
         }
@@ -147,17 +147,19 @@ public class DisplayJobsList : MonoBehaviour
     {
         //Debug.Log("Job Added: " + job.jobType);
 
-        string displayText = job.jobType == "Idle" ? "Idle" : JobUtils.ReturnJobName(job.jobType);
+        var displayText = job.jobType == "Idle" ? "Idle" : JobUtils.ReturnJobName(job.jobType);
 
         listedJobs.Add(job);
 
-        var jobElement = Instantiate(UIManager.jobPrefab, jobListDisplay.transform) as GameObject;
+        var jobElement = Instantiate(UIManager.jobPrefab, jobListDisplay.transform);
         jobElement.transform.SetAsFirstSibling();
 
-        jobElement.GetComponent<RectTransform>().anchoredPosition = new Vector3(0f, -20f - (37.5f * (elementIndex - 1)), 0f);
+        jobElement.GetComponent<RectTransform>().anchoredPosition =
+            new Vector3(0f, -20f - 37.5f * (elementIndex - 1), 0f);
         jobElement.GetComponentInChildren<TMP_Text>().text = displayText;
 
-        jobElement.transform.GetChild(0).Find("CancelBackground").GetChild(0).GetComponent<Button>().onClick.AddListener(() => RemoveJobGroup(job));
+        jobElement.transform.GetChild(0).Find("CancelBackground").GetChild(0).GetComponent<Button>().onClick
+            .AddListener(() => RemoveJobGroup(job));
         //jobElement.transform.GetChild(0).Find("CancelBackground").GetChild(0).GetComponent<Button>().onClick.AddListener(() => RemoveJobElement(job));
 
         //Debug.Log("Modifiable: " + modifiable);
@@ -168,30 +170,33 @@ public class DisplayJobsList : MonoBehaviour
     }
 
     /// <summary>
-    /// Indexes of job list elements are reversed. If the job's index is 2 and the job list has 5 elements, you would need to grab the 3rd element (0, 1, 2, 3, 4). 
-    /// The index of jobs would start at 1, not 0!
-    /// First element would have an index of jobListDisplay.transform.childCount - 1.
+    ///     Indexes of job list elements are reversed. If the job's index is 2 and the job list has 5 elements, you would need
+    ///     to grab the 3rd element (0, 1, 2, 3, 4).
+    ///     The index of jobs would start at 1, not 0!
+    ///     First element would have an index of jobListDisplay.transform.childCount - 1.
     /// </summary>
     /// <param name="jobListDisplay"></param>
     /// <param name="jobIndex"></param>
     public void RemoveJobElement(Job job)
     {
-        Transform jobListDisplay = UIManagerScript.miscUIElements["JobsList"].transform;
+        var jobListDisplay = UIManagerScript.miscUIElements["JobsList"].transform;
 
         //if the job index is unavailable, just delete the first job.
 
-        //Debug.Log("Job removed; job index & job type: " + (jobListDisplay.transform.childCount - jobIndex - 1) + ", " + job.jobType);
+        Debug.Log("Job removed; job index & job type: " +
+                  (jobListDisplay.transform.childCount - listedJobs.IndexOf(job) - 1) + ", " + job.jobType);
 
         Destroy(jobListDisplay.GetChild(jobListDisplay.transform.childCount - listedJobs.IndexOf(job) - 1).gameObject);
 
         listedJobs.Remove(job);
 
         if (listedJobs.Count == 0 && selectedVillager.jobList.Count == 0)
-            AddJobElement(jobListDisplay.transform, 1, new Job { jobType = "Idle" }, false);
+            AddJobElement(jobListDisplay.transform, 1, new Job {jobType = "Idle"}, false);
     }
 
     /// <summary>
-    /// jobIndex has to be starting at 1. Ex: if the first element's modifiable property has to be set to false, then jobIndex must equal 1.
+    ///     jobIndex has to be starting at 1. Ex: if the first element's modifiable property has to be set to false, then
+    ///     jobIndex must equal 1.
     /// </summary>
     /// <param name="jobListDisplay"></param>
     /// <param name="jobIndex"></param>
@@ -200,7 +205,8 @@ public class DisplayJobsList : MonoBehaviour
     {
         //Debug.Log("Modifiability Set: " + jobListDisplay.GetChild(jobListDisplay.childCount - jobIndex).GetChild(0).GetComponentInChildren<TMP_Text>().text + ", " + modifiable);
 
-        Animator jobElementAnimator = jobListDisplay.GetChild(jobListDisplay.childCount - jobIndex).GetChild(0).GetComponent<Animator>();
+        var jobElementAnimator = jobListDisplay.GetChild(jobListDisplay.childCount - jobIndex).GetChild(0)
+            .GetComponent<Animator>();
 
         if (!modifiable && jobElementAnimator.GetBool("OpenSettings"))
             jobElementAnimator.SetBool("OpenSettings", false);
@@ -212,7 +218,7 @@ public class DisplayJobsList : MonoBehaviour
     {
         //Debug.Log("Modifiability Set: " + jobElement.GetComponentInChildren<TMP_Text>().text + ", " + modifiable);
 
-        Animator jobElementAnimator = jobElement.transform.GetChild(0).GetComponent<Animator>();
+        var jobElementAnimator = jobElement.transform.GetChild(0).GetComponent<Animator>();
 
         if (!modifiable && jobElementAnimator.GetBool("OpenSettings"))
             jobElementAnimator.SetBool("OpenSettings", false);
@@ -220,59 +226,78 @@ public class DisplayJobsList : MonoBehaviour
         jobElementAnimator.SetBool("Modifiable", modifiable);
     }
 
-    private IEnumerator UpdateJobElementPositions() 
+    private IEnumerator UpdateJobElementPositions()
     {
-        GameObject jobListDisplay = UIManagerScript.miscUIElements["JobsList"];
+        var jobListDisplay = UIManagerScript.miscUIElements["JobsList"];
 
         yield return new WaitForEndOfFrame();
 
-        for (int i = 0; i < listedJobs.Count; i++)
-        {
-            jobListDisplay.transform.GetChild(i).GetComponent<RectTransform>().anchoredPosition = new Vector3(0f, -20f - (37.5f * (listedJobs.Count - i - 1)), 0f);
-        }
+        for (var i = 0; i < listedJobs.Count; i++)
+            jobListDisplay.transform.GetChild(i).GetComponent<RectTransform>().anchoredPosition =
+                new Vector3(0f, -20f - 37.5f * (listedJobs.Count - i - 1), 0f);
     }
 
-    public void RemoveJobGroup(Job job)
+    public void RemoveJobGroup(Job job, Villager villager = null)
     {
-        JobManager jobManager = FindObjectOfType<JobManager>();
-        
+        var jobManager = FindObjectOfType<JobManager>();
+
         //Debug.Log(job.jobType + "; " + selectedVillager);
-        
-        int jobIndex = selectedVillager.jobList.IndexOf(job);
+
+        Villager _selectedVillager = null;
+
+        if (villager == null)
+            _selectedVillager = selectedVillager;
+        else
+            _selectedVillager = villager;
+
+        var jobIndex = _selectedVillager.jobList.IndexOf(job);
 
         switch (job.jobType)
         {
             //Cancel both move and chop jobs. (index - 1 and index)
             case "Chop":
+            {
+                if (_selectedVillager.performingJob)
                 {
-                    if (selectedVillager.performingJob)
-                    {
-                        jobManager.RemoveJob(selectedVillager.index, jobIndex);
-                        selectedVillager.moveJobCancelled = true;
-                    }
-                    else
-                    {
-                        jobManager.RemoveJob(selectedVillager.index, jobIndex);
-                        jobManager.RemoveJob(selectedVillager.index, jobIndex - 1);
-                    }
-
-                    //Remove axe from tree.
-                    job.objectiveTransforms[0].GetComponent<Resource>().RemoveHarvestIndicator();
-                    break;   
+                    jobManager.RemoveJob(_selectedVillager._index, jobIndex);
+                    _selectedVillager.moveJobCancelled = true;
                 }
+                else
+                {
+                    jobManager.RemoveJob(_selectedVillager._index, jobIndex);
+                    jobManager.RemoveJob(_selectedVillager._index, jobIndex - 1);
+                }
+
+                //Remove axe from tree.
+                job.objectiveTransforms[0].GetComponent<Resource>().RemoveHarvestIndicator();
+                break;
+            }
 
             //Cancel both move and build jobs. (index - 1 and index)
             case "Build":
+            {
+                /*
+                if (_selectedVillager.performingJob)
                 {
-                    jobManager.RemoveJob(selectedVillager.index, jobIndex);
-                    jobManager.RemoveJob(selectedVillager.index, jobIndex - 1);
-                    break;
+                    jobManager.RemoveJob(_selectedVillager._index, jobIndex);
+                    _selectedVillager.moveJobCancelled = true;
                 }
+                else
+                {
+                    jobManager.RemoveJob(_selectedVillager._index, jobIndex);
+                    jobManager.RemoveJob(_selectedVillager._index, jobIndex - 1);
+                }
+                */
+
+                //Remove building prefab
+                StartCoroutine(PositionBuildingTemplate.RemoveTemplate(job.objectiveTransforms[0]));
+                break;
+            }
             default:
-                {
-                    Debug.LogError("Invalid job type provided: " + job.jobType);
-                    break;
-                }
+            {
+                Debug.LogError("Invalid job type provided: " + job.jobType);
+                break;
+            }
         }
 
         StartCoroutine(UpdateJobElementPositions());

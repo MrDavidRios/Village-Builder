@@ -1,22 +1,13 @@
-﻿using UnityEditor;
+﻿using System.IO;
+using UnityEditor;
 using UnityEngine;
 
 /// <summary>
-/// Based on: https://forum.unity.com/threads/draw-a-field-only-if-a-condition-is-met.448855/
+///     Based on: https://forum.unity.com/threads/draw-a-field-only-if-a-condition-is-met.448855/
 /// </summary>
 [CustomPropertyDrawer(typeof(DrawIfAttribute))]
 public class DrawIfPropertyDrawer : PropertyDrawer
 {
-    #region Fields
-
-    // Reference to the attribute on the property.
-    DrawIfAttribute drawIf;
-
-    // Field that is being compared.
-    SerializedProperty comparedField;
-
-    #endregion
-
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
         if (!ShowMe(property) && drawIf.disablingType == DrawIfAttribute.DisablingType.DontDraw)
@@ -27,13 +18,15 @@ public class DrawIfPropertyDrawer : PropertyDrawer
     }
 
     /// <summary>
-    /// Errors default to showing the property.
+    ///     Errors default to showing the property.
     /// </summary>
     private bool ShowMe(SerializedProperty property)
     {
         drawIf = attribute as DrawIfAttribute;
         // Replace propertyname to the value from the parameter
-        string path = property.propertyPath.Contains(".") ? System.IO.Path.ChangeExtension(property.propertyPath, drawIf.comparedPropertyName) : drawIf.comparedPropertyName;
+        var path = property.propertyPath.Contains(".")
+            ? Path.ChangeExtension(property.propertyPath, drawIf.comparedPropertyName)
+            : drawIf.comparedPropertyName;
 
         comparedField = property.serializedObject.FindProperty(path);
 
@@ -45,11 +38,12 @@ public class DrawIfPropertyDrawer : PropertyDrawer
 
         // get the value & compare based on types
         switch (comparedField.type)
-        { // Possible extend cases to support your own type
+        {
+            // Possible extend cases to support your own type
             case "bool":
                 return comparedField.boolValue.Equals(drawIf.comparedValue);
             case "Enum":
-                return comparedField.enumValueIndex.Equals((int)drawIf.comparedValue);
+                return comparedField.enumValueIndex.Equals((int) drawIf.comparedValue);
             default:
                 Debug.LogError("Error: " + comparedField.type + " is not supported of " + path);
                 return true;
@@ -71,4 +65,13 @@ public class DrawIfPropertyDrawer : PropertyDrawer
         }
     }
 
+    #region Fields
+
+    // Reference to the attribute on the property.
+    private DrawIfAttribute drawIf;
+
+    // Field that is being compared.
+    private SerializedProperty comparedField;
+
+    #endregion
 }

@@ -1,12 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class VillagerPropertiesGenerator
 {
-    private static string[] femaleNames = new string[] { "Aethelu", "Agnes", "Alba", "Ava", "Beatrice", "Beverly", "Cecily", "Edith", "Ella", "Emma", "Isabella", "Margery", "Matilda", "Merry", "Odilia", "Reina", "Rhoslyn", "Trea", "Juanita" };
+    private static readonly string[] femaleNames =
+    {
+        "Aethelu", "Agnes", "Alba", "Ava", "Beatrice", "Beverly", "Cecily", "Edith", "Ella", "Emma", "Isabella",
+        "Margery", "Matilda", "Merry", "Odilia", "Reina", "Rhoslyn", "Trea", "Juanita"
+    };
 
-    private static string[] maleNames = new string[] { "Aldous", "Alistair", "Bennett", "Conrad", "Constantine", "Dietrich", "Drake", "Everard", "Gawain", "Godwin", "Jeffery", "Joachim", "Ladislas", "Luther", "Milo", "Odo", "Percival", "Robin", "Wade", "Wolfgang", "Amadeus", "Warner" };
+    private static readonly string[] maleNames =
+    {
+        "Aldous", "Alistair", "Bennett", "Conrad", "Constantine", "Dietrich", "Drake", "Everard", "Gawain", "Godwin",
+        "Jeffery", "Joachim", "Ladislas", "Luther", "Milo", "Odo", "Percival", "Robin", "Wade", "Wolfgang", "Amadeus",
+        "Warner"
+    };
 
     public static string GenerateName(Villager villager)
     {
@@ -18,22 +27,19 @@ public class VillagerPropertiesGenerator
 
             return femaleNames[nameIndex];
         }
-        else
-        {
-            nameIndex = Mathf.RoundToInt(Random.Range(0, maleNames.Length));
 
-            return maleNames[nameIndex];
-        }
+        nameIndex = Mathf.RoundToInt(Random.Range(0, maleNames.Length));
+
+        return maleNames[nameIndex];
     }
 
     public static string GenerateSex(Villager villager)
     {
-        int genderDecider = Mathf.RoundToInt(Random.Range(0, 1));
+        var genderDecider = Mathf.RoundToInt(Random.Range(0, 1));
 
         if (genderDecider == 1)
             return "Female";
-        else
-            return "Male";
+        return "Male";
     }
 
     public static string CurrentJobDescription(Villager villager)
@@ -41,15 +47,27 @@ public class VillagerPropertiesGenerator
         if (villager.jobList.Count == 0)
             return "Idle";
 
-        Job job = villager.jobList[0];
+        var job = villager.jobList[0];
+
+        var suffix = "";
+
+        if (job.amounts != null)
+            if (job.amounts.Length > 0)
+                suffix = job.amounts[0] > 0 ? "s" : "";
 
         switch (job.jobType)
         {
             case "Move":
                 if (job.objectiveTransforms != null)
-                    return "walking to " + job.objectiveTransforms[0].name;
-                else
+                {
+                    if (job.objectiveTransforms.Length > 0)
+                        return "walking to " + job.objectiveTransforms[0].name;
                     return "walking somewhere";
+                }
+                else
+                {
+                    return "walking somewhere";
+                }
             case "Chop":
                 return "chopping tree.";
             case "Mine":
@@ -57,7 +75,11 @@ public class VillagerPropertiesGenerator
             case "Build":
                 return "building something.";
             case "Deposit":
-                return "transferring " + job.amounts + " items to storage.";
+                return $"transferring {job.amounts[0]} item{suffix} to storage.";
+            case "Withdraw":
+                return $"withdrawing {job.amounts[0]} item{suffix} from storage.";
+            case "DepositToBuildSite":
+                return $"Placing {job.amounts[0]} item{suffix} in a build site.";
             case "TakeFromItemPile":
                 return "picking up a pile of items.";
             default:
@@ -66,5 +88,8 @@ public class VillagerPropertiesGenerator
         }
     }
 
-    public static string ProcessRole(int roleID) => System.Enum.GetName(typeof (VillagerRoles), roleID);
+    public static string ProcessRole(int roleID)
+    {
+        return Enum.GetName(typeof(VillagerRoles), roleID);
+    }
 }

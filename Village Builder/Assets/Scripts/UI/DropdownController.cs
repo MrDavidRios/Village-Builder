@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using TMPro;
 
-[RequireComponent(typeof(TMPro.TMP_Dropdown))]
+[RequireComponent(typeof(TMP_Dropdown))]
 [DisallowMultipleComponent]
 public class DropdownController : MonoBehaviour, IPointerClickHandler
 {

@@ -1,11 +1,14 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
+
 #endif
 
 public class LabelOverride : PropertyAttribute
 {
     public string label;
+
     public LabelOverride(string label)
     {
         this.label = label;
@@ -19,32 +22,30 @@ public class LabelOverride : PropertyAttribute
         {
             try
             {
-                var propertyAttribute = this.attribute as LabelOverride;
+                var propertyAttribute = attribute as LabelOverride;
                 if (IsItBloodyArrayTho(property) == false)
-                {
                     label.text = propertyAttribute.label;
-
-                }
                 else
-                {
                     Debug.LogWarningFormat(
                         "{0}(\"{1}\") doesn't support arrays ",
                         typeof(LabelOverride).Name,
                         propertyAttribute.label
                     );
-                }
                 EditorGUI.PropertyField(position, property, label);
             }
-            catch (System.Exception ex) { Debug.LogException(ex); }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
         }
 
-        bool IsItBloodyArrayTho(SerializedProperty property)
+        private bool IsItBloodyArrayTho(SerializedProperty property)
         {
-            string path = property.propertyPath;
-            int idot = path.IndexOf('.');
+            var path = property.propertyPath;
+            var idot = path.IndexOf('.');
             if (idot == -1) return false;
-            string propName = path.Substring(0, idot);
-            SerializedProperty p = property.serializedObject.FindProperty(propName);
+            var propName = path.Substring(0, idot);
+            var p = property.serializedObject.FindProperty(propName);
             return p.isArray;
             //CREDITS: https://answers.unity.com/questions/603882/serializedproperty-isnt-being-detected-as-an-array.html
         }

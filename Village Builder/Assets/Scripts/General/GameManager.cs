@@ -1,112 +1,111 @@
-﻿using UnityEngine;
+﻿using DavidRios.Building;
+using DavidRios.Input;
 using TileOperations;
+using TMPro;
+using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    //Booleans
-    private bool gamePaused;
-    public bool cinematicModeEnabled;
-
     //Integers
     private int _timeSpeedBeforePause;
 
-    //Hotkeys
-    [Header("Hotkeys")]
-    [LabelOverride("Deselect/Pause Key")]
-    [Space(5)]
-    public KeyCode deselect_and_pauseKey;
-    public KeyCode pauseKey;
-
-    [LabelOverride("Build Menu Toggle Key")]
-    [Space(5)]
-    public KeyCode buildMenuKey;
-
-    //Scripts
-    private PlaceBuilding placeBuilding;
-    private Select selectScript;
-    private UIManager UIManagerScript;
+    //Booleans
+    public bool cinematicModeEnabled;
+    
+    private bool _gamePaused;
 
     //GameObjects
-    private GameObject villagerParent;
+    private GameObject _villagerParent;
+    
+    //Scripts
+    private Select _selectScript;
+    private UIManager _uiManagerScript;
+    
+    //Input
+    private PlayerController.DefaultActions _input;
 
     private void Awake()
     {
-        placeBuilding = GetComponent<PlaceBuilding>();
-        selectScript = GetComponent<Select>();
-        UIManagerScript = FindObjectOfType<UIManager>();
+        _selectScript = GetComponent<Select>();
+        _uiManagerScript = FindObjectOfType<UIManager>();
 
-        villagerParent = GameObject.Find("Villagers");
+        _villagerParent = GameObject.Find("Villagers");
 
         #region Initialize Time Speed Controls
-        UIManagerScript.ActivateButton(UIManagerScript.miscUIElements["Paused"], false);
-        UIManagerScript.ActivateButton(UIManagerScript.miscUIElements["NormalSpeed"], false);
-        UIManagerScript.ActivateButton(UIManagerScript.miscUIElements["FastSpeed"], false);
-        UIManagerScript.ActivateButton(UIManagerScript.miscUIElements["MaxSpeed"], false);
+
+        _uiManagerScript.ActivateButton(_uiManagerScript.miscUIElements["Paused"], false);
+        _uiManagerScript.ActivateButton(_uiManagerScript.miscUIElements["NormalSpeed"], false);
+        _uiManagerScript.ActivateButton(_uiManagerScript.miscUIElements["FastSpeed"], false);
+        _uiManagerScript.ActivateButton(_uiManagerScript.miscUIElements["MaxSpeed"], false);
 
         switch (Time.timeScale)
         {
             case 0:
-                UIManagerScript.ActivateButton(UIManagerScript.miscUIElements["Paused"]);
+                _uiManagerScript.ActivateButton(_uiManagerScript.miscUIElements["Paused"]);
                 break;
             case 1:
-                UIManagerScript.ActivateButton(UIManagerScript.miscUIElements["NormalSpeed"]);
+                _uiManagerScript.ActivateButton(_uiManagerScript.miscUIElements["NormalSpeed"]);
                 break;
             case 2:
-                UIManagerScript.ActivateButton(UIManagerScript.miscUIElements["FastSpeed"]);
+                _uiManagerScript.ActivateButton(_uiManagerScript.miscUIElements["FastSpeed"]);
                 break;
             case 3:
-                UIManagerScript.ActivateButton(UIManagerScript.miscUIElements["MaxSpeed"]);
+                _uiManagerScript.ActivateButton(_uiManagerScript.miscUIElements["MaxSpeed"]);
                 break;
         }
+
         #endregion
     }
+    
+    private void Start() => _input = InputHandler.PlayerControllerInstance.Default;
 
     private void Update()
     {
+        //TODO: Refactor this code into separate methods
         //Toggle cinematicModeEnabled variable on 'LeftAlt' keypress.
-        if (Input.GetKeyDown(KeyCode.LeftAlt) && !gamePaused)
+        if (InputHandler.Pressed(_input.CinematicMode) && !_gamePaused)
         {
             cinematicModeEnabled = cinematicModeEnabled ? cinematicModeEnabled = false : cinematicModeEnabled = true;
 
             if (cinematicModeEnabled)
             {
-                selectScript.DeselectAll();
-                Select.canSelect = false;
+                _selectScript.DeselectAll();
+                Select.CanSelect = false;
 
-                UIManagerScript.CloseAllPanels(false);
-                UIManagerScript.HideMiscUI();
+                _uiManagerScript.CloseAllPanels(false);
+                _uiManagerScript.HideMiscUI();
             }
-            else if (!UIManagerScript.anyPanelsOpen)
+            else if (!_uiManagerScript.anyPanelsOpen)
             {
-                UIManagerScript.OpenStaticUI();
-                Select.canSelect = true;
+                _uiManagerScript.OpenStaticUI();
+                Select.CanSelect = true;
             }
         }
 
         //If the deselect/pause key was pressed, pause the game.
-        if (Input.GetKeyDown(pauseKey) || Input.GetKeyDown(deselect_and_pauseKey))
+        if (InputHandler.Pressed(_input.DeselectPause))
             PauseGame();
 
         //If the build menu toggle key was pressed, open/close the build menu.
-        if (Input.GetKeyDown(buildMenuKey))
+        if (InputHandler.Pressed(_input.BuildMenuToggle))
         {
-            if (UIManagerScript.mainPanels["BuildingPanel"].activeInHierarchy)
-                UIManagerScript.ClosePanel("BuildingPanel");
+            if (_uiManagerScript.mainPanels["BuildingPanel"].activeInHierarchy)
+                _uiManagerScript.ClosePanel("BuildingPanel");
             else
-                UIManagerScript.OpenPanel("BuildingPanel");
+                _uiManagerScript.OpenPanel("BuildingPanel");
         }
 
         //Time Speed Controls
-        if (Input.GetKeyDown(KeyCode.BackQuote))
+        if (InputHandler.Pressed(_input.StopTime))
             ChangeTimeSpeed(0);
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (InputHandler.Pressed(_input.TimeSpeed1))
             ChangeTimeSpeed(1);
 
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        if (InputHandler.Pressed(_input.TimeSpeed2))
             ChangeTimeSpeed(2);
 
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+        if (InputHandler.Pressed(_input.TimeSpeed3))
             ChangeTimeSpeed(3);
 
         UpdateUI();
@@ -115,46 +114,45 @@ public class GameManager : MonoBehaviour
     public void PauseGame(bool onePress = false)
     {
         //If the pause key was pressed and the game is currently paused, resume the game.
-        if (gamePaused)
+        if (_gamePaused)
         {
             ResumeGame();
             return;
         }
 
-        _timeSpeedBeforePause = (int)Time.timeScale;
+        _timeSpeedBeforePause = (int) Time.timeScale;
 
         if (ElementsLeftToClose() && !onePress)
             return;
 
-        UIManagerScript.CloseAllPanels(false);
+        _uiManagerScript.CloseAllPanels(false);
 
-        gamePaused = true;
+        _gamePaused = true;
 
         //Open the pause menu
-        UIManagerScript.OpenPanel("PauseMenu");
+        _uiManagerScript.OpenPanel("PauseMenu");
 
         ChangeTimeSpeed(0);
     }
 
     public void ResumeGame()
     {
-        gamePaused = false;
+        _gamePaused = false;
 
         //Close the pause menu
-        UIManagerScript.ClosePanel("PauseMenu");
+        _uiManagerScript.ClosePanel("PauseMenu");
 
         //Open panels that were closed on pause
-        UIManagerScript.OpenStaticUI();
+        _uiManagerScript.OpenStaticUI();
 
         ChangeTimeSpeed(_timeSpeedBeforePause);
     }
 
-    public void ToggleSettingsMenu() 
+    public void ToggleSettingsMenu()
     {
-
     }
 
-    public void QuitGame() 
+    public void QuitGame()
     {
         Application.Quit();
     }
@@ -162,38 +160,45 @@ public class GameManager : MonoBehaviour
     public void ChangeTimeSpeed(int timeSpeed)
     {
         var timeControlButtons = new GameObject[4];
-        timeControlButtons = new[] { UIManagerScript.miscUIElements["Paused"], UIManagerScript.miscUIElements["NormalSpeed"], UIManagerScript.miscUIElements["FastSpeed"], UIManagerScript.miscUIElements["MaxSpeed"] };
+        timeControlButtons = new[]
+        {
+            _uiManagerScript.miscUIElements["Paused"], _uiManagerScript.miscUIElements["NormalSpeed"],
+            _uiManagerScript.miscUIElements["FastSpeed"], _uiManagerScript.miscUIElements["MaxSpeed"]
+        };
 
-        int oldTimeSpeed = (int)Time.timeScale;
+        var oldTimeSpeed = (int) Time.timeScale;
 
         Time.timeScale = timeSpeed;
 
-        UIManagerScript.ActivateButton(timeControlButtons[oldTimeSpeed], false);
-        UIManagerScript.ActivateButton(timeControlButtons[timeSpeed]);
+        _uiManagerScript.ActivateButton(timeControlButtons[oldTimeSpeed], false);
+        _uiManagerScript.ActivateButton(timeControlButtons[timeSpeed]);
     }
 
     private bool ElementsLeftToClose()
     {
-        if (UIManagerScript.UIElementOpen("JobsPanel", "MainPanel"))
+        if (_uiManagerScript.UIElementOpen("JobsPanel", "MainPanel"))
         {
-            UIManagerScript.ClosePanel("JobsPanel");
-            UIManagerScript.OpenPanel("SelectionDescriptionPanel");
+            _uiManagerScript.ClosePanel("JobsPanel");
+            _uiManagerScript.OpenPanel("SelectionDescriptionPanel");
             return true;
         }
-        else if (selectScript.anythingSelected)
+
+        if (_selectScript.anythingSelected)
         {
-            selectScript.DeselectAll();
+            _selectScript.DeselectAll();
             return true;
         }
-        else if (placeBuilding.templateBuilding)
+
+        if (PositionBuildingTemplate.TemplateBuilding)
         {
-            placeBuilding.ClearTemplate();
+            TemplateActions.ClearTemplate();
             return true;
         }
-        else if (UIManagerScript.anyPanelsOpen)
+
+        if (_uiManagerScript.anyPanelsOpen)
         {
             //If any panels are open, close them.
-            UIManagerScript.CloseAllPanels(true);
+            _uiManagerScript.CloseAllPanels(true);
             return true;
         }
 
@@ -202,6 +207,7 @@ public class GameManager : MonoBehaviour
 
     private void UpdateUI()
     {
-        UIManagerScript.textFields["PopulationCounter"].GetComponent<TMPro.TMP_Text>().text = villagerParent.transform.childCount.ToString();
+        _uiManagerScript.textFields["PopulationCounter"].GetComponent<TMP_Text>().text =
+            _villagerParent.transform.childCount.ToString();
     }
 }

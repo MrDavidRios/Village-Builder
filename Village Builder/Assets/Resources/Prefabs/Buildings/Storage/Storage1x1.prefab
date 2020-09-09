@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 565636951418781518}
   - component: {fileID: 565636951418781517}
   - component: {fileID: 565636951418781516}
+  - component: {fileID: 9097810866838519982}
   - component: {fileID: 3224256550443147743}
   - component: {fileID: 5819607244224196898}
-  - component: {fileID: 9097810866838519982}
   - component: {fileID: 846523065549435242}
   m_Layer: 0
   m_Name: Storage1x1
@@ -83,6 +83,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 565636951418781515}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &9097810866838519982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 565636951418781515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8261a1d4aab2d44ca1bd3b36c1831b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  building: {fileID: 11400000, guid: 5d8a01e82afcfb44599874c4d6cfdaec, type: 2}
 --- !u!114 &3224256550443147743
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -118,22 +131,13 @@ MonoBehaviour:
   - positionOffset: {x: 0, y: 0.02, z: 0}
     rotationOffset: {x: -90, y: 0, z: 180}
     scale: {x: 0, y: 0.5, z: 0.05}
+  requiredItems: []
+  itemsOnSite: []
+  sufficientItems: 0
+  grassCleared: 0
   currentlyProgressing: 0
   resetPosition: 1
   buildingInfo: {fileID: 0}
---- !u!114 &9097810866838519982
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 565636951418781515}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8261a1d4aab2d44ca1bd3b36c1831b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  building: {fileID: 11400000, guid: 5d8a01e82afcfb44599874c4d6cfdaec, type: 2}
 --- !u!114 &846523065549435242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -146,6 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39c65b01103b11042a0aa06527413f5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  beingModified: 0
   numberOfPlots: 0
   plotCapacity: 48
   totalCapacity: 0
@@ -154,3 +159,4 @@ MonoBehaviour:
   - {x: -0.25, y: 0, z: 0.25}
   - {x: 0.25, y: 0, z: -0.25}
   - {x: 0.25, y: 0, z: 0.25}
+  debug: 0

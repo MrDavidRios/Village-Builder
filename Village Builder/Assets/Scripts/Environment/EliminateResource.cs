@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EliminateResource : MonoBehaviour
 {
@@ -22,5 +20,5 @@ public class EliminateResource : MonoBehaviour
         }
     }
 
-    public void DeleteHarvestMarker() => GameObject.Destroy(transform.GetChild(0).GetChild(0).gameObject); 
+    public void DeleteHarvestMarker() => Destroy(transform.GetChild(0).GetChild(0).gameObject);
 }

@@ -1,51 +1,55 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using DavidRios.Input;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-public class CameraRotationLimit : MonoBehaviour {
+namespace DavidRios.Camera
+{
+    public class CameraRotationLimit : MonoBehaviour
+    {
+        /// <summary>
+        ///     This script manages the rotation of the camera by setting its rotation limits.
+        /// </summary>
 
-    /// <summary>
-    /// This script manages the rotation of the camera by setting its rotation limits.
-    /// </summary>
-	
-    //Floats
-	public float speed = 10.0F;
-	public float RotSpeed = 150.0F;
-	public float minY = 0.0f;
-	public float maxY = -90.0f;
+        //Floats
+        public float speed = 10.0F;
 
-	private float forwardBackward;
-	private float leftRight;
-	private float RotLeftRight;
-	private float RotUpDown;
+        public float rotSpeed = 150.0F;
+        public float minY;
+        public float maxY = -90.0f;
 
-	//Vectors
-	Vector3 euler;
+        //Vectors
+        private Vector3 _euler;
 
-	public void CameraRotate()
-	{
-		euler = transform.localEulerAngles;
+        private float _forwardBackward;
+        private float _leftRight;
+        private float _rotLeftRight;
+        private float _rotUpDown;
+        
+        public void CameraRotate()
+        {
+            _euler = transform.localEulerAngles;
 
-		// Getting axes
-		RotLeftRight = Input.GetAxis("Mouse X") * RotSpeed * Time.unscaledDeltaTime;
-		RotUpDown = Input.GetAxis("Mouse Y") * -RotSpeed * Time.unscaledDeltaTime;
+            // Getting axes
+            _rotLeftRight = Mouse.current.delta.ReadValue().x * rotSpeed * Time.unscaledDeltaTime;
+            _rotUpDown = Mouse.current.delta.ReadValue().y * -rotSpeed * Time.unscaledDeltaTime;
 
-		// Doing movements
-		euler.y += RotLeftRight;
+            // Doing movements
+            _euler.y += _rotLeftRight;
 
-		euler.x += RotUpDown;
+            _euler.x += _rotUpDown;
 
-		LimitRotation ();
+            LimitRotation();
 
-        //Set the camera's rotation value to the 'euler' rotation value
-        transform.localEulerAngles = euler;
+            //Set the camera's rotation value to the 'euler' rotation value
+            transform.localEulerAngles = _euler;
+        }
+
+        private void LimitRotation()
+        {
+            if (_euler.x >= maxY)
+                _euler.x = maxY;
+            if (_euler.x <= minY)
+                _euler.x = minY;
+        }
     }
-
-	public void LimitRotation()
-	{
-		if(euler.x >= maxY)
-			euler.x = maxY;
-		if(euler.x <= minY)
-			euler.x = minY;
-	}
 }

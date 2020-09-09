@@ -1,19 +1,16 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 public class ItemPile : MonoBehaviour
 {
+    /// <summary>
+    ///     Initial value. This should not be modified in the script.
+    /// </summary>
+    private const int minutesToDespawn = 5;
+
     public bool beingPickedUp;
 
     public int amountOfItems;
-
-    /// <summary>
-    /// Initial value. This should not be modified in the script.
-    /// </summary>
-    private const int minutesToDespawn = 5;
 
     public int despawnSeconds;
     public int despawnMinutes;
@@ -40,27 +37,29 @@ public class ItemPile : MonoBehaviour
     {
         amountOfItems--;
 
-        Transform itemToRemove = transform.GetChild(amountOfItems);
+        var itemToRemove = transform.GetChild(amountOfItems);
 
-        GameObject.Destroy(itemToRemove.gameObject);
+        Destroy(itemToRemove.gameObject);
 
         return tag;
     }
 
-    IEnumerator UpdateTimeToDespawn()
+    private IEnumerator UpdateTimeToDespawn()
     {
-        int timeInSeconds = minutesToDespawn * 60;
+        var timeInSeconds = minutesToDespawn * 60;
 
         despawnMinutes = minutesToDespawn;
         despawnSeconds = 0;
 
         //Update time left to despawn.
-        for (int timeLeft = 0; timeLeft < timeInSeconds; timeLeft++)
+        for (var timeLeft = 0; timeLeft < timeInSeconds; timeLeft++)
         {
             yield return new WaitForSeconds(1);
 
             if (despawnSeconds != 0)
+            {
                 despawnSeconds--;
+            }
             else
             {
                 if (despawnMinutes == 0)
@@ -72,6 +71,6 @@ public class ItemPile : MonoBehaviour
         }
 
         if (!beingPickedUp)
-            GameObject.Destroy(gameObject);
+            Destroy(gameObject);
     }
 }

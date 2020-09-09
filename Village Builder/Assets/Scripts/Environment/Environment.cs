@@ -1,14 +1,37 @@
-﻿using Pathfinding;
-using System.Collections.Generic;
-using TerrainGeneration;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using Pathfinding;
+using Terrain;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
+using Random = System.Random;
 
 public class Environment : MonoBehaviour
 {
+    // Cached data:
+    public static Vector3[,] tileCentres;
+    public static string[,] tileType;
+    public static bool[,] walkable;
+    public static bool[,] buildingPlaced;
+    public static int[,] fertility;
+    public static Vector2[,] uvs;
+    public static Map<Vector3, Vector2Int> tileCentresMap;
+
+    public static bool[,] fishingTile;
+
+    private static int size;
+    private static Coord[,][] walkableNeighboursMap;
+    private static List<Coord> walkableCoords;
+
+    //Array of visible tiles from any tile; value is Coord.invalid if no visible water tile
+    private static Coord[,] closestVisibleWaterMap;
+
+    private static Random prng;
+    private static TerrainGenerator.TerrainData terrainData;
     public int seed;
 
-    [Header("Trees")]
-    public GameObject treePrefab;
+    [Header("Trees")] public GameObject treePrefab;
+
     public GameObject treeContainer;
 
     public Color lightestLeafColor;
@@ -17,50 +40,31 @@ public class Environment : MonoBehaviour
     [Range(0, 1)] public float treePlacementProbability;
     [Range(0, 5)] public float treeDensityCoefficient;
 
-    [Header("Rocks")]
-    public MeshRenderer[] rockPrefabs;
+    [Header("Rocks")] public MeshRenderer[] rockPrefabs;
+
     public GameObject rockContainer;
 
     public Material stoneMaterial;
 
     [Range(0, 1)] public float rockPlacementProbability;
 
-    [Header("Fishing Tiles")]
-    public MeshRenderer fishingTilePrefab;
+    [Header("Fishing Tiles")] public MeshRenderer fishingTilePrefab;
+
     public GameObject fishingTileContainer;
 
     public Material fishingTileMaterial;
 
     [Range(0, 1)] public float fishingTilePlacementProbability;
 
-    [Header("Debug")]
-    public bool showMapDebug;
+    [Header("Debug")] public bool showMapDebug;
+
+    public bool debugInitTime;
     public Transform mapCoordTransform;
     public float mapViewDst;
 
-    // Cached data:
-    public static Vector3[,] tileCentres;
-    public static string[,] tileType;
-    public static bool[,] walkable;
-    public static int[,] fertility;
-    public static Vector2[,] uvs;
-    public static Map<Vector3, Vector2Int> tileCentresMap;
-
-    public static bool[,] fishingTile;
-
-    static int size;
-    static Coord[,][] walkableNeighboursMap;
-    static List<Coord> walkableCoords;
-
-    //Array of visible tiles from any tile; value is Coord.invalid if no visible water tile
-    static Coord[,] closestVisibleWaterMap;
-
-    static System.Random prng;
-    static TerrainGenerator.TerrainData terrainData;
-
-    void Start()
+    private void Start()
     {
-        prng = new System.Random();
+        prng = new Random();
 
         Init();
     }
@@ -68,54 +72,41 @@ public class Environment : MonoBehaviour
     public static Coord GetNextTileRandom(Coord current)
     {
         var neighbours = walkableNeighboursMap[current.x, current.y];
-        if (neighbours.Length == 0)
-        {
-            return current;
-        }
+        if (neighbours.Length == 0) return current;
         return neighbours[prng.Next(neighbours.Length)];
     }
 
     /// Get random neighbour tile, weighted towards those in similar direction as currently facing
-    public static Coord GetNextTileWeighted(Coord current, Coord previous, double forwardProbability = 0.2, int weightingIterations = 3)
+    public static Coord GetNextTileWeighted(Coord current, Coord previous, double forwardProbability = 0.2,
+        int weightingIterations = 3)
     {
+        if (current == previous) return GetNextTileRandom(current);
 
-        if (current == previous)
-        {
-            return GetNextTileRandom(current);
-        }
-
-        Coord forwardOffset = (current - previous);
+        var forwardOffset = current - previous;
         // Random chance of returning foward tile (if walkable)
         if (prng.NextDouble() < forwardProbability)
         {
-            Coord forwardCoord = current + forwardOffset;
+            var forwardCoord = current + forwardOffset;
 
             if (forwardCoord.x >= 0 && forwardCoord.x < size && forwardCoord.y >= 0 && forwardCoord.y < size)
-            {
                 if (walkable[forwardCoord.x, forwardCoord.y])
-                {
                     return forwardCoord;
-                }
-            }
         }
 
         // Get walkable neighbours
         var neighbours = walkableNeighboursMap[current.x, current.y];
-        if (neighbours.Length == 0)
-        {
-            return current;
-        }
+        if (neighbours.Length == 0) return current;
 
         // From n random tiles, pick the one that is most aligned with the forward direction:
-        Vector2 forwardDir = new Vector2(forwardOffset.x, forwardOffset.y).normalized;
-        float bestScore = float.MinValue;
-        Coord bestNeighbour = current;
+        var forwardDir = new Vector2(forwardOffset.x, forwardOffset.y).normalized;
+        var bestScore = float.MinValue;
+        var bestNeighbour = current;
 
-        for (int i = 0; i < weightingIterations; i++)
+        for (var i = 0; i < weightingIterations; i++)
         {
-            Coord neighbour = neighbours[prng.Next(neighbours.Length)];
+            var neighbour = neighbours[prng.Next(neighbours.Length)];
             Vector2 offset = neighbour - current;
-            float score = Vector2.Dot(offset.normalized, forwardDir);
+            var score = Vector2.Dot(offset.normalized, forwardDir);
             if (score > bestScore)
             {
                 bestScore = score;
@@ -127,9 +118,9 @@ public class Environment : MonoBehaviour
     }
 
     // Call terrain generator and cache useful info
-    void Init()
+    private void Init()
     {
-        var sw = System.Diagnostics.Stopwatch.StartNew();
+        var sw = Stopwatch.StartNew();
 
         var terrainGenerator = FindObjectOfType<TerrainGenerator>();
         terrainData = terrainGenerator.Generate();
@@ -143,6 +134,7 @@ public class Environment : MonoBehaviour
         tileCentresMap = terrainData.tileCentresMap;
 
         fishingTile = new bool[terrainData.size, terrainData.size];
+        buildingPlaced = new bool[terrainData.size, terrainData.size];
 
         SpawnTrees();
         SpawnRocks();
@@ -152,40 +144,34 @@ public class Environment : MonoBehaviour
         walkableNeighboursMap = new Coord[size, size][];
 
         // Find and store all walkable neighbours for each walkable tile on the map
-        for (int y = 0; y < terrainData.size; y++)
+        for (var y = 0; y < terrainData.size; y++)
+        for (var x = 0; x < terrainData.size; x++)
         {
-            for (int x = 0; x < terrainData.size; x++)
+            //No buildings have been placed, since this land is newly generated.
+            buildingPlaced[x, y] = false;
+
+            if (walkable[x, y])
             {
-                if (walkable[x, y])
-                {
-                    List<Coord> walkableNeighbours = new List<Coord>();
-                    for (int offsetY = -1; offsetY <= 1; offsetY++)
+                var walkableNeighbours = new List<Coord>();
+                for (var offsetY = -1; offsetY <= 1; offsetY++)
+                for (var offsetX = -1; offsetX <= 1; offsetX++)
+                    if (offsetX != 0 || offsetY != 0)
                     {
-                        for (int offsetX = -1; offsetX <= 1; offsetX++)
-                        {
-                            if (offsetX != 0 || offsetY != 0)
-                            {
-                                int neighbourX = x + offsetX;
-                                int neighbourY = y + offsetY;
-                                if (neighbourX >= 0 && neighbourX < size && neighbourY >= 0 && neighbourY < size)
-                                {
-                                    if (walkable[neighbourX, neighbourY])
-                                    {
-                                        walkableNeighbours.Add(new Coord(neighbourX, neighbourY));
-                                    }
-                                }
-                            }
-                        }
+                        var neighbourX = x + offsetX;
+                        var neighbourY = y + offsetY;
+                        if (neighbourX >= 0 && neighbourX < size && neighbourY >= 0 && neighbourY < size)
+                            if (walkable[neighbourX, neighbourY])
+                                walkableNeighbours.Add(new Coord(neighbourX, neighbourY));
                     }
 
-                    walkableNeighboursMap[x, y] = walkableNeighbours.ToArray();
-                }
+                walkableNeighboursMap[x, y] = walkableNeighbours.ToArray();
             }
         }
 
         ModifyWalkableTiles();
 
         #region Useless Code
+
         /*
         // Generate offsets within max view distance, sorted by distance ascending
         // Used to speed up per-tile search for closest water tile
@@ -241,13 +227,15 @@ public class Environment : MonoBehaviour
             }
         }
         */
+
         #endregion
 
-        Debug.Log("Init time: " + sw.ElapsedMilliseconds);
+        if (debugInitTime)
+            Debug.Log("Init time: " + sw.ElapsedMilliseconds);
     }
 
     /// <summary>
-    /// Updates all the tiles in the GridGraph or only one selected tile.
+    ///     Updates all the tiles in the GridGraph or only one selected tile.
     /// </summary>
     /// <param name="xIndex"></param>
     /// <param name="zIndex"></param>
@@ -258,19 +246,17 @@ public class Environment : MonoBehaviour
 
         if (xIndex == -1 && zIndex == -1)
         {
-            for (int z = 0; z < gg.depth; z++)
+            for (var z = 0; z < gg.depth; z++)
+            for (var x = 0; x < gg.width; x++)
             {
-                for (int x = 0; x < gg.width; x++)
-                {
-                    var node = gg.GetNode(x, z);
+                var node = gg.GetNode(x, z);
 
-                    node.Walkable = terrainData.walkable[x, z];
-                }
+                node.Walkable = terrainData.walkable[x, z];
             }
 
             // Recalculate all grid connections
             // This is required because we have updated the walkability of some nodes
-            gg.GetNodes(node => gg.CalculateConnections((GridNodeBase)node));
+            gg.GetNodes(node => gg.CalculateConnections((GridNodeBase) node));
         }
         else if (xIndex != -1 && zIndex != -1)
         {
@@ -287,191 +273,183 @@ public class Environment : MonoBehaviour
         // gg.CalculateConnectionsForCellAndNeighbours only on those nodes instead for performance.
     }
 
-    void SpawnTrees()
+    private void SpawnTrees()
     {
         // Settings:
         float maxRot = 4;
-        float maxScaleDeviation = .2f;
+        var maxScaleDeviation = .2f;
 
-        var spawnPrng = new System.Random(seed);
+        var spawnPrng = new Random(seed);
         var treeHolder = treeContainer.transform;
         walkableCoords = new List<Coord>();
 
-        for (int y = 0; y < terrainData.size; y++)
-        {
-            for (int x = 0; x < terrainData.size; x++)
+        for (var y = 0; y < terrainData.size; y++)
+        for (var x = 0; x < terrainData.size; x++)
+            if (walkable[x, y])
             {
-                if (walkable[x, y])
+                var respectiveTreePlacementProbability =
+                    treePlacementProbability * Mathf.Pow(fertility[x, y], treeDensityCoefficient);
+
+                //Has to comply with probablility, but cannot spawn on sand due to its infertility
+                if (prng.NextDouble() < respectiveTreePlacementProbability)
                 {
-                    float respectiveTreePlacementProbability = treePlacementProbability * Mathf.Pow(fertility[x, y], treeDensityCoefficient);
+                    // Randomize rot/scale
+                    var rotX = Mathf.Lerp(-maxRot, maxRot, (float) spawnPrng.NextDouble());
+                    var rotZ = Mathf.Lerp(-maxRot, maxRot, (float) spawnPrng.NextDouble());
+                    var rotY = (float) spawnPrng.NextDouble() * 360f;
+                    var rot = new Vector3(rotX, rotY, rotZ);
 
-                    //Has to comply with probablility, but cannot spawn on sand due to its infertility
-                    if (prng.NextDouble() < respectiveTreePlacementProbability)
-                    {
-                        // Randomize rot/scale
-                        float rotX = Mathf.Lerp(-maxRot, maxRot, (float)spawnPrng.NextDouble());
-                        float rotZ = Mathf.Lerp(-maxRot, maxRot, (float)spawnPrng.NextDouble());
-                        float rotY = (float)spawnPrng.NextDouble() * 360f;
-                        Vector3 rot = new Vector3(rotX, rotY, rotZ);
+                    var scaleDeviation = ((float) spawnPrng.NextDouble() * 2 - 1) * maxScaleDeviation;
 
-                        float scaleDeviation = ((float)spawnPrng.NextDouble() * 2 - 1) * maxScaleDeviation;
+                    if (fertility[x, y] == 1 && scaleDeviation > 0f)
+                        scaleDeviation = -scaleDeviation;
 
-                        if (fertility[x, y] == 1 && scaleDeviation > 0f)
-                            scaleDeviation = -scaleDeviation;
+                    if (fertility[x, y] > 1 && scaleDeviation < 0f)
+                        scaleDeviation = Mathf.Abs(scaleDeviation);
 
-                        if (fertility[x, y] > 1 && scaleDeviation < 0f)
-                            scaleDeviation = Mathf.Abs(scaleDeviation);
+                    if (fertility[x, y] > 2f)
+                        scaleDeviation *= 2f;
 
-                        if (fertility[x, y] > 2f)
-                            scaleDeviation *= 2f;
+                    var scale = 1 + scaleDeviation;
 
-                        float scale = 1 + scaleDeviation;
+                    // Spawn
+                    var tree = Instantiate(treePrefab);
+                    var treeMesh = tree.transform.GetChild(0).GetComponent<MeshRenderer>();
 
-                        // Spawn
-                        GameObject tree = Instantiate(treePrefab);
-                        MeshRenderer treeMesh = tree.transform.GetChild(0).GetComponent<MeshRenderer>();
+                    //Initialize
+                    tree.transform.parent = treeHolder;
+                    tree.transform.position = tileCentres[x, y];
+                    tree.transform.localScale = Vector3.one * scale;
+                    tree.GetComponent<Animator>().enabled = false;
+                    tree.name = tree.tag;
 
-                        //Initialize
-                        tree.transform.parent = treeHolder;
-                        tree.transform.position = tileCentres[x, y];
-                        tree.transform.localScale = Vector3.one * scale;
-                        tree.GetComponent<Animator>().enabled = false;
-                        tree.name = tree.tag;
+                    //Set the color of the tree's 'Leaves' material based on its scale.
 
-                        //Set the color of the tree's 'Leaves' material based on its scale.
+                    //Scale Percentage
+                    var scalePercentage = Mathf.Abs(scaleDeviation) / (maxScaleDeviation * 2);
 
-                        //Scale Percentage
-                        float scalePercentage = Mathf.Abs(scaleDeviation) / (maxScaleDeviation * 2);
+                    //Debug.Log(scaleDeviation + "; " + scalePercentage);
 
-                        //Debug.Log(scaleDeviation + "; " + scalePercentage);
+                    treeMesh.materials[1].SetColor("_MainColor",
+                        Color.Lerp(lightestLeafColor, darkestLeafColor, scalePercentage));
 
-                        treeMesh.materials[1].SetColor("_MainColor", Color.Lerp(lightestLeafColor, darkestLeafColor, scalePercentage));
+                    treeMesh.transform.eulerAngles = rot;
 
-                        treeMesh.transform.eulerAngles = rot;
-
-                        //Mark tile as unwalkable
-                        walkable[x, y] = false;
-                    }
-                    else
-                        walkableCoords.Add(new Coord(x, y));
+                    //Mark tile as unwalkable
+                    walkable[x, y] = false;
+                }
+                else
+                {
+                    walkableCoords.Add(new Coord(x, y));
                 }
             }
-        }
     }
 
-    void SpawnRocks()
+    private void SpawnRocks()
     {
         // Settings:
         float maxRot = 4;
-        float maxScaleDeviation = .2f;
-        float startingScale = 0.65f;
-        float colVariationFactor = 0.15f;
-        float minCol = .8f;
+        var maxScaleDeviation = .2f;
+        var startingScale = 0.65f;
+        var colVariationFactor = 0.15f;
+        var minCol = .8f;
 
-        var spawnPrng = new System.Random(seed);
+        var spawnPrng = new Random(seed);
         var rockHolder = rockContainer.transform;
         walkableCoords = new List<Coord>();
 
-        for (int y = 0; y < terrainData.size; y++)
-        {
-            for (int x = 0; x < terrainData.size; x++)
+        for (var y = 0; y < terrainData.size; y++)
+        for (var x = 0; x < terrainData.size; x++)
+            if (walkable[x, y])
             {
-                if (walkable[x, y])
+                if (prng.NextDouble() < rockPlacementProbability)
                 {
-                    if (prng.NextDouble() < rockPlacementProbability)
-                    {
-                        // Randomize rot/scale
-                        float rotX = Mathf.Lerp(-maxRot, maxRot, (float)spawnPrng.NextDouble());
-                        float rotZ = Mathf.Lerp(-maxRot, maxRot, (float)spawnPrng.NextDouble());
-                        float rotY = (float)spawnPrng.NextDouble() * 360f;
-                        Quaternion rot = Quaternion.Euler(rotX, rotY, rotZ);
-                        float scale = startingScale + ((float)spawnPrng.NextDouble() * 2 - 1) * maxScaleDeviation;
+                    // Randomize rot/scale
+                    var rotX = Mathf.Lerp(-maxRot, maxRot, (float) spawnPrng.NextDouble());
+                    var rotZ = Mathf.Lerp(-maxRot, maxRot, (float) spawnPrng.NextDouble());
+                    var rotY = (float) spawnPrng.NextDouble() * 360f;
+                    var rot = Quaternion.Euler(rotX, rotY, rotZ);
+                    var scale = startingScale + ((float) spawnPrng.NextDouble() * 2 - 1) * maxScaleDeviation;
 
-                        // Randomize colour
-                        float col = Mathf.Lerp(minCol, 1, (float)spawnPrng.NextDouble());
-                        float r = col + ((float)spawnPrng.NextDouble() * 2 - 1) * colVariationFactor;
-                        float g = col + ((float)spawnPrng.NextDouble() * 2 - 1) * colVariationFactor;
-                        float b = col + ((float)spawnPrng.NextDouble() * 2 - 1) * colVariationFactor;
+                    // Randomize colour
+                    var col = Mathf.Lerp(minCol, 1, (float) spawnPrng.NextDouble());
+                    var r = col + ((float) spawnPrng.NextDouble() * 2 - 1) * colVariationFactor;
+                    var g = col + ((float) spawnPrng.NextDouble() * 2 - 1) * colVariationFactor;
+                    var b = col + ((float) spawnPrng.NextDouble() * 2 - 1) * colVariationFactor;
 
-                        // Spawn
-                        int rockPrefabIndex = Mathf.RoundToInt(Random.Range(0, rockPrefabs.Length));
+                    // Spawn
+                    var rockPrefabIndex = Mathf.RoundToInt(UnityEngine.Random.Range(0, rockPrefabs.Length));
 
-                        MeshRenderer rock = Instantiate(rockPrefabs[rockPrefabIndex], tileCentres[x, y], rot);
+                    var rock = Instantiate(rockPrefabs[rockPrefabIndex], tileCentres[x, y], rot);
 
-                        //Initialize
-                        rock.transform.parent = rockHolder;
-                        rock.transform.localScale = Vector3.one * scale;
-                        //rock.material = stoneMaterial;
-                        //rock.material.color = new Color(r, g, b);
-                        rock.gameObject.layer = LayerMask.NameToLayer("Resource");
-                        rock.tag = "Stone";
-                        rock.name = rock.tag;
+                    //Initialize
+                    rock.transform.parent = rockHolder;
+                    rock.transform.localScale = Vector3.one * scale;
+                    //rock.material = stoneMaterial;
+                    //rock.material.color = new Color(r, g, b);
+                    rock.gameObject.layer = LayerMask.NameToLayer("Resource");
+                    rock.tag = "Stone";
+                    rock.name = rock.tag;
 
-                        // Mark tile unwalkable
-                        walkable[x, y] = false;
-                    }
-                    else
-                    {
-                        walkableCoords.Add(new Coord(x, y));
-                    }
-                }
-            }
-        }
-    }
-
-    void GenerateFishingTiles()
-    {
-        var spawnPrng = new System.Random(seed);
-        var fishingTileHolder = fishingTileContainer.transform;
-
-        for (int y = 0; y < terrainData.size; y++)
-        {
-            for (int x = 0; x < terrainData.size; x++)
-            {
-                if (tileType[x, y] == "Shore")
-                {
-                    if (prng.NextDouble() < fishingTilePlacementProbability)
-                    {
-                        // Randomize rot/scale
-                        float rotY = (float)spawnPrng.NextDouble() * 360f;
-                        Quaternion rot = Quaternion.Euler(-90f, rotY, 0f);
-
-                        fishingTile[x, y] = true;
-
-                        MeshRenderer fishingTileObject = Instantiate(fishingTilePrefab, tileCentres[x, y], rot);
-
-                        fishingTileObject.transform.parent = fishingTileHolder;
-                        fishingTileObject.transform.localScale = new Vector3(30, 30, 30);
-                        fishingTileObject.material = fishingTileMaterial;
-
-                        //Make the gameobject static
-                        fishingTileObject.gameObject.isStatic = true;
-
-                        fishingTileObject.transform.position = tileCentres[x, y];
-                    }
-                    else
-                        fishingTile[x, y] = false;
+                    // Mark tile unwalkable
+                    walkable[x, y] = false;
                 }
                 else
-                    fishingTile[x, y] = false;
+                {
+                    walkableCoords.Add(new Coord(x, y));
+                }
             }
-        }
+    }
+
+    private void GenerateFishingTiles()
+    {
+        var spawnPrng = new Random(seed);
+        var fishingTileHolder = fishingTileContainer.transform;
+
+        for (var y = 0; y < terrainData.size; y++)
+        for (var x = 0; x < terrainData.size; x++)
+            if (tileType[x, y] == "Shore")
+            {
+                if (prng.NextDouble() < fishingTilePlacementProbability)
+                {
+                    // Randomize rot/scale
+                    var rotY = (float) spawnPrng.NextDouble() * 360f;
+                    var rot = Quaternion.Euler(-90f, rotY, 0f);
+
+                    fishingTile[x, y] = true;
+
+                    var fishingTileObject = Instantiate(fishingTilePrefab, tileCentres[x, y], rot);
+
+                    fishingTileObject.transform.parent = fishingTileHolder;
+                    fishingTileObject.transform.localScale = new Vector3(30, 30, 30);
+                    fishingTileObject.material = fishingTileMaterial;
+
+                    //Make the gameobject static
+                    fishingTileObject.gameObject.isStatic = true;
+
+                    fishingTileObject.transform.position = tileCentres[x, y];
+                }
+                else
+                {
+                    fishingTile[x, y] = false;
+                }
+            }
+            else
+            {
+                fishingTile[x, y] = false;
+            }
     }
 
     public static void RemoveTree(Transform treeToRemove)
     {
-        for (int y = 0; y < walkable.GetLength(0); y++)
-        {
-            for (int x = 0; x < walkable.GetLength(1); x++)
+        for (var y = 0; y < walkable.GetLength(0); y++)
+        for (var x = 0; x < walkable.GetLength(1); x++)
+            if (treeToRemove.position == tileCentres[x, y])
             {
-                if (treeToRemove.position == tileCentres[x, y])
-                {
-                    Destroy(treeToRemove.gameObject);
+                Destroy(treeToRemove.gameObject);
 
-                    walkable[x, y] = true;
-                    ModifyWalkableTiles(x, y, true);
-                }
+                walkable[x, y] = true;
+                ModifyWalkableTiles(x, y);
             }
-        }
     }
 }

@@ -1,40 +1,32 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public enum UIActions
 {
     Activate,
     Rotate,
-    Move
+    Move,
+    ChangeColor
 }
 
 public class UIAction : MonoBehaviour
 {
-    [Header("Action")]
-    [LabelOverride("UI Action")]
+    [Header("Action")] [LabelOverride("UI Action")]
     public UIActions desiredAction;
 
-    [Header("Settings")]
+    [Header("Settings")] public GameObject affectedUI;
 
-    public GameObject affectedUI;
-
-    [DrawIf("desiredAction", UIActions.Rotate)]
-    public Vector3 desiredRotation;
-
-    [DrawIf("desiredAction", UIActions.Move)]
-    public Vector3 desiredPosition;
+    #region Activate
 
     [DrawIf("desiredAction", UIActions.Activate)]
     public bool reverseActivation;
 
-    private Vector3 initRotation;
-    private Vector3 initPosition;
+    #endregion
 
-    private RectTransform rectTransform;
     private Button button;
     private Image image;
+
+    private RectTransform rectTransform;
 
     private void Awake()
     {
@@ -51,6 +43,7 @@ public class UIAction : MonoBehaviour
         switch (desiredAction)
         {
             case UIActions.Activate:
+            {
                 if (affectedUI.activeInHierarchy && reverseActivation)
                 {
                     //Make the button unable to be interacted with
@@ -67,15 +60,29 @@ public class UIAction : MonoBehaviour
                     //Make the button visible
                     ChangeAlpha(1.0f);
                 }
+
                 break;
+            }
             case UIActions.Move:
+            {
                 break;
+            }
             case UIActions.Rotate:
+            {
                 if (affectedUI.activeInHierarchy)
                     rectTransform.eulerAngles = desiredRotation;
                 else
                     rectTransform.eulerAngles = initRotation;
                 break;
+            }
+            case UIActions.ChangeColor:
+            {
+                if (affectedUI.activeInHierarchy)
+                    image.color = endingColor;
+                else
+                    image.color = startingColor;
+                break;
+            }
         }
     }
 
@@ -85,4 +92,32 @@ public class UIAction : MonoBehaviour
         color.a = desiredAlpha;
         image.color = color;
     }
+
+    #region Rotate
+
+    [DrawIf("desiredAction", UIActions.Rotate)]
+    public Vector3 desiredRotation;
+
+    private Vector3 initRotation;
+
+    #endregion
+
+    #region Move
+
+    [DrawIf("desiredAction", UIActions.Move)]
+    public Vector3 desiredPosition;
+
+    private Vector3 initPosition;
+
+    #endregion
+
+    #region Change Color
+
+    [DrawIf("desiredAction", UIActions.ChangeColor)]
+    public Color startingColor;
+
+    [DrawIf("desiredAction", UIActions.ChangeColor)]
+    public Color endingColor;
+
+    #endregion
 }
