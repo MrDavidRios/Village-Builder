@@ -1,5 +1,6 @@
 ﻿using DavidRios.Building;
 using DavidRios.Input;
+using DavidRios.UI;
 using TileOperations;
 using TMPro;
 using UnityEngine;
@@ -33,24 +34,24 @@ public class GameManager : MonoBehaviour
 
         #region Initialize Time Speed Controls
 
-        _uiManagerScript.ActivateButton(_uiManagerScript.miscUIElements["Paused"], false);
-        _uiManagerScript.ActivateButton(_uiManagerScript.miscUIElements["NormalSpeed"], false);
-        _uiManagerScript.ActivateButton(_uiManagerScript.miscUIElements["FastSpeed"], false);
-        _uiManagerScript.ActivateButton(_uiManagerScript.miscUIElements["MaxSpeed"], false);
+        _uiManagerScript.ActivateButton(_uiManagerScript.MiscUIElements["Paused"], false);
+        _uiManagerScript.ActivateButton(_uiManagerScript.MiscUIElements["NormalSpeed"], false);
+        _uiManagerScript.ActivateButton(_uiManagerScript.MiscUIElements["FastSpeed"], false);
+        _uiManagerScript.ActivateButton(_uiManagerScript.MiscUIElements["MaxSpeed"], false);
 
         switch (Time.timeScale)
         {
             case 0:
-                _uiManagerScript.ActivateButton(_uiManagerScript.miscUIElements["Paused"]);
+                _uiManagerScript.ActivateButton(_uiManagerScript.MiscUIElements["Paused"]);
                 break;
             case 1:
-                _uiManagerScript.ActivateButton(_uiManagerScript.miscUIElements["NormalSpeed"]);
+                _uiManagerScript.ActivateButton(_uiManagerScript.MiscUIElements["NormalSpeed"]);
                 break;
             case 2:
-                _uiManagerScript.ActivateButton(_uiManagerScript.miscUIElements["FastSpeed"]);
+                _uiManagerScript.ActivateButton(_uiManagerScript.MiscUIElements["FastSpeed"]);
                 break;
             case 3:
-                _uiManagerScript.ActivateButton(_uiManagerScript.miscUIElements["MaxSpeed"]);
+                _uiManagerScript.ActivateButton(_uiManagerScript.MiscUIElements["MaxSpeed"]);
                 break;
         }
 
@@ -61,8 +62,22 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        //TODO: Refactor this code into separate methods
         //Toggle cinematicModeEnabled variable on 'LeftAlt' keypress.
+        ToggleCinematicMode();
+
+        //If the deselect/pause key was pressed, pause the game.
+        if (InputHandler.Pressed(_input.DeselectPause))
+            PauseGame();
+
+        //Time Speed Controls
+        TimeSpeedControls();
+
+        //Update the UI
+        UpdateUI();
+    }
+
+    private void ToggleCinematicMode()
+    {
         if (InputHandler.Pressed(_input.CinematicMode) && !_gamePaused)
         {
             cinematicModeEnabled = cinematicModeEnabled ? cinematicModeEnabled = false : cinematicModeEnabled = true;
@@ -81,21 +96,10 @@ public class GameManager : MonoBehaviour
                 Select.CanSelect = true;
             }
         }
+    }
 
-        //If the deselect/pause key was pressed, pause the game.
-        if (InputHandler.Pressed(_input.DeselectPause))
-            PauseGame();
-
-        //If the build menu toggle key was pressed, open/close the build menu.
-        if (InputHandler.Pressed(_input.BuildMenuToggle))
-        {
-            if (_uiManagerScript.mainPanels["BuildingPanel"].activeInHierarchy)
-                _uiManagerScript.ClosePanel("BuildingPanel");
-            else
-                _uiManagerScript.OpenPanel("BuildingPanel");
-        }
-
-        //Time Speed Controls
+    private void TimeSpeedControls()
+    {
         if (InputHandler.Pressed(_input.StopTime))
             ChangeTimeSpeed(0);
 
@@ -107,8 +111,6 @@ public class GameManager : MonoBehaviour
 
         if (InputHandler.Pressed(_input.TimeSpeed3))
             ChangeTimeSpeed(3);
-
-        UpdateUI();
     }
 
     public void PauseGame(bool onePress = false)
@@ -152,18 +154,15 @@ public class GameManager : MonoBehaviour
     {
     }
 
-    public void QuitGame()
-    {
-        Application.Quit();
-    }
+    public void QuitGame() => Application.Quit();
 
     public void ChangeTimeSpeed(int timeSpeed)
     {
         var timeControlButtons = new GameObject[4];
         timeControlButtons = new[]
         {
-            _uiManagerScript.miscUIElements["Paused"], _uiManagerScript.miscUIElements["NormalSpeed"],
-            _uiManagerScript.miscUIElements["FastSpeed"], _uiManagerScript.miscUIElements["MaxSpeed"]
+            _uiManagerScript.MiscUIElements["Paused"], _uiManagerScript.MiscUIElements["NormalSpeed"],
+            _uiManagerScript.MiscUIElements["FastSpeed"], _uiManagerScript.MiscUIElements["MaxSpeed"]
         };
 
         var oldTimeSpeed = (int) Time.timeScale;
@@ -207,7 +206,7 @@ public class GameManager : MonoBehaviour
 
     private void UpdateUI()
     {
-        _uiManagerScript.textFields["PopulationCounter"].GetComponent<TMP_Text>().text =
+        _uiManagerScript.TextFields["PopulationCounter"].GetComponent<TMP_Text>().text =
             _villagerParent.transform.childCount.ToString();
     }
 }

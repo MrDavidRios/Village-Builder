@@ -6,7 +6,7 @@ public class ItemPile : MonoBehaviour
     /// <summary>
     ///     Initial value. This should not be modified in the script.
     /// </summary>
-    private const int minutesToDespawn = 5;
+    private const int MinutesToDespawn = 5;
 
     public bool beingPickedUp;
 
@@ -46,9 +46,9 @@ public class ItemPile : MonoBehaviour
 
     private IEnumerator UpdateTimeToDespawn()
     {
-        var timeInSeconds = minutesToDespawn * 60;
+        var timeInSeconds = MinutesToDespawn * 60;
 
-        despawnMinutes = minutesToDespawn;
+        despawnMinutes = MinutesToDespawn;
         despawnSeconds = 0;
 
         //Update time left to despawn.

@@ -82,7 +82,7 @@ namespace DavidRios.Building
                 //Only fire a Raycast if the mouse is over ground
                 _ray = mainCamera.ScreenPointToRay(InputHandler.MousePosition);
 
-                if (Physics.Raycast(_ray, out _hit, GlobalRules._maxRaycastDistance, terrainLayer))
+                if (Physics.Raycast(_ray, out _hit, GlobalRules.MAXRaycastDistance, terrainLayer))
                 {
                     _building = BuildingOperations.GetBuildingScriptableObject(TemplateBuilding.transform);
 

@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 3479367652376547923}
   - component: {fileID: 8801704519631233506}
   - component: {fileID: 8850792338199569932}
+  - component: {fileID: 4534079890423978985}
   m_Layer: 11
   m_Name: Villager
   m_TagString: Untagged
@@ -138,8 +139,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   version: 2
-  radius: 2
-  height: 2
+  radius: 0.5
+  height: 0.5
   repathRate: 0.5
   canSearch: 1
   canMove: 1
@@ -152,7 +153,6 @@ MonoBehaviour:
   orientation: 0
   enableRotation: 1
   targetCompatibility: {fileID: 0}
-  overrideY: 0
   maxAcceleration: -2.5
   rotationSpeed: 360
   slowdownDistance: 1.5
@@ -196,7 +196,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3606e75dd4b5e154e8b0a1a45ecd2b52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  index: 0
+  _index: 0
   _name: 
   _sex: 
   roleToAssign: 1
@@ -206,9 +206,21 @@ MonoBehaviour:
   inventoryCapacity: 6
   items: []
   performingJob: 0
-  currentlyDepositing: 0
+  moveJobCancelled: 0
+  jobList: []
+  lastAddedJob:
+    jobType: 
+    position: {x: 0, y: 0, z: 0}
+    objectiveTransforms: []
+    amounts: 
+  lastRemovedJob:
+    jobType: 
+    position: {x: 0, y: 0, z: 0}
+    objectiveTransforms: []
+    amounts: 
   jobAmount: 0
   unfinishedJob: 
+  customJobDescription: 
   _harvestAmount: 1
   _harvestRate: 1
   _buildAmount: 5
@@ -217,3 +229,30 @@ MonoBehaviour:
   _walkSpeed: 3
   _currentWalkSpeed: 0
   debugLevel: 0
+--- !u!114 &4534079890423978985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8850792338199569921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 560112f876f5746c780eca0d404e7139, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 2
+  radiusBackingField: 0.5
+  heightBackingField: 2
+  centerBackingField: 1
+  locked: 0
+  lockWhenNotMoving: 0
+  agentTimeHorizon: 2
+  obstacleTimeHorizon: 2
+  maxNeighbours: 10
+  layer: 1
+  collidesWith: -1
+  wallAvoidForce: 1
+  wallAvoidFalloff: 1
+  priority: 0.5
+  debug: 0

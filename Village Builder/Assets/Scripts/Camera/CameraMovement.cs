@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using DavidRios.Building;
 using DavidRios.Input;
 using Terrain;
@@ -10,10 +10,6 @@ namespace DavidRios.Camera
 {
     public class CameraMovement : MonoBehaviour
     {
-        /// <summary>
-        ///     This script manages the movement, rotation, and panning of the camera. This is vital to a smooth experience.
-        /// </summary>
-
         //Floats
         public float turnSpeed = 4.0f; //Speed of camera turning when mouse moves in along an axis
 
@@ -224,7 +220,7 @@ namespace DavidRios.Camera
             }
             else
                 _isPanning = false;
-            
+
             //Get the right mouse button
             if (InputHandler.Held(_input.RightClick) && !InputHandler.Held(_input.LeftClick))
             {

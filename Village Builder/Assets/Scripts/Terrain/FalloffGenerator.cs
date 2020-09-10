@@ -1,26 +1,29 @@
 ﻿using UnityEngine;
 
-public class FalloffGenerator
+namespace DavidRios.Terrain
 {
-    public static float[,] GenerateFalloffMap(int size, float a = 3.0f, float b = 2.2f)
+    public static class FalloffGenerator
     {
-        var map = new float[size, size];
-
-        for (var i = 0; i < size; i++)
-        for (var j = 0; j < size; j++)
+        public static float[,] GenerateFalloffMap(int size, float a = 3.0f, float b = 2.2f)
         {
-            var x = i / (float) size * 2 - 1;
-            var y = j / (float) size * 2 - 1;
+            var map = new float[size, size];
 
-            var value = Mathf.Max(Mathf.Abs(x), Mathf.Abs(y));
-            map[i, j] = Evaluate(value, a, b);
+            for (var i = 0; i < size; i++)
+            for (var j = 0; j < size; j++)
+            {
+                var x = i / (float) size * 2 - 1;
+                var y = j / (float) size * 2 - 1;
+
+                var value = Mathf.Max(Mathf.Abs(x), Mathf.Abs(y));
+                map[i, j] = Evaluate(value, a, b);
+            }
+
+            return map;
         }
 
-        return map;
-    }
-
-    private static float Evaluate(float value, float a = 3.0f, float b = 2.2f)
-    {
-        return Mathf.Pow(value, a) / (Mathf.Pow(value, a) + Mathf.Pow(b - b * value, a));
+        private static float Evaluate(float value, float a = 3.0f, float b = 2.2f)
+        {
+            return Mathf.Pow(value, a) / (Mathf.Pow(value, a) + Mathf.Pow(b - b * value, a));
+        }
     }
 }

@@ -1,14 +1,14 @@
 ﻿public class CityInfo
 {
-    public static string _cityName;
+    public static string CityName;
 
-    public static int _population;
-    public static int _happiness;
+    public static int Population;
+    public static int Happiness;
 
-    public static int _time;
+    public static int Time;
 
     //Resources
-    public static ItemBundle[] _cityResources =
+    public static ItemBundle[] CityResources =
     {
         //Implement a different way to initialize this when save/load system is implemented.
 
@@ -38,13 +38,13 @@
 
     public static void AddResource(int itemIndex, int amount)
     {
-        _cityResources[itemIndex].amount += amount;
+        CityResources[itemIndex].amount += amount;
         //_cityResourcesLeftForBuilding[itemIndex].amount += amount;
     }
 
     public static void RemoveResource(int itemIndex, int amount)
     {
-        _cityResources[itemIndex].amount -= amount;
+        CityResources[itemIndex].amount -= amount;
     }
 
     /*

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using DavidRios.Building;
+using DavidRios.Camera;
 using DavidRios.Input;
+using DavidRios.UI;
 using Terrain;
 using TMPro;
 using UnityEngine;
@@ -85,7 +87,7 @@ namespace TileOperations
                 !SelectionLocked)
             {
                 //If the raycast hit something with a collider, run the code inside this 'if' statement
-                if (Physics.Raycast(_ray, out _hit, GlobalRules._maxRaycastDistance, selectable))
+                if (Physics.Raycast(_ray, out _hit, GlobalRules.MAXRaycastDistance, selectable))
                 {
                     //Left-Click
                     if (InputHandler.Pressed(_input.LeftClick))
@@ -141,8 +143,7 @@ namespace TileOperations
                                     case "Gold":
                                         break;
                                     default:
-                                        Debug.Log("Invalid tag specified: " + SelectedObject.tag);
-                                        break;
+                                        throw new ArgumentOutOfRangeException();
                                 }
 
                                 PositionSelectionCursor(SelectedObject.transform.position, true);
@@ -192,14 +193,11 @@ namespace TileOperations
                             }
 
                             default:
-                            {
-                                Debug.LogError("Error: Invalid Layer ID given: " + _hit.transform.gameObject.layer);
-                                break;
-                            }
+                                throw new ArgumentOutOfRangeException();
                         }
 
-                        if (!_uiManagerScript.mainPanels["SelectionPanel"].activeInHierarchy)
-                            _uiManagerScript.mainPanels["SelectionPanel"].SetActive(true);
+                        if (!_uiManagerScript.MainPanels["SelectionPanel"].activeInHierarchy)
+                            _uiManagerScript.MainPanels["SelectionPanel"].SetActive(true);
                     }
                 }
                 else
@@ -442,12 +440,12 @@ namespace TileOperations
                         //If the building's current stage is 0, that means that it is still a template.
                         if (underConstructionScript.currentStage == 0 && !underConstructionScript.grassCleared &&
                             !underConstructionScript.beingDeposited && underConstructionScript.laborAmount == 0 &&
-                            !_uiManagerScript.miscUIElements["TemplateClearButton"].activeInHierarchy)
+                            !_uiManagerScript.MiscUIElements["TemplateClearButton"].activeInHierarchy)
                         {
-                            _uiManagerScript.miscUIElements["TemplateClearButton"].GetComponent<Button>().onClick
+                            _uiManagerScript.MiscUIElements["TemplateClearButton"].GetComponent<Button>().onClick
                                 .AddListener(() =>
                                     StartCoroutine(PositionBuildingTemplate.RemoveTemplate(SelectedObject.transform,
-                                        _uiManagerScript.miscUIElements["TemplateClearButton"].GetComponent<Button>())));
+                                        _uiManagerScript.MiscUIElements["TemplateClearButton"].GetComponent<Button>())));
                             _uiManagerScript.ShowMiscUI("TemplateClearButton");
                         }
                         //If the current stage isn't 0 or the building's labor amount is greater than 0, then hide the template clear button.
@@ -566,8 +564,8 @@ namespace TileOperations
                 case 10:
                 {
                     if (InputHandler.Pressed(_input.Delete))
-                        if (_uiManagerScript.miscUIElements["TemplateClearButton"].activeInHierarchy)
-                            _uiManagerScript.miscUIElements["TemplateClearButton"].GetComponent<Button>().onClick
+                        if (_uiManagerScript.MiscUIElements["TemplateClearButton"].activeInHierarchy)
+                            _uiManagerScript.MiscUIElements["TemplateClearButton"].GetComponent<Button>().onClick
                                 .Invoke();
                     break;
                 }
@@ -578,11 +576,11 @@ namespace TileOperations
                     //Open/Close Jobs panel if the 'J' key is pressed.
                     if (InputHandler.Pressed(_input.JobsMenuToggle))
                     {
-                        if (!_uiManagerScript.mainPanels["JobsPanel"].activeInHierarchy)
+                        if (!_uiManagerScript.MainPanels["JobsPanel"].activeInHierarchy)
                             StartCoroutine(_displayJobsList.DisplayVillagerJobs("SelectTile.cs"));
 
-                        _uiManagerScript.ToggleUIObject(_uiManagerScript.mainPanels["JobsPanel"]);
-                        _uiManagerScript.ToggleUIObject(_uiManagerScript.mainPanels["SelectionDescriptionPanel"]);
+                        _uiManagerScript.ToggleUIObject(_uiManagerScript.MainPanels["JobsPanel"]);
+                        _uiManagerScript.ToggleUIObject(_uiManagerScript.MainPanels["SelectionDescriptionPanel"]);
                     }
 
                     break;
@@ -757,8 +755,8 @@ namespace TileOperations
         {
             if (SelectionLocked != lockSelection)
             {
-                _uiManagerScript.ToggleUIObject(_uiManagerScript.miscUIElements["LockButton"]);
-                _uiManagerScript.ToggleUIObject(_uiManagerScript.miscUIElements["UnlockButton"]);
+                _uiManagerScript.ToggleUIObject(_uiManagerScript.MiscUIElements["LockButton"]);
+                _uiManagerScript.ToggleUIObject(_uiManagerScript.MiscUIElements["UnlockButton"]);
             }
 
             SelectionLocked = lockSelection;
