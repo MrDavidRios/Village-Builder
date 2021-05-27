@@ -197,15 +197,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 0
-<<<<<<< Updated upstream
   _name: 
   _sex: 
-=======
-  name: 
-  sex: 
->>>>>>> Stashed changes
   roleToAssign: 1
-  role: 
+  _role: 
   inventoryFull: 0
   numberOfItems: 0
   inventoryCapacity: 6
@@ -213,7 +208,6 @@ MonoBehaviour:
   performingJob: 0
   currentlyDepositing: 0
   jobAmount: 0
-<<<<<<< Updated upstream
   unfinishedJob: 
   _harvestAmount: 1
   _harvestRate: 1
@@ -222,14 +216,4 @@ MonoBehaviour:
   _itemExchangeRate: 1
   _walkSpeed: 3
   _currentWalkSpeed: 0
-=======
-  customJobDescription: 
-  harvestAmount: 1
-  harvestRate: 1
-  buildAmount: 1
-  buildRate: 1
-  itemExchangeRate: 1
-  walkSpeed: 3
-  currentWalkSpeed: 0
->>>>>>> Stashed changes
   debugLevel: 0

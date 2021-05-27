@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using DavidRios.Assets.Scripts.Villager;
 using DavidRios.Building;
-using DavidRios.Villager;
 using TileOperations;
 using TMPro;
 using UnityEngine;
@@ -14,11 +12,7 @@ public class DisplayJobsList : MonoBehaviour
     public List<string> jobsThatAreNotModifiable;
     [SerializeField] private List<Job> listedJobs = new List<Job>();
 
-<<<<<<< Updated upstream
     private Villager selectedVillager;
-=======
-        private VillagerLogic _selectedVillager;
->>>>>>> Stashed changes
 
     private UIManager UIManagerScript;
 
@@ -27,19 +21,11 @@ public class DisplayJobsList : MonoBehaviour
         UIManagerScript = FindObjectOfType<UIManager>();
     }
 
-<<<<<<< Updated upstream
     //On call, if just opened, redo everything. If not, then add/remove the last added/removed job.
     public IEnumerator DisplayVillagerJobs(string source, Job lastJob = null, Villager sourceVillager = null)
     {
         //Initialize necessary variables
         var selectedObject = Select.SelectedObject;
-=======
-        //On call, if just opened, redo everything. If not, then add/remove the last added/removed job.
-        public IEnumerator DisplayVillagerJobs(string source, Job lastJob = null, VillagerLogic sourceVillager = null)
-        {
-            //Initialize necessary variables
-            var selectedObject = Select.SelectedObject;
->>>>>>> Stashed changes
 
         var newlyOpened = !UIManagerScript.miscUIElements["JobsList"].activeInHierarchy;
 
@@ -54,7 +40,6 @@ public class DisplayJobsList : MonoBehaviour
         if (selectedObject.layer != LayerMask.NameToLayer("Villager"))
             yield break;
 
-<<<<<<< Updated upstream
         if (source == "Villager.cs" && lastJob == null)
         {
             Debug.LogError("'lastJobType' cannot be null if Villager.cs is the source!");
@@ -63,16 +48,6 @@ public class DisplayJobsList : MonoBehaviour
 
         //Initialize necessary variables
         var villager = selectedObject.GetComponent<Villager>();
-=======
-            if (source == "VillagerLogic.cs" && lastJob == null)
-            {
-                Debug.LogError("'lastJobType' cannot be null if VillagerLogic.cs is the source!");
-                yield break;
-            }
-
-            //Initialize necessary variables
-            var villager = selectedObject.GetComponent<VillagerLogic>();
->>>>>>> Stashed changes
 
         //Make it so that the function exits if the villager is not the same as the selected villager.
         if (sourceVillager != null)
@@ -257,7 +232,6 @@ public class DisplayJobsList : MonoBehaviour
 
         yield return new WaitForEndOfFrame();
 
-<<<<<<< Updated upstream
         for (var i = 0; i < listedJobs.Count; i++)
             jobListDisplay.transform.GetChild(i).GetComponent<RectTransform>().anchoredPosition =
                 new Vector3(0f, -20f - 37.5f * (listedJobs.Count - i - 1), 0f);
@@ -266,19 +240,10 @@ public class DisplayJobsList : MonoBehaviour
     public void RemoveJobGroup(Job job, Villager villager = null)
     {
         var jobManager = FindObjectOfType<JobManager>();
-=======
-        private void RemoveJobGroup(Job job, VillagerLogic villager = null)
-        {
-            var jobManager = FindObjectOfType<JobManager>();
->>>>>>> Stashed changes
 
         //Debug.Log(job.jobType + "; " + selectedVillager);
 
-<<<<<<< Updated upstream
         Villager _selectedVillager = null;
-=======
-            VillagerLogic selectedVillager = null;
->>>>>>> Stashed changes
 
         if (villager == null)
             _selectedVillager = selectedVillager;
@@ -294,25 +259,8 @@ public class DisplayJobsList : MonoBehaviour
             {
                 if (_selectedVillager.performingJob)
                 {
-<<<<<<< Updated upstream
                     jobManager.RemoveJob(_selectedVillager._index, jobIndex);
                     _selectedVillager.moveJobCancelled = true;
-=======
-                    if (selectedVillager.performingJob)
-                    {
-                        jobManager.RemoveJob(selectedVillager.index, jobIndex);
-                        selectedVillager.moveJobCancelled = true;
-                    }
-                    else
-                    {
-                        jobManager.RemoveJob(selectedVillager.index, jobIndex);
-                        jobManager.RemoveJob(selectedVillager.index, jobIndex - 1);
-                    }
-
-                    //Remove axe from tree.
-                    job.objectiveTransforms[0].GetComponent<Resource>().RemoveHarvestIndicator();
-                    break;
->>>>>>> Stashed changes
                 }
                 else
                 {

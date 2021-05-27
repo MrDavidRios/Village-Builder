@@ -1,20 +1,13 @@
 ﻿using System;
 using System.Collections;
-using DavidRios.Assets.Scripts.Villager;
 using DavidRios.Building;
 using DavidRios.Input;
-<<<<<<< Updated upstream
-=======
-using DavidRios.UI;
-using DavidRios.Villager;
->>>>>>> Stashed changes
 using Terrain;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using Environment = DavidRios.Environment.Environment;
 
 namespace TileOperations
 {
@@ -119,7 +112,7 @@ namespace TileOperations
                                 ScaleSelectionCursor(new Vector3(0.5f, 0.5f, 0.5f));
 
                                 //Is this tile a water tile?
-                                if (Environment.TileType[_tileIndex.x, _tileIndex.y] == "Water")
+                                if (Environment.tileType[_tileIndex.x, _tileIndex.y] == "Water")
                                     //If the tile is a water tile, move the cursor down 0.4 units because water tiles are lower than land tiles.
                                     PositionSelectionCursor(tilePos + new Vector3(0f, -0.4f, 0f), _tileIndex);
                                 else
@@ -291,8 +284,8 @@ namespace TileOperations
                 case 8:
                 {
                     //Cached data
-                    var tileType = Environment.TileType[_tileIndex.x, _tileIndex.y];
-                    var fertility = Environment.Fertility[_tileIndex.x, _tileIndex.y];
+                    var tileType = Environment.tileType[_tileIndex.x, _tileIndex.y];
+                    var fertility = Environment.fertility[_tileIndex.x, _tileIndex.y];
 
                     string fertilityLevel;
 
@@ -321,7 +314,7 @@ namespace TileOperations
                     if (tileType == "Water" || tileType == "Shore")
                     {
                         //UV basically represents the color of the tile and is represented by x and y values.
-                        var uvY = Environment.Uvs[_tileIndex.x, _tileIndex.y].y;
+                        var uvY = Environment.uvs[_tileIndex.x, _tileIndex.y].y;
                         var waterDepth = "Shallow";
 
                         //Depending on the darkness of the water (uvY) the depth of the water can be found.
@@ -341,7 +334,7 @@ namespace TileOperations
                         _uiManagerScript.ChangeText("Subtitle1", fertilityLevel);
 
                     //If the tile is a fishing tile, display the fact that it has fish
-                    if (Environment.FishingTile[_tileIndex.x, _tileIndex.y])
+                    if (Environment.fishingTile[_tileIndex.x, _tileIndex.y])
                         _uiManagerScript.ChangeText("Subtitle1", "Good fishing spot");
 
                     //Show the first subtitle
@@ -474,11 +467,11 @@ namespace TileOperations
                 //Villager
                 case 11:
                 {
-                    var villager = SelectedObject.GetComponent<VillagerLogic>();
+                    var villager = SelectedObject.GetComponent<Villager>();
 
-                    _uiManagerScript.ChangeText("SelectedTitle", villager.name);
+                    _uiManagerScript.ChangeText("SelectedTitle", villager._name);
 
-                    _uiManagerScript.ChangeText("Subtitle1", "Gender: " + villager.sex);
+                    _uiManagerScript.ChangeText("Subtitle1", "Gender: " + villager._sex);
 
                     if (villager.customJobDescription == "")
                         _uiManagerScript.ChangeText("Subtitle2",
@@ -487,9 +480,9 @@ namespace TileOperations
                         _uiManagerScript.ChangeText("Subtitle2", villager.customJobDescription);
 
                     //Only change dropdown value if the villager's role changes. Check later if this is necessary.
-                    if ((int) Enum.Parse(typeof(VillagerRoles), villager.role) != _villagerRole)
+                    if ((int) Enum.Parse(typeof(VillagerRoles), villager._role) != _villagerRole)
                     {
-                        _villagerRole = (int) Enum.Parse(typeof(VillagerRoles), villager.role);
+                        _villagerRole = (int) Enum.Parse(typeof(VillagerRoles), villager._role);
 
                         _uiManagerScript.UpdateDropdown("RoleSelector",
                             _villagerRole - 1 /*VillagerRoles Enum begins at 1*/);
@@ -735,7 +728,7 @@ namespace TileOperations
             for (var y = 0; y < _terrainGenerator.worldSize; y++)
             for (var x = 0; x < _terrainGenerator.worldSize; x++)
                 //Check if it's land
-                if (Environment.TileCentres[x, y] == new Vector3(tilePos.x, Environment.TileCentres[x, y].y, tilePos.z))
+                if (Environment.tileCentres[x, y] == new Vector3(tilePos.x, Environment.tileCentres[x, y].y, tilePos.z))
                     return new Vector2Int(x, y);
 
             //If the tile can't be found, return an impossible value, signaling an error.
@@ -744,7 +737,7 @@ namespace TileOperations
 
         public void UpdateVillagerRole(TMP_Dropdown dropDown)
         {
-            SelectedObject.GetComponent<VillagerLogic>().role = Enum.GetName(typeof(VillagerRoles),
+            SelectedObject.GetComponent<Villager>()._role = Enum.GetName(typeof(VillagerRoles),
                 dropDown.value + 1 /*VillagerRoles Enum begins at 1*/);
         }
 

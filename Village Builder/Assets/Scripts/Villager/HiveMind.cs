@@ -2,142 +2,137 @@
 using System.Linq;
 using DavidRios.Building;
 using DavidRios.Building.Building_Types;
-using DavidRios.Villager;
 using UnityEngine;
 
 //This script is to help optimize the distribution of jobs among the villagers. (Prevents one villager from hogging everything)
-namespace DavidRios.Assets.Scripts.Villager
+public class HiveMind : MonoBehaviour
 {
-    public class HiveMind : MonoBehaviour
+    //Variables
+    public List<Villager> idleVillagers = new List<Villager>();
+    private ItemPileManager itemPileManager;
+
+    //Scripts
+    private JobManager jobManager;
+
+    private void Awake()
     {
-        //Variables
-        public List<VillagerLogic> idleVillagers = new List<VillagerLogic>();
-        private ItemPileManager _itemPileManager;
+        jobManager = FindObjectOfType<JobManager>();
+        itemPileManager = FindObjectOfType<ItemPileManager>();
+    }
 
-        //Scripts
-        private JobManager _jobManager;
-
-        private void Awake()
-        {
-            _jobManager = FindObjectOfType<JobManager>();
-            _itemPileManager = FindObjectOfType<ItemPileManager>();
-        }
-
-        private void Update()
-        {
-            foreach (Transform child in transform)
+    private void Update()
+    {
+        foreach (Transform child in transform)
+            if (child.gameObject.activeInHierarchy)
             {
-                if (!child.gameObject.activeInHierarchy) continue;
-                                    
                 //If the selected villager currently has no jobs and is not marked as idle, mark them as idle.
-                var villagerScript = child.GetComponent<VillagerLogic>();
-                
-                if (villagerScript.jobList.Count == 0 && !idleVillagers.Contains(villagerScript))
-                    idleVillagers.Add(villagerScript);
+                if (child.GetComponent<Villager>().jobList.Count == 0 &&
+                    !idleVillagers.Contains(child.GetComponent<Villager>()))
+                    idleVillagers.Add(child.GetComponent<Villager>());
 
                 //If the villager has jobs to do and is marked as idle, remove them from the idle list.
-                else if (villagerScript.jobList.Count > 0 &&
-                         idleVillagers.Contains(villagerScript))
-                    idleVillagers.Remove(villagerScript);
+                else if (child.GetComponent<Villager>().jobList.Count > 0 &&
+                         idleVillagers.Contains(child.GetComponent<Villager>()))
+                    idleVillagers.Remove(child.GetComponent<Villager>());
             }
 
-            #region Pile Logic
+        #region Pile Logic
 
-            //Decide which villager would do the job the fastest based on their current position
-            /*
-            * Get the item pile if one exists
-            * Get the closest idle villager to it and make them pick up the pile
-            */
+        //Decide which villager would do the job the fastest based on their current position
+        /*
+         * Get the item pile if one exists
+         * Get the closest idle villager to it and make them pick up the pile
+        */
 
-            //If there are any piles that are not currently being picked up, look for a villager to assign it to.
-            ItemPile itemPile = null;
+        //If there are any piles that are not currently being picked up, look for a villager to assign it to.
+        Transform itemPileTransform = null;
+        ItemPile itemPile = null;
 
-            var villagerDistances = new Dictionary<int, float>();
+        var villagerDistances = new Dictionary<int, float>();
 
-            if (_itemPileManager.untendedPiles.Count > 0)
+        if (itemPileManager.untendedPiles.Count > 0)
+        {
+            itemPileTransform = itemPileManager.GetNextAvailableItemPile();
+
+            if (itemPileTransform != null)
             {
-                var itemPileTransform = _itemPileManager.GetNextAvailableItemPile();
+                itemPile = itemPileTransform.GetComponent<ItemPile>();
 
-                if (itemPileTransform != null)
-                {
-                    itemPile = itemPileTransform.GetComponent<ItemPile>();
-
-                    for (var j = 0; j < idleVillagers.Count; j++)
-                        villagerDistances.Add(j,
-                            Vector3.Distance(idleVillagers[j].transform.position, itemPileTransform.position));
-                }
+                for (var j = 0; j < idleVillagers.Count; j++)
+                    villagerDistances.Add(j,
+                        Vector3.Distance(idleVillagers[j].transform.position, itemPileTransform.position));
             }
+        }
 
-            if (villagerDistances.Count <= 0 || itemPile == null) return;
+        if (villagerDistances.Count > 0 && itemPile != null)
+        {
             var closestVillagerDictionaryIndex = villagerDistances.OrderBy(kvp => kvp.Value).First().Key;
 
             var villager = idleVillagers[closestVillagerDictionaryIndex];
 
             if (StorageManager.SpaceLeftForItemBundle(itemPile.tag, itemPile.amountOfItems))
                 PickUpPile(villager, itemPile);
-
-            #endregion
         }
 
-        private void PickUpPile(VillagerLogic villagerLogic, ItemPile pile)
+        #endregion
+    }
+
+    private void PickUpPile(Villager villager, ItemPile pile)
+    {
+        //Test out removing these variables and just casting them to floats
+        float itemPileAmount = pile.amountOfItems;
+        float inventoryCapacity = villager.inventoryCapacity;
+
+        //Amount of times the villager needs to go back to pick up the entire pile (if the pile has 10 items and their inventory capacity is 5, they would have to go back twice)
+        var amountOfTimesToLoop = (int) Mathf.Ceil(itemPileAmount / inventoryCapacity);
+
+        for (var i = 0; i < amountOfTimesToLoop; i++)
         {
-            //Test out removing these variables and just casting them to floats
-            float itemPileAmount = pile.amountOfItems;
-            float inventoryCapacity = villagerLogic.inventoryCapacity;
+            //Amount of items that the villager will pick up from the pile this time around. If the villager's inventory capacity is less than the amount in the item pile, they will take as much as they can. Otherwise, they'll take the whole pile.
+            //This is a total amount distributed across all of the storages the villager will use.
+            var amount = itemPileAmount > villager.inventoryCapacity
+                ? villager.inventoryCapacity
+                : (int) itemPileAmount;
 
-            //Amount of times the villager needs to go back to pick up the entire pile (if the pile has 10 items and their inventory capacity is 5, they would have to go back twice)
-            var amountOfTimesToLoop = (int) Mathf.Ceil(itemPileAmount / inventoryCapacity);
+            //Assign the job of picking up the pile and mark the pile as being picked up.
+            jobManager.AssignJobGroup("PickUpPile", pile.transform.position, new Transform[1] {pile.transform},
+                new int[1] {amount}, villager._index);
 
-            for (var i = 0; i < amountOfTimesToLoop; i++)
+            pile.beingPickedUp = true;
+
+            var itemType = pile.tag;
+
+            //Get all of the storages that the villager would need to use
+            var storagesToUse = JobUtils.GetNearestAvailableStorages(villager, itemType, (int) itemPileAmount);
+
+            var amountLeftToDeposit = amount;
+
+            for (var storageIndex = 0; storageIndex < storagesToUse.Length; storageIndex++)
             {
-                //Amount of items that the villager will pick up from the pile this time around. If the villager's inventory capacity is less than the amount in the item pile, they will take as much as they can. Otherwise, they'll take the whole pile.
-                //This is a total amount distributed across all of the storages the villager will use.
-                var amount = itemPileAmount > villagerLogic.inventoryCapacity
-                    ? villagerLogic.inventoryCapacity
-                    : (int) itemPileAmount;
+                //Amount of space left for these items in storage
+                var amountForThisStorage = storagesToUse[storageIndex].GetComponent<Storage>()
+                    .GetSpaceForItemsByItemType(itemType);
 
-                //Assign the job of picking up the pile and mark the pile as being picked up.
-                _jobManager.AssignJobGroup("PickUpPile", pile.transform.position, new Transform[1] {pile.transform},
-                    new int[1] {amount}, villagerLogic.index);
+                if (amountForThisStorage > amountLeftToDeposit || amountForThisStorage == amountLeftToDeposit)
+                    amountForThisStorage = amountLeftToDeposit;
 
-                pile.beingPickedUp = true;
+                amountLeftToDeposit -= amountForThisStorage;
 
-                var itemType = pile.tag;
-
-                //Get all of the storages that the villager would need to use
-                var storagesToUse = JobUtils.GetNearestAvailableStorages(villagerLogic, itemType, (int) itemPileAmount);
-
-                var amountLeftToDeposit = amount;
-
-                foreach (var storage in storagesToUse)
+                var itemCollection = new ItemBundle
                 {
-                    //Amount of space left for these items in storage
-                    var storageScript = storage.GetComponent<Storage>();
-                    
-                    var amountForThisStorage = storageScript
-                        .GetSpaceForItemsByItemType(itemType);
+                    item = new Item {itemObject = pile.transform.GetChild(0).gameObject, itemType = itemType},
+                    amount = amountForThisStorage
+                };
 
-                    if (amountForThisStorage > amountLeftToDeposit || amountForThisStorage == amountLeftToDeposit)
-                        amountForThisStorage = amountLeftToDeposit;
+                storagesToUse[storageIndex].GetComponent<Storage>()
+                    .QueueItemsForDeposit(itemCollection, villager._index);
 
-                    amountLeftToDeposit -= amountForThisStorage;
-
-                    var itemCollection = new ItemBundle
-                    {
-                        item = new Item {itemObject = pile.transform.GetChild(0).gameObject, itemType = itemType},
-                        amount = amountForThisStorage
-                    };
-
-                    storageScript
-                        .QueueItemsForDeposit(itemCollection, villagerLogic.index);
-
-                    //Assign the job of depositing the items.
-                    _jobManager.AssignJobGroup("Deposit", storage.transform.position,
-                        new Transform[1] {storage}, new int[1] {amountForThisStorage}, villagerLogic.index);
-                }
-
-                itemPileAmount -= amount;
+                //Assign the job of depositing the items.
+                jobManager.AssignJobGroup("Deposit", storagesToUse[storageIndex].transform.position,
+                    new Transform[1] {storagesToUse[storageIndex]}, new int[1] {amountForThisStorage}, villager._index);
             }
+
+            itemPileAmount -= amount;
         }
     }
 }

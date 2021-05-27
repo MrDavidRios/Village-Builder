@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using DavidRios.Assets.Scripts.Villager;
 using DavidRios.Building.Building_Types;
-using DavidRios.Villager;
 using UnityEngine;
 
 namespace DavidRios.Building
@@ -101,7 +99,7 @@ namespace DavidRios.Building
             var occupiedTiles = BuildingOperations.GetBuildingScript(transform)._occupiedIndices;
 
             for (var i = 0; i < occupiedTiles.Count; i++)
-                Environment.Environment.BuildingPlaced[(int) occupiedTiles[i].x, (int) occupiedTiles[i].y] = true;
+                Environment.buildingPlaced[(int) occupiedTiles[i].x, (int) occupiedTiles[i].y] = true;
 
             var cloneMaterial = Instantiate(GetComponent<Renderer>().sharedMaterials[0]);
 
@@ -126,7 +124,7 @@ namespace DavidRios.Building
                 //CityInfo.ReserveResourcesForBuilding(ItemInfo.GetItemIndex(itemType), requiredItems[i].amount);
 
                 //Assign one villager per item type. If item amount is greater than two times that villager can handle, assign another, etc.
-                var villagersNeededForResource = new List<VillagerLogic>();
+                var villagersNeededForResource = new List<Villager>();
                 var villagerWithdrawAmount = new List<int>();
 
                 //Amount of resources left to bring to the build site from villagers (this is not a literal value, just used in calculations to assign the correct number of villagers).
@@ -159,7 +157,7 @@ namespace DavidRios.Building
                     var villager = villagersNeededForResource[j];
 
                     if (j == 0)
-                        firstVillagerIndex = villagersNeededForResource[0].index;
+                        firstVillagerIndex = villagersNeededForResource[0]._index;
 
                     //Debug.Log($"{villager._name} (Index #{villager._index}) will handle the resources needed for this build.");
 
@@ -194,15 +192,15 @@ namespace DavidRios.Building
                             storagesToWithdrawFrom[l].GetComponent<Storage>().QueueItemsForWithdrawal(
                                 new ItemBundle
                                     {item = new Item {itemType = itemType}, amount = amountToWithdrawThisTrip},
-                                villager.index);
+                                villager._index);
 
                             jobManager.AssignJobGroup("Withdraw", storagesToWithdrawFrom[l].position,
                                 new Transform[1] {storagesToWithdrawFrom[l]}, new int[1] {amountToWithdrawThisTrip},
-                                villager.index);
+                                villager._index);
                         }
 
                         jobManager.AssignJobGroup("GetResourcesToBuildSite", transform.position,
-                            new Transform[1] {transform}, new int[1] {villagerWithdrawAmount[j]}, villager.index);
+                            new Transform[1] {transform}, new int[1] {villagerWithdrawAmount[j]}, villager._index);
                     }
                 }
 
@@ -253,8 +251,8 @@ namespace DavidRios.Building
 
                     for (var i = 0; i < occupiedTiles.Count; i++)
                     {
-                        Environment.Environment.Walkable[(int) occupiedTiles[i].x, (int) occupiedTiles[i].y] = false;
-                        Environment.Environment.ModifyWalkableTiles((int) occupiedTiles[i].x, (int) occupiedTiles[i].y, false);
+                        Environment.walkable[(int) occupiedTiles[i].x, (int) occupiedTiles[i].y] = false;
+                        Environment.ModifyWalkableTiles((int) occupiedTiles[i].x, (int) occupiedTiles[i].y, false);
                     }
                 }
             }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using DavidRios.Assets.Scripts.Villager;
 using UnityEngine;
 
 namespace DavidRios.Building.Building_Types

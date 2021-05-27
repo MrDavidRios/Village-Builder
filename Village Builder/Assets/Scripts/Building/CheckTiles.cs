@@ -194,17 +194,17 @@ namespace DavidRios.Building
                 if (occupiedTiles[i].x > maxWorldBounds.x || occupiedTiles[i].z > maxWorldBounds.z)
                     return true;
 
-                var tileX = Environment.Environment.TileCentresMap.Forward[occupiedTiles[i]].x;
-                var tileY = Environment.Environment.TileCentresMap.Forward[occupiedTiles[i]].y;
+                var tileX = Environment.tileCentresMap.Forward[occupiedTiles[i]].x;
+                var tileY = Environment.tileCentresMap.Forward[occupiedTiles[i]].y;
 
                 //Check if any tiles are over unbuildable/occupied tiles (e.g. water, resource, another building)
                 if (!canBePlacedOnWater)
-                    if (Environment.Environment.TileType[tileX, tileY] == "Water")
+                    if (Environment.tileType[tileX, tileY] == "Water")
                         return true;
 
                 //Debug.Log("Walkable: " + Environment.walkable[tileX, tileY] + "; Placed Building: " + Environment.buildingPlaced[tileX, tileY]);
 
-                if (!Environment.Environment.Walkable[tileX, tileY] || Environment.Environment.BuildingPlaced[tileX, tileY])
+                if (!Environment.walkable[tileX, tileY] || Environment.buildingPlaced[tileX, tileY])
                     return true;
             }
 

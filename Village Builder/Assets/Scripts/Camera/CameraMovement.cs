@@ -15,21 +15,16 @@ namespace DavidRios.Camera
         /// </summary>
 
         //Floats
-        [Header("Speeds")]
         public float turnSpeed = 4.0f; //Speed of camera turning when mouse moves in along an axis
 
         public float panSpeed = 4.0f; //Speed of the camera when being panned
-        
-        public float verticalSpeed = 4.0f; //Speed of the camera when being raised/lowered
-        private float _originalVerticalSpeed;
-        
+        public float zoomSpeed = 4.0f; //Speed of the camera going back and forth
         public float speed = 5.0f;
-        private float _originalSpeed;
-        
+
+        public float sensitivity = 0.05f;
         public float movementSmoothing;
         public float maxSpeed;
 
-        [Header("Bounds")]
         public float minX = 1f; //Minimum x bound 
         public float minY = 2f; //Minimum y bound 
         public float minZ = 1f; //Minimum z bound 
@@ -53,6 +48,8 @@ namespace DavidRios.Camera
         private UnityEngine.Camera _mainCamera;
 
         //Positions
+        private Vector3 _mouseOrigin; //Position of cursor when mouse dragging starts
+        private float _originalSpeed;
         private TerrainGenerator _terrainGenerator;
         private Vector3 _velocity = Vector3.zero;
         private bool _withinBounds; //Is the camera within its bounds?
@@ -70,7 +67,6 @@ namespace DavidRios.Camera
 
             //The camera's original movement speed; this allows for functions that speed up the camera and then switch back to the original camera speed.
             _originalSpeed = speed;
-            _originalVerticalSpeed = verticalSpeed;
         }
 
         private void Start() => _input = InputHandler.PlayerControllerInstance.Default;
@@ -134,7 +130,7 @@ namespace DavidRios.Camera
             //If the 'Shift' key is pressed and the camera's y position isn't out of minimum bounds, move the camera downward.
             if (InputHandler.PressedNegative(_input.CameraVerticalMovement) && !InputHandler.PressedPositive(_input.CameraVerticalMovement) && !(transform.position.y <= minY))
             {
-                yValue = -verticalSpeed * Time.unscaledDeltaTime;
+                yValue = -speed / 30 * Time.unscaledDeltaTime;
 
                 transform.position = new Vector3(transform.position.x, transform.position.y + yValue, transform.position.z);
             }
@@ -142,21 +138,17 @@ namespace DavidRios.Camera
             //If the 'Space' key is pressed and the camera's y position isn't out of maximum bounds, move the camera upward.
             if (InputHandler.PressedPositive(_input.CameraVerticalMovement) && !InputHandler.PressedNegative(_input.CameraVerticalMovement) && !(transform.position.y >= maxY))
             {
-                yValue = verticalSpeed * Time.unscaledDeltaTime;
+                yValue = speed / 30 * Time.unscaledDeltaTime;
                 transform.position = new Vector3(transform.position.x, transform.position.y + yValue, transform.position.z);
             }
 
             //If the 'LeftCtrl' button is pressed, speed the camera up. Values are divided by Time.timeScale to equalize movement when the game is running at different speeds.
             if (InputHandler.Held(_input.BoostCamera))
-            {
                 speed = _originalSpeed * 2f;
-                verticalSpeed = _originalVerticalSpeed * 2f;
-            }
+            else if (InputHandler.PressedNegative(_input.CameraVerticalMovement) && InputHandler.PressedPositive(_input.CameraVerticalMovement))
+                speed = _originalSpeed / 2f;
             else
-            {
                 speed = _originalSpeed;
-                verticalSpeed = _originalVerticalSpeed;
-            }
 
             maxSpeed = speed + 50;
 
@@ -225,13 +217,21 @@ namespace DavidRios.Camera
             
             //Get the left mouse button
             if (InputHandler.HeldSimultaneously(_input.LeftClick, _input.RightClick) && !PositionBuildingTemplate.PlacingBuilding)
+            {
+                // Get mouse origin
+                _mouseOrigin = InputHandler.MousePosition;
                 _isPanning = true;
-                else
+            }
+            else
                 _isPanning = false;
             
             //Get the right mouse button
             if (InputHandler.Held(_input.RightClick) && !InputHandler.Held(_input.LeftClick))
+            {
+                // Get mouse origin
+                _mouseOrigin = InputHandler.MousePosition;
                 _isRotating = true;
+            }
             else
                 _isRotating = false;
 

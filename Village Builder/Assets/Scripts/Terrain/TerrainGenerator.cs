@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
-using Environment = DavidRios.Environment.Environment;
 
 namespace Terrain
 {
@@ -88,7 +87,7 @@ namespace Terrain
                         }
 
                     if (viewWalkableTiles)
-                        if (Environment.Walkable[x, y])
+                        if (Environment.walkable[x, y])
                         {
                             Gizmos.color = Color.green;
                             Gizmos.DrawSphere(debugTerrainData.tileCentres[x, y], 0.3f);

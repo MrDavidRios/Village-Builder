@@ -1,6 +1,4 @@
-﻿using DavidRios.Assets.Scripts.Villager;
-
-public class CityInfo
+﻿public class CityInfo
 {
     public static string _cityName;
 

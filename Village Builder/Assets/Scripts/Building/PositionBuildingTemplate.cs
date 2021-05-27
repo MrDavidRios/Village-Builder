@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using DavidRios.Assets.Scripts.Villager;
 using DavidRios.Building.Building_Types;
 using DavidRios.Input;
 using DavidRios.Utils;
@@ -20,6 +19,9 @@ namespace DavidRios.Building
 
         //GameObjects
         public static GameObject TemplateBuilding;
+
+        //Hotkeys
+        public KeyCode positionLockKey;
         
         //Building Objects
         private Building _building;
@@ -198,9 +200,9 @@ namespace DavidRios.Building
             //Set all occupied tiles as walkable now that the building is no longer there
             for (var i = 0; i < occupiedTiles.Count; i++)
             {
-                Environment.Environment.Walkable[(int) occupiedTiles[i].x, (int) occupiedTiles[i].y] = true;
-                Environment.Environment.BuildingPlaced[(int) occupiedTiles[i].x, (int) occupiedTiles[i].y] = false;
-                Environment.Environment.ModifyWalkableTiles((int) occupiedTiles[i].x, (int) occupiedTiles[i].y);
+                Environment.walkable[(int) occupiedTiles[i].x, (int) occupiedTiles[i].y] = true;
+                Environment.buildingPlaced[(int) occupiedTiles[i].x, (int) occupiedTiles[i].y] = false;
+                Environment.ModifyWalkableTiles((int) occupiedTiles[i].x, (int) occupiedTiles[i].y);
             }
 
             //If this is called from a button, then remove all of its listeners.
@@ -231,15 +233,15 @@ namespace DavidRios.Building
                                     //If currently withdrawing, finish withdrawal, clear all jobs, and deposit.
                                     Debug.Log("-1-");
 
-                                    jobManager.RemoveJob(villager.index, i);
+                                    jobManager.RemoveJob(villager._index, i);
                                     villager.moveJobCancelled = true;
 
-                                    jobManager.RemoveJob(villager.index, i);
+                                    jobManager.RemoveJob(villager._index, i);
 
-                                    jobManager.RemoveJob(villager.index, i);
+                                    jobManager.RemoveJob(villager._index, i);
                                     villager.moveJobCancelled = true;
 
-                                    jobManager.RemoveJob(villager.index, i);
+                                    jobManager.RemoveJob(villager._index, i);
 
                                     //Wait until job count is equal to 0 and continue.
                                     yield return new WaitUntil(() => villager.jobList.Count == 0);
@@ -253,13 +255,13 @@ namespace DavidRios.Building
                                             .QueueItemsForDeposit(
                                                 new ItemBundle
                                                     {item = villager.items[0], amount = villager.items.Count},
-                                                villager.index);
+                                                villager._index);
 
                                         villager.moveJobCancelled = false;
 
                                         jobManager.AssignJobGroup("Deposit", storagesToUse[j].transform.position,
                                             new Transform[1] {storagesToUse[j]}, new int[1] {villager.items.Count},
-                                            villager.index);
+                                            villager._index);
                                     }
                                 }
                                 else
@@ -273,7 +275,7 @@ namespace DavidRios.Building
                                     yield return new WaitUntil(() => villager.jobList[0].jobType == "Withdraw");
                                     yield return new WaitUntil(() => villager.jobList[0].jobType == "Move");
 
-                                    jobManager.RemoveJob(villager.index);
+                                    jobManager.RemoveJob(villager._index);
 
                                     Debug.Log("here.");
                                 }
@@ -287,14 +289,14 @@ namespace DavidRios.Building
 
                                 var jobList = villager.jobList;
                                 //Remove 'Move' Job
-                                jobManager.RemoveJob(villager.index, i);
+                                jobManager.RemoveJob(villager._index, i);
                                 villager.moveJobCancelled = true;
 
                                 //Remove 'DepositToBuildSite' Job
-                                jobManager.RemoveJob(villager.index, i);
+                                jobManager.RemoveJob(villager._index, i);
 
                                 //Remove 'Move' Job
-                                jobManager.RemoveJob(villager.index, i);
+                                jobManager.RemoveJob(villager._index, i);
                                 villager.moveJobCancelled = true;
 
                                 //Add new jobs that deposit items that are currently in hand to storage
@@ -305,21 +307,21 @@ namespace DavidRios.Building
                                 {
                                     storagesToUse[j].GetComponent<Storage>().QueueItemsForDeposit(
                                         new ItemBundle {item = villager.items[0], amount = villager.items.Count},
-                                        villager.index);
+                                        villager._index);
 
                                     villager.moveJobCancelled = false;
 
                                     jobManager.AssignJobGroup("Deposit", storagesToUse[j].transform.position,
                                         new Transform[1] {storagesToUse[j]}, new int[1] {villager.items.Count},
-                                        villager.index);
+                                        villager._index);
                                 }
                             }
                         }
                         else
                         {
                             Debug.Log("-4-");
-                            jobManager.RemoveJob(villager.index, i);
-                            jobManager.RemoveJob(villager.index, i - 1);
+                            jobManager.RemoveJob(villager._index, i);
+                            jobManager.RemoveJob(villager._index, i - 1);
                         }
 
                         break;

@@ -1,5 +1,4 @@
 ﻿using System;
-using Environment = DavidRios.Environment.Environment;
 
 public static class EnvironmentUtility
 {
@@ -59,7 +58,7 @@ public static class EnvironmentUtility
                 y += dy2;
             }
 
-            if (!Environment.Walkable[x, y]) return false;
+            if (!Environment.walkable[x, y]) return false;
         }
 
         return true;
@@ -119,7 +118,7 @@ public static class EnvironmentUtility
                 y += dy2;
             }
 
-            if (!Environment.Walkable[x, y]) return null;
+            if (!Environment.walkable[x, y]) return null;
             path[i - 1] = new Coord(x, y);
         }
 

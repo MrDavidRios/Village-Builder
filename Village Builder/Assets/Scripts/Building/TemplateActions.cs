@@ -126,14 +126,14 @@ namespace DavidRios.Building
             //Set all occupied tiles as unwalkable
             for (var i = 0; i < occupiedTileCenters.Count; i++)
             {
-                while (Environment.Environment.TileCentresMap.Forward[occupiedTileCenters[i]].x == 0 &&
-                       Environment.Environment.TileCentresMap.Forward[occupiedTileCenters[i]].y == 0) yield return null;
+                while (Environment.tileCentresMap.Forward[occupiedTileCenters[i]].x == 0 &&
+                       Environment.tileCentresMap.Forward[occupiedTileCenters[i]].y == 0) yield return null;
 
-                var tileX = Environment.Environment.TileCentresMap.Forward[occupiedTileCenters[i]].x;
-                var tileY = Environment.Environment.TileCentresMap.Forward[occupiedTileCenters[i]].y;
+                var tileX = Environment.tileCentresMap.Forward[occupiedTileCenters[i]].x;
+                var tileY = Environment.tileCentresMap.Forward[occupiedTileCenters[i]].y;
 
                 //Debug.Log($"Tile X: {tileX}; Tile Y: {tileY}");
-                Environment.Environment.BuildingPlaced[tileX, tileY] = true;
+                Environment.buildingPlaced[tileX, tileY] = true;
 
                 occupiedTileIndices.Add(new Vector2(tileX, tileY));
             }

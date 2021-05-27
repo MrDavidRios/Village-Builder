@@ -20,7 +20,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="361f986b-ffeb-4dc4-b78f-7b994dc71dd3" name="Default Changelist" comment="">
-<<<<<<< Updated upstream
       <change afterPath="$PROJECT_DIR$/Assets/Scripts/Building/BuildingOperations.cs" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/Assets/Scripts/Building/BuildingParentObjects.cs" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/Assets/Scripts/Building/BuildingParentObjects.cs.meta" afterDir="false" />
@@ -43,13 +42,6 @@
       <change beforePath="$PROJECT_DIR$/Assets/Animations/UI/JobButton.controller.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Animations/UI/JobButton.controller.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Animations/UI/OpenButtonSettings.anim" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Animations/UI/OpenButtonSettings.anim" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Animations/UI/OpenButtonSettings.anim.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Animations/UI/OpenButtonSettings.anim.meta" afterDir="false" />
-=======
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Village Builder/.idea/contentModel.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Village Builder/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Village Builder/.idea/indexLayout.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Village Builder/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Village Builder/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Village Builder/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Village Builder/riderModule.iml" beforeDir="false" />
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/AstarPathfindingProject.asmdef" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/AstarPathfindingProject.asmdef.meta" beforeDir="false" />
@@ -58,11 +50,8 @@
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Behaviors/AIDestinationSetter.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Behaviors/Patrol.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Behaviors/Patrol.cs.meta" beforeDir="false" />
-<<<<<<< Updated upstream
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/CHANGELOG.md" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/CHANGELOG.md.meta" beforeDir="false" />
-=======
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/AI.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/AI/AIBase.cs" beforeDir="false" />
@@ -75,13 +64,6 @@
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/AI/IAstarAI.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/AI/NavmeshController.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/AI/NavmeshController.cs.meta" beforeDir="false" />
-<<<<<<< Updated upstream
-=======
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/AI/RichAI.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/AI/RichAI.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/AI/RichPath.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/AI/RichPath.cs.meta" beforeDir="false" />
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/AI/Seeker.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/AI/Seeker.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/AI/TurnBasedAI.cs" beforeDir="false" />
@@ -156,20 +138,6 @@
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/Path.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/PathHandler.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/PathHandler.cs.meta" beforeDir="false" />
-<<<<<<< Updated upstream
-=======
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/RVO.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/RVO/RVOAgent.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/RVO/RVOAgent.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/RVO/RVOCoreObstacle.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/RVO/RVOCoreObstacle.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/RVO/RVOCoreSimulator.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/RVO/RVOCoreSimulator.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/RVO/RVOLine.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/RVO/RVOLine.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/RVO/RVOQuadtree.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/RVO/RVOQuadtree.cs.meta" beforeDir="false" />
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/Serialization.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/Serialization/JsonConverters.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/Serialization/JsonConverters.cs.meta" beforeDir="false" />
@@ -183,7 +151,6 @@
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/Serialization/TinyJson.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/astarclasses.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Core/astarclasses.cs.meta" beforeDir="false" />
-<<<<<<< Updated upstream
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Documentation.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Documentation/documentation.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Documentation/documentation.html.meta" beforeDir="false" />
@@ -191,8 +158,6 @@
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Documentation/documentation.pdf.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Documentation/index.md" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Documentation/index.md.meta" beforeDir="false" />
-=======
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/AIBaseEditor.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/AIBaseEditor.cs.meta" beforeDir="false" />
@@ -407,20 +372,10 @@
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/GraphEditors/GraphEditor.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/GraphEditors/GridGeneratorEditor.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/GraphEditors/GridGeneratorEditor.cs.meta" beforeDir="false" />
-<<<<<<< Updated upstream
-=======
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/GraphEditors/LayerGridGraphEditor.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/GraphEditors/LayerGridGraphEditor.cs.meta" beforeDir="false" />
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/GraphEditors/NavMeshGeneratorEditor.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/GraphEditors/NavMeshGeneratorEditor.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/GraphEditors/PointGeneratorEditor.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/GraphEditors/PointGeneratorEditor.cs.meta" beforeDir="false" />
-<<<<<<< Updated upstream
-=======
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/GraphEditors/RecastGraphEditor.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/GraphEditors/RecastGraphEditor.cs.meta" beforeDir="false" />
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/GraphUpdateSceneEditor.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/GraphUpdateSceneEditor.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/Legacy.meta" beforeDir="false" />
@@ -428,63 +383,14 @@
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/Legacy/LegacyAIPathEditor2.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/Legacy/LegacyEditorHelper2.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/Legacy/LegacyEditorHelper2.cs.meta" beforeDir="false" />
-<<<<<<< Updated upstream
-=======
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/Legacy/LegacyRVOControllerEditor2.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/Legacy/LegacyRVOControllerEditor2.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/Legacy/LegacyRichAIEditor2.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/Legacy/LegacyRichAIEditor2.cs.meta" beforeDir="false" />
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/ModifierEditors.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/ModifierEditors/RaycastModifierEditor.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/ModifierEditors/RaycastModifierEditor.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/ModifierEditors/SmoothModifierEditor.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/ModifierEditors/SmoothModifierEditor.cs.meta" beforeDir="false" />
-<<<<<<< Updated upstream
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/SeekerEditor.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/SeekerEditor.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes.meta" beforeDir="false" />
-=======
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/NavmeshCutEditor.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/NavmeshCutEditor.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/RVOControllerEditor.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/RVOControllerEditor.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/RVONavmeshEditor.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/RVONavmeshEditor.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/RVOSimulatorEditor.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/RVOSimulatorEditor.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/RVOSquareObstacleEditor.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/RVOSquareObstacleEditor.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/RecastMeshObjEditor.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/RecastMeshObjEditor.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/SeekerEditor.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Editor/SeekerEditor.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example10_LayeredGridGraph.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example10_LayeredGridGraph/Example10.unity" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example10_LayeredGridGraph/Example10.unity.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example11_RVO.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example11_RVO/Arrow.mat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example11_RVO/Arrow.mat.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example11_RVO/Arrow.psd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example11_RVO/Arrow.psd.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example11_RVO/GroupController.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example11_RVO/GroupController.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example11_RVO/LightweightRVO.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example11_RVO/LightweightRVO.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example11_RVO/RVO.unity" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example11_RVO/RVO.unity.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example11_RVO/RVOAgent.prefab" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example11_RVO/RVOAgent.prefab.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example11_RVO/RVOAgentPlacer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example11_RVO/RVOAgentPlacer.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example11_RVO/RVOExampleAgent.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example11_RVO/RVOExampleAgent.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example11_RVO/RVOLightweight.unity" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example11_RVO/RVOLightweight.unity.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example11_RVO/selectionBox.psd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example11_RVO/selectionBox.psd.meta" beforeDir="false" />
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example12_Procedural.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example12_Procedural/Procedural.unity" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example12_Procedural/Procedural.unity.meta" beforeDir="false" />
@@ -506,92 +412,9 @@
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example12_Procedural/TopDownOverlay.mat.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example12_Procedural/cylinder.fbx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example12_Procedural/cylinder.fbx.meta" beforeDir="false" />
-<<<<<<< Updated upstream
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example15_2D.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example15_2D/2D.unity" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example15_2D/2D.unity.meta" beforeDir="false" />
-=======
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example13_Moving.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example13_Moving/BezierMover.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example13_Moving/BezierMover.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example13_Moving/LocalSpaceGraph.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example13_Moving/LocalSpaceGraph.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example13_Moving/LocalSpaceRichAI.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example13_Moving/LocalSpaceRichAI.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example13_Moving/Materials.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example13_Moving/Materials/No Name.mat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example13_Moving/Materials/No Name.mat.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example13_Moving/Moving.unity" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example13_Moving/Moving.unity.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example13_Moving/Ship.anim" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example13_Moving/Ship.anim.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example13_Moving/Ship.controller" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example13_Moving/Ship.controller.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example13_Moving/Water fallback.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example13_Moving/Water fallback.jpg.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example13_Moving/WaterPlane.mat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example13_Moving/WaterPlane.mat.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example13_Moving/ship.fbx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example13_Moving/ship.fbx.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Animations.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Animations/Door.controller" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Animations/Door.controller.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Animations/Red.controller" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Animations/Red.controller.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Animations/hexagon_button_hidden.anim" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Animations/hexagon_button_hidden.anim.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Animations/hexagon_button_show.anim" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Animations/hexagon_button_show.anim.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Animations/hexagon_door_blocked.anim" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Animations/hexagon_door_blocked.anim.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Animations/hexagon_door_open.anim" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Animations/hexagon_door_open.anim.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Astar3DButton.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Astar3DButton.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/HexagonTrigger.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/HexagonTrigger.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Materials.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Materials/hexagon_blue.mat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Materials/hexagon_blue.mat.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Materials/hexagon_green.mat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Materials/hexagon_green.mat.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Materials/hexagon_purple.mat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Materials/hexagon_purple.mat.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Materials/hexagon_red.mat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Materials/hexagon_red.mat.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Materials/hexagon_yellow.mat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Materials/hexagon_yellow.mat.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Materials/hexagon_yellow_transparent.mat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Materials/hexagon_yellow_transparent.mat.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Textures.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Textures/hexagon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Textures/hexagon.png.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/TurnBasedDoor.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/TurnBasedDoor.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/TurnBasedManager.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/TurnBasedManager.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Turnbased.unity" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/Turnbased.unity.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/hexagon.fbx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/hexagon.fbx.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/hexagon_cone.fbx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/hexagon_cone.fbx.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/hexagon_obstacle.prefab" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/hexagon_obstacle.prefab.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/hexagon_outline.fbx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example14_TurnBased_Hexagon/hexagon_outline.fbx.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example15_2D.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example15_2D/2D.unity" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example15_2D/2D.unity.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example16_RVO 2D.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example16_RVO 2D/ExampleMover.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example16_RVO 2D/ExampleMover.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example16_RVO 2D/RVO 2D.unity" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example16_RVO 2D/RVO 2D.unity.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example16_RVO 2D/grid_tile.psd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example16_RVO 2D/grid_tile.psd.meta" beforeDir="false" />
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example2_Terrain.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example2_Terrain/Example2.unity" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example2_Terrain/Example2.unity.meta" beforeDir="false" />
@@ -601,29 +424,6 @@
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example2_Terrain/checkerGround.psd.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example2_Terrain/dynamicObstacle.anim" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example2_Terrain/dynamicObstacle.anim.meta" beforeDir="false" />
-<<<<<<< Updated upstream
-=======
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example3_Recast_Navmesh1.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example3_Recast_Navmesh1/Debris.prefab" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example3_Recast_Navmesh1/Debris.prefab.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example3_Recast_Navmesh1/Materials.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example3_Recast_Navmesh1/Materials/Material.mat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example3_Recast_Navmesh1/Materials/Material.mat.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example3_Recast_Navmesh1/Materials/structure2-Material.mat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example3_Recast_Navmesh1/Materials/structure2-Material.mat.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example3_Recast_Navmesh1/MecanimBridge.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example3_Recast_Navmesh1/MecanimBridge.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example3_Recast_Navmesh1/RecastExample.unity" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example3_Recast_Navmesh1/RecastExample.unity.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example4_Recast_Navmesh2.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example4_Recast_Navmesh2/Animations.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example4_Recast_Navmesh2/Animations/ClimbTest.anim" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example4_Recast_Navmesh2/Animations/ClimbTest.anim.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example4_Recast_Navmesh2/Animations/JumpTest.anim" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example4_Recast_Navmesh2/Animations/JumpTest.anim.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example4_Recast_Navmesh2/RecastExample2.unity" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example4_Recast_Navmesh2/RecastExample2.unity.meta" beforeDir="false" />
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example5_PointGraph.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example5_PointGraph/ListCubes.mat" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example5_PointGraph/ListCubes.mat.meta" beforeDir="false" />
@@ -645,39 +445,6 @@
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example6_Navmesh/example6.fbx.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example6_Navmesh/navmesh.obj" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example6_Navmesh/navmesh.obj.meta" beforeDir="false" />
-<<<<<<< Updated upstream
-=======
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example6_Navmesh_RichAI.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example6_Navmesh_RichAI/NavmeshExample.unity" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example6_Navmesh_RichAI/NavmeshExample.unity.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example7_Door1.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example7_Door1/Animations.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example7_Door1/Animations/Close.anim" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example7_Door1/Animations/Close.anim.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example7_Door1/Animations/Open.anim" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example7_Door1/Animations/Open.anim.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example7_Door1/Door1.unity" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example7_Door1/Door1.unity.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example7_Door1/Door2.unity" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example7_Door1/Door2.unity.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example8_PathTypes.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example8_PathTypes/PathTypes.unity" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example8_PathTypes/PathTypes.unity.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example8_PathTypes/PathTypesDemo.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example8_PathTypes/PathTypesDemo.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example8_PathTypes/SquareShader.shader" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example8_PathTypes/SquareShader.shader.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example8_PathTypes/line.psd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example8_PathTypes/line.psd.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example8_PathTypes/pathLine.mat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example8_PathTypes/pathLine.mat.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example8_PathTypes/pathSquare.mat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example8_PathTypes/pathSquare.mat.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example8_PathTypes/pathSquare.prefab" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example8_PathTypes/pathSquare.prefab.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example8_PathTypes/pathSquare.psd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example8_PathTypes/pathSquare.psd.meta" beforeDir="false" />
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example9_Penalties.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example9_Penalties/PenaltiesExample.unity" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Example9_Penalties/PenaltiesExample.unity.meta" beforeDir="false" />
@@ -688,28 +455,12 @@
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/ExampleScripts/DoorController.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/ExampleScripts/DynamicGridObstacle.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/ExampleScripts/DynamicGridObstacle.cs.meta" beforeDir="false" />
-<<<<<<< Updated upstream
-=======
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/ExampleScripts/ManualRVOAgent.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/ExampleScripts/ManualRVOAgent.cs.meta" beforeDir="false" />
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/ExampleScripts/MineBotAI.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/ExampleScripts/MineBotAI.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/ExampleScripts/MineBotAnimation.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/ExampleScripts/MineBotAnimation.cs.meta" beforeDir="false" />
-<<<<<<< Updated upstream
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/ExampleScripts/ObjectPlacer.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/ExampleScripts/ObjectPlacer.cs.meta" beforeDir="false" />
-=======
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/ExampleScripts/NavmeshClamp.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/ExampleScripts/NavmeshClamp.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/ExampleScripts/ObjectPlacer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/ExampleScripts/ObjectPlacer.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/ExampleScripts/RecastTileUpdate.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/ExampleScripts/RecastTileUpdate.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/ExampleScripts/RecastTileUpdateHandler.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/ExampleScripts/RecastTileUpdateHandler.cs.meta" beforeDir="false" />
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/ExampleScripts/TargetMover.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/ExampleScripts/TargetMover.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Materials.meta" beforeDir="false" />
@@ -767,28 +518,20 @@
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Prefabs/MineBot/Materials/mine_bot@awake-01 - Default.mat.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Prefabs/MineBot/Materials/mine_bot@back-01 - Default.mat" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Prefabs/MineBot/Materials/mine_bot@back-01 - Default.mat.meta" beforeDir="false" />
-<<<<<<< Updated upstream
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Prefabs/MineBot/Materials/mine_bot@forward 1-01 - Default.mat" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Prefabs/MineBot/Materials/mine_bot@forward 1-01 - Default.mat.meta" beforeDir="false" />
-=======
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Prefabs/MineBot/Materials/mine_bot@forward-01 - Default.mat" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Prefabs/MineBot/Materials/mine_bot@forward-01 - Default.mat.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Prefabs/MineBot/Materials/mine_bot@left-01 - Default.mat" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Prefabs/MineBot/Materials/mine_bot@left-01 - Default.mat.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Prefabs/MineBot/Materials/mine_bot@right-01 - Default.mat" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Prefabs/MineBot/Materials/mine_bot@right-01 - Default.mat.meta" beforeDir="false" />
-<<<<<<< Updated upstream
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Prefabs/MineBot/idle.anim" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Prefabs/MineBot/idle.anim.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Prefabs/MineBot/mine_bot.FBX" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Prefabs/MineBot/mine_bot.FBX.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Prefabs/MineBot/mine_bot.controller" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Prefabs/MineBot/mine_bot.controller.meta" beforeDir="false" />
-=======
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Prefabs/MineBot/mine_bot.FBX" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Prefabs/MineBot/mine_bot.FBX.meta" beforeDir="false" />
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Prefabs/MineBot/mine_bot@awake.FBX" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Prefabs/MineBot/mine_bot@awake.FBX.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/ExampleScenes/Prefabs/MineBot/mine_bot@back.FBX" beforeDir="false" />
@@ -810,11 +553,6 @@
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Base.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/GridGenerator.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/GridGenerator.cs.meta" beforeDir="false" />
-<<<<<<< Updated upstream
-=======
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/LayerGridGraphGenerator.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/LayerGridGraphGenerator.cs.meta" beforeDir="false" />
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/NavMeshGenerator.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/NavMeshGenerator.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/NavmeshBase.cs" beforeDir="false" />
@@ -832,11 +570,6 @@
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/PointGenerator.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/QuadtreeGraph.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/QuadtreeGraph.cs.meta" beforeDir="false" />
-<<<<<<< Updated upstream
-=======
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/RecastGenerator.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/RecastGenerator.cs.meta" beforeDir="false" />
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/BBTree.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/BBTree.cs.meta" beforeDir="false" />
@@ -854,34 +587,6 @@
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/ObjImporter.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/PointKDTree.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/PointKDTree.cs.meta" beforeDir="false" />
-<<<<<<< Updated upstream
-=======
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/RecastBBTree.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/RecastBBTree.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/RecastMeshGatherer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/RecastMeshGatherer.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/RecastMeshObj.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/RecastMeshObj.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/TileHandler.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/TileHandler.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/Voxels.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/Voxels/DebugUtility.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/Voxels/DebugUtility.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/Voxels/VoxelClasses.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/Voxels/VoxelClasses.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/Voxels/VoxelContour.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/Voxels/VoxelContour.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/Voxels/VoxelMesh.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/Voxels/VoxelMesh.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/Voxels/VoxelPolygonClipper.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/Voxels/VoxelPolygonClipper.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/Voxels/VoxelRasterization.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/Voxels/VoxelRasterization.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/Voxels/VoxelRegion.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/Voxels/VoxelRegion.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/Voxels/VoxelUtility.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Generators/Utilities/Voxels/VoxelUtility.cs.meta" beforeDir="false" />
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Legacy.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Legacy/Editor.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Legacy/Editor/LegacyAIPathEditor.cs" beforeDir="false" />
@@ -894,32 +599,15 @@
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Legacy/Editor/LegacyRichAIEditor.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Legacy/LegacyAIPath.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Legacy/LegacyAIPath.cs.meta" beforeDir="false" />
-<<<<<<< Updated upstream
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Legacy/MiscLegacy.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Legacy/MiscLegacy.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Modifiers.meta" beforeDir="false" />
-=======
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Legacy/LegacyRVOController.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Legacy/LegacyRVOController.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Legacy/LegacyRichAI.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Legacy/LegacyRichAI.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Legacy/MiscLegacy.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Legacy/MiscLegacy.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Modifiers.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Modifiers/AdvancedSmooth.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Modifiers/AdvancedSmooth.cs.meta" beforeDir="false" />
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Modifiers/AlternativePath.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Modifiers/AlternativePath.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Modifiers/FunnelModifier.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Modifiers/FunnelModifier.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Modifiers/Modifiers.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Modifiers/Modifiers.cs.meta" beforeDir="false" />
-<<<<<<< Updated upstream
-=======
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Modifiers/RadiusModifier.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Modifiers/RadiusModifier.cs.meta" beforeDir="false" />
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Modifiers/RaycastModifier.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Modifiers/RaycastModifier.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Modifiers/SimpleSmoothModifier.cs" beforeDir="false" />
@@ -927,22 +615,10 @@
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Modifiers/StartEndModifier.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Modifiers/StartEndModifier.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Navmesh.meta" beforeDir="false" />
-<<<<<<< Updated upstream
-=======
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Navmesh/NavmeshAdd.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Navmesh/NavmeshAdd.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Navmesh/NavmeshCut.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Navmesh/NavmeshCut.cs.meta" beforeDir="false" />
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Navmesh/NavmeshUpdates.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Navmesh/NavmeshUpdates.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Navmesh/RelevantGraphSurface.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Navmesh/RelevantGraphSurface.cs.meta" beforeDir="false" />
-<<<<<<< Updated upstream
-=======
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Navmesh/TileHandlerHelper.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Navmesh/TileHandlerHelper.cs.meta" beforeDir="false" />
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/PackageTools.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/PackageTools/Editor.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/PackageTools/Editor/EditorBase.cs" beforeDir="false" />
@@ -951,11 +627,6 @@
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/PackageTools/Editor/EditorGUIx.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/PackageTools/Editor/EnumFlagDrawer.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/PackageTools/Editor/EnumFlagDrawer.cs.meta" beforeDir="false" />
-<<<<<<< Updated upstream
-=======
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/PackageTools/Editor/OptimizationHandler.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/PackageTools/Editor/OptimizationHandler.cs.meta" beforeDir="false" />
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/PackageTools/Editor/PackageToolsEditor.asmdef" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/PackageTools/Editor/PackageToolsEditor.asmdef.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/PackageTools/EnumFlagAttribute.cs" beforeDir="false" />
@@ -967,58 +638,14 @@
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Pathfinders.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Pathfinders/ABPath.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Pathfinders/ABPath.cs.meta" beforeDir="false" />
-<<<<<<< Updated upstream
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Plugins.meta" beforeDir="false" />
-=======
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Pathfinders/ConstantPath.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Pathfinders/ConstantPath.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Pathfinders/FleePath.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Pathfinders/FleePath.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Pathfinders/FloodPath.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Pathfinders/FloodPath.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Pathfinders/FloodPathTracer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Pathfinders/FloodPathTracer.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Pathfinders/MultiTargetPath.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Pathfinders/MultiTargetPath.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Pathfinders/RandomPath.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Pathfinders/RandomPath.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Pathfinders/XPath.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Pathfinders/XPath.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Plugins.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Plugins/Clipper.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Plugins/Clipper/ClipperLicense.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Plugins/Clipper/ClipperLicense.txt.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Plugins/Clipper/Pathfinding.ClipperLib.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Plugins/Clipper/Pathfinding.ClipperLib.dll.meta" beforeDir="false" />
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Plugins/DotNetZip.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Plugins/DotNetZip/DotNetZipLicense.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Plugins/DotNetZip/DotNetZipLicense.txt.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Plugins/DotNetZip/Pathfinding.Ionic.Zip.Reduced.dll" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Plugins/DotNetZip/Pathfinding.Ionic.Zip.Reduced.dll.meta" beforeDir="false" />
-<<<<<<< Updated upstream
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Plugins/dependencies.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Plugins/dependencies.txt.meta" beforeDir="false" />
-=======
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Plugins/Poly2Tri.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Plugins/Poly2Tri/Pathfinding.Poly2Tri.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Plugins/Poly2Tri/Pathfinding.Poly2Tri.dll.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Plugins/Poly2Tri/Poly2TriLicense.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Plugins/Poly2Tri/Poly2TriLicense.txt.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Plugins/dependencies.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Plugins/dependencies.txt.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/RVO.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/RVO/RVOController.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/RVO/RVOController.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/RVO/RVONavmesh.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/RVO/RVONavmesh.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/RVO/RVOObstacle.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/RVO/RVOObstacle.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/RVO/RVOSimulator.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/RVO/RVOSimulator.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/RVO/RVOSquareObstacle.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/RVO/RVOSquareObstacle.cs.meta" beforeDir="false" />
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Readme.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Readme.txt.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Readme_upgrading.txt" beforeDir="false" />
@@ -1029,11 +656,6 @@
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/TurnBased/SingleNodeBlocker.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/TurnBased/SingleNodeBlocker.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Utilities.meta" beforeDir="false" />
-<<<<<<< Updated upstream
-=======
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Utilities/AnimationLinkTraverser.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Utilities/AnimationLinkTraverser.cs.meta" beforeDir="false" />
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Utilities/AstarChecksum.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Utilities/AstarChecksum.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Utilities/AstarMemory.cs" beforeDir="false" />
@@ -1058,22 +680,12 @@
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Utilities/RetainedGizmos.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Utilities/UnityReferenceHelper.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/Utilities/UnityReferenceHelper.cs.meta" beforeDir="false" />
-<<<<<<< Updated upstream
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/defines.csv" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/defines.csv.meta" beforeDir="false" />
-=======
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/changelog.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/changelog.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/defines.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/defines.csv.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/documentation.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/documentation.html.meta" beforeDir="false" />
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/link.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/link.xml.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/package.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AstarPathfindingProject/package.json.meta" beforeDir="false" />
-<<<<<<< Updated upstream
       <change beforePath="$PROJECT_DIR$/Assets/Models/Buildings/Construction_Site.blend.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Models/Buildings/Construction_Site.blend.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Models/Buildings/Construction_Site.blend1.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Models/Buildings/Construction_Site.blend1.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Models/Buildings/Materials.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Models/Buildings/Materials.meta" afterDir="false" />
@@ -1161,14 +773,6 @@
       <change beforePath="$PROJECT_DIR$/Assets/Resources/Prefabs/Villagers/Villager.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Prefabs/Villagers/Villager.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Resources/Prefabs/Villagers/Villager.prefab.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Prefabs/Villagers/Villager.prefab.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.meta" afterDir="false" />
-=======
-      <change beforePath="$PROJECT_DIR$/Assets/Models/Buildings/Materials/No Name.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Models/Buildings/Materials/No Name.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Models/Materials/TemplateBuilding.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Models/Materials/TemplateBuilding.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Models/Materials/VFX/SelectionVFX.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Models/Materials/VFX/SelectionVFX.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Models/Tree.blend1" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Models/Tree.blend1" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Prefabs/Buildings/Storage/Storage1x1.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Prefabs/Buildings/Storage/Storage1x1.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Prefabs/Villagers/Villager.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Prefabs/Villagers/Villager.prefab" afterDir="false" />
->>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene/LightingData.asset.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene/LightingData.asset.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene/Lightmap-0_comp_dir.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene/Lightmap-0_comp_dir.png.meta" afterDir="false" />
@@ -1181,7 +785,6 @@
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Building/Building Types/InfrastructureBuilding.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Building/Building Types/InfrastructureBuilding.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Building/Building Types/ResidentialBuilding.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Building/Building Types/ResidentialBuilding.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Building/Building Types/Storage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Building/Building Types/Storage.cs" afterDir="false" />
-<<<<<<< Updated upstream
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Building/Building Types/Storage.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Building/Building Types/Storage.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Building/Building.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Building/Building.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Building/PlaceBuilding.cs" beforeDir="false" />
@@ -1441,37 +1044,6 @@
       <change beforePath="$PROJECT_DIR$/ProjectSettings/QualitySettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/QualitySettings.asset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ProjectSettings/UnityConnectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/UnityConnectSettings.asset" afterDir="false" />
-=======
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Building/Building.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Building/Building.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Building/CheckTiles.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Building/CheckTiles.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Building/PositionBuildingTemplate.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Building/PositionBuildingTemplate.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Building/StorageManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Building/StorageManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Building/TemplateActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Building/TemplateActions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Building/UnderConstruction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Building/UnderConstruction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Camera/CameraMovement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Camera/CameraMovement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Environment/EliminateResource.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Environment/EliminateResource.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Environment/Environment.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Environment/Environment.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Environment/EnvironmentUtility.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Environment/EnvironmentUtility.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/General/CityInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/General/CityInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/General/Select.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/General/Select.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Terrain/TerrainGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Terrain/TerrainGenerator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/DisplayJobsList.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/DisplayJobsList.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Villager/HiveMind.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Villager/HiveMind.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Villager/Item.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Villager/Item.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Villager/Job.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Villager/Job.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Villager/JobManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Villager/JobManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Villager/JobUtils.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Villager/JobUtils.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Villager/Jobs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Villager/Jobs.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Villager/Villager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Villager/VillagerLogic.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Villager/Villager.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Villager/VillagerLogic.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Villager/VillagerPropertiesGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Villager/VillagerPropertiesGenerator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/_TerrainAutoUpgrade.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_TerrainAutoUpgrade.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/_TerrainAutoUpgrade/layer_checkerGround3d3aba195e4d26ee.terrainlayer.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_TerrainAutoUpgrade/layer_checkerGround3d3aba195e4d26ee.terrainlayer.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logs/Packages-Update.log" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/Packages-Update.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectVersion.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectVersion.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/URPProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/URPProjectSettings.asset" afterDir="false" />
->>>>>>> Stashed changes
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -1482,9 +1054,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Camera/CameraMovement.cs" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Building/TemplateActions.cs" root0="FORCE_HIGHLIGHTING" />
-<<<<<<< Updated upstream
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.inputsystem@1.0.0/InputSystem/Actions/InputAction.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.inputsystem@1.0.0/InputSystem/Actions/InputActionState.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
@@ -1507,15 +1077,6 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/Camera/CameraMovement.cs" />
       </list>
     </option>
-=======
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/General/GameManager.cs" root0="SKIP_HIGHLIGHTING" />
-  </component>
-  <component name="IdeDocumentHistory">
-    <changedPaths>
-      <option value="$PROJECT_DIR$/Assets/Scripts/Environment/Environment.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/Camera/CameraMovement.cs" />
-    </changedPaths>
->>>>>>> Stashed changes
   </component>
   <component name="ProjectId" id="1hEch6g7qTcBSGHATApz4XUhaFE" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -1529,23 +1090,16 @@
     <property name="DebuggerViewTab_PTCS_LastProportionKey" value="0.37919825" />
     <property name="Discover.Launch.Via.Unity" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-<<<<<<< Updated upstream
-=======
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="TODO_SCOPE" value="Scripts" />
->>>>>>> Stashed changes
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="settings.editor.selected.configurable" value="CodeCleanupOptionsPage" />
-    <property name="vue.rearranger.settings.migration" value="true" />
   </component>
-  <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
+  <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor &amp; Play">
     <configuration name="Attach to Unity Editor &amp; Play" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="UNITY_ATTACH_AND_PLAY" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
       <option name="pid" />
-      <option name="projectPathOnTarget" />
       <option name="selectedOptions">
-        <list />
+        <set />
       </option>
       <method v="2" />
     </configuration>
@@ -1553,9 +1107,8 @@
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
       <option name="pid" />
-      <option name="projectPathOnTarget" />
       <option name="selectedOptions">
-        <list />
+        <set />
       </option>
       <method v="2" />
     </configuration>
@@ -1574,20 +1127,6 @@
       <workItem from="1599592330701" duration="13187000" />
       <workItem from="1599621608859" duration="22000" />
       <workItem from="1599666589559" duration="3824000" />
-<<<<<<< Updated upstream
-=======
-      <workItem from="1599680086549" duration="2708000" />
-      <workItem from="1599683713337" duration="2143000" />
-      <workItem from="1599748384489" duration="1007000" />
-      <workItem from="1599751930985" duration="85000" />
-      <workItem from="1599752045593" duration="278000" />
-      <workItem from="1599752377931" duration="12198000" />
-      <workItem from="1605842659925" duration="1604000" />
-      <workItem from="1605923741513" duration="22000" />
-      <workItem from="1606136631313" duration="394000" />
-      <workItem from="1606139851587" duration="599000" />
-      <workItem from="1622075739604" duration="1233000" />
->>>>>>> Stashed changes
     </task>
     <servers />
   </component>
@@ -1616,19 +1155,7 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="536" y="164" key="#Inspection_severity/-1920.-8.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1599580108119" />
-<<<<<<< Updated upstream
     <state x="707" y="374" key="ANALYSIS_DLG_com.jetbrains.rider.actions.impl.cleanup.RiderCodeCleanupAction$actionPerformed$dlg$1" timestamp="1599584760817">
-=======
-    <state x="552" y="160" key="#Plugins" timestamp="1599752323632">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="552" y="160" key="#Plugins/-1920.-8.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1599752323632" />
-    <state x="717" y="321" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1599762591160">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="717" y="321" key="#com.intellij.fileTypes.FileTypeChooser/-1920.-8.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1599762591160" />
-    <state x="707" y="374" key="ANALYSIS_DLG_com.jetbrains.rider.actions.impl.cleanup.RiderCodeCleanupAction$actionPerformed$dlg$1" timestamp="1599681493354">
->>>>>>> Stashed changes
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="707" y="374" key="ANALYSIS_DLG_com.jetbrains.rider.actions.impl.cleanup.RiderCodeCleanupAction$actionPerformed$dlg$1/-1920.-8.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1599584760817" />
@@ -1735,47 +1262,20 @@
     <state x="727" y="244" key="RiderGenerateDialog" timestamp="1599580310277">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-<<<<<<< Updated upstream
     <state x="727" y="244" key="RiderGenerateDialog/-1920.-8.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1599580310277" />
     <state x="782" y="206" key="SettingsEditor" timestamp="1599601479215">
-=======
-    <state x="727" y="244" key="RiderGenerateDialog/-1920.-8.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1599681504489" />
-    <state x="697" y="230" key="RollbackChangesDialog" timestamp="1599762608301">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="697" y="230" key="RollbackChangesDialog/-1920.-8.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1599762608301" />
-    <state x="782" y="206" key="SettingsEditor" timestamp="1599681597773">
->>>>>>> Stashed changes
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="782" y="206" key="SettingsEditor/-1920.-8.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1599601479215" />
     <state x="92" y="92" width="1736" height="856" key="VCS.FileHistoryDialog" timestamp="1599668006275">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-<<<<<<< Updated upstream
     <state x="92" y="92" width="1736" height="856" key="VCS.FileHistoryDialog/-1920.-8.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1599668006275" />
     <state x="1058" y="164" width="693" height="801" key="find.popup" timestamp="1599668983624">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="1058" y="164" width="693" height="801" key="find.popup/-1920.-8.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1599668983624" />
     <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1599600761998">
-=======
-    <state x="92" y="92" width="1736" height="856" key="VCS.FileHistoryDialog/-1920.-8.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1599684028830" />
-    <state x="777" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1599680391745">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="777" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/-1920.-8.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1599680391745" />
-    <state x="1058" y="164" width="693" height="801" key="find.popup" timestamp="1599767220217">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="1058" y="164" width="693" height="801" key="find.popup/-1920.-8.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1599767220217" />
-    <state x="846" y="130" width="685" height="635" key="find.popup/0.0.1536.824@0.0.1536.824" timestamp="1599761337252" />
-    <state x="616" y="240" key="run.anything.popup" timestamp="1605842950483">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="616" y="240" key="run.anything.popup/-1920.0.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1605842950483" />
-    <state x="752" y="378" width="490" height="397" key="scopes" timestamp="1599680999565">
->>>>>>> Stashed changes
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/-1920.-8.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1599600761998" />
