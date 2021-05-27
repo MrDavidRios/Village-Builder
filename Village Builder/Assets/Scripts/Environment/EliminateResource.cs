@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using DavidRios.Environment;
+using UnityEngine;
 
 public class EliminateResource : MonoBehaviour
 {

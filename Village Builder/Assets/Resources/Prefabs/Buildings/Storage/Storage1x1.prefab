@@ -135,6 +135,7 @@ MonoBehaviour:
   itemsOnSite: []
   sufficientItems: 0
   grassCleared: 0
+  beingDeposited: 0
   currentlyProgressing: 0
   resetPosition: 1
   buildingInfo: {fileID: 0}
