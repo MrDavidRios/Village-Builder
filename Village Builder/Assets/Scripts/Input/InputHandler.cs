@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,41 +5,26 @@ namespace DavidRios.Input
 {
     public class InputHandler : MonoBehaviour
     {
+        public static Vector3 mousePosition;
+
+        public static float scrollValue;
+
+        public static PlayerController playerControllerInstance;
+
         private PlayerController _playerController;
-
-        public static Vector3 MousePosition;
-
-        public static float ScrollValue;
-
-        public static PlayerController PlayerControllerInstance;
-
-        [SerializeField] private UnityEngine.Camera mainCamera;
-
-        public static bool PressedPositive(InputAction inputAction) => inputAction.ReadValue<float>() > 0;
-        public static bool PressedNegative(InputAction inputAction) => inputAction.ReadValue<float>() < 0;
-
-        public static bool Held(InputAction inputAction) => inputAction.phase == InputActionPhase.Started;
-
-        public static bool Pressed(InputAction inputAction) => inputAction.triggered;
-
-        public static bool HeldSimultaneously(InputAction inputAction1, InputAction inputAction2) =>
-            inputAction1.phase == InputActionPhase.Started && inputAction2.phase == InputActionPhase.Started;
-
-        public static bool PressedSimultaneously(InputAction inputAction1, InputAction inputAction2) =>
-            inputAction1.triggered && inputAction2.triggered;
 
         private void Awake()
         {
             _playerController = new PlayerController();
 
-            PlayerControllerInstance = _playerController;
+            playerControllerInstance = _playerController;
         }
 
         private void Update()
         {
-            MousePosition = Mouse.current.position.ReadValue();
+            mousePosition = Mouse.current.position.ReadValue();
 
-            ScrollValue = Mouse.current.scroll.ReadValue().y;
+            scrollValue = Mouse.current.scroll.ReadValue().y;
         }
 
         private void OnEnable()
@@ -51,6 +35,36 @@ namespace DavidRios.Input
         private void OnDisable()
         {
             _playerController.Disable();
+        }
+
+        public static bool PressedPositive(InputAction inputAction)
+        {
+            return inputAction.ReadValue<float>() > 0;
+        }
+
+        public static bool PressedNegative(InputAction inputAction)
+        {
+            return inputAction.ReadValue<float>() < 0;
+        }
+
+        public static bool Held(InputAction inputAction)
+        {
+            return inputAction.phase == InputActionPhase.Started;
+        }
+
+        public static bool Pressed(InputAction inputAction)
+        {
+            return inputAction.triggered;
+        }
+
+        public static bool HeldSimultaneously(InputAction inputAction1, InputAction inputAction2)
+        {
+            return inputAction1.phase == InputActionPhase.Started && inputAction2.phase == InputActionPhase.Started;
+        }
+
+        public static bool PressedSimultaneously(InputAction inputAction1, InputAction inputAction2)
+        {
+            return inputAction1.triggered && inputAction2.triggered;
         }
     }
 }

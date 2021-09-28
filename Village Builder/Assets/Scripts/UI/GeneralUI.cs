@@ -17,35 +17,10 @@ namespace DavidRios.UI
         [LabelOverride("UI Type")] public UITypes uiType;
 
         public bool updateValues;
-        
+
         [DrawIf("uiType", UITypes.CityResourceInfo)]
         public string itemType;
 
-        #region Building UI Fields
-
-        [DrawIf("uiType", UITypes.BuildingResourceInfo)]
-        public GameObject buildingPrefab;
-
-        private UnderConstruction _buildingPrefabUnderConstruction;
-
-        [DrawIf("uiType", UITypes.BuildingResourceInfo)]
-        public int itemIndex;
-
-        [DrawIf("uiType", UITypes.BuildingResourceInfo)]
-        public Color sufficientItemsColor;
-
-        [DrawIf("uiType", UITypes.BuildingResourceInfo)]
-        public Color insufficientItemsColor;
-
-        private Button _parentButton;
-
-        private bool _buttonActionSet;
-
-        private TMP_Text _uiText;
-        private int _itemIndex;
-
-        #endregion
-        
         private void Awake()
         {
             _parentButton = transform.parent.parent.parent.GetComponent<Button>();
@@ -98,7 +73,8 @@ namespace DavidRios.UI
                             if (itemIndex == 0)
                                 if (!_buttonActionSet)
                                 {
-                                    _parentButton.onClick.AddListener(() => TemplateActions.SetTemplate(buildingPrefab));
+                                    _parentButton.onClick.AddListener(() =>
+                                        TemplateActions.SetTemplate(buildingPrefab));
                                     _buttonActionSet = true;
                                 }
                         }
@@ -157,5 +133,30 @@ namespace DavidRios.UI
                     break;
             }
         }
+
+        #region Building UI Fields
+
+        [DrawIf("uiType", UITypes.BuildingResourceInfo)]
+        public GameObject buildingPrefab;
+
+        private UnderConstruction _buildingPrefabUnderConstruction;
+
+        [DrawIf("uiType", UITypes.BuildingResourceInfo)]
+        public int itemIndex;
+
+        [DrawIf("uiType", UITypes.BuildingResourceInfo)]
+        public Color sufficientItemsColor;
+
+        [DrawIf("uiType", UITypes.BuildingResourceInfo)]
+        public Color insufficientItemsColor;
+
+        private Button _parentButton;
+
+        private bool _buttonActionSet;
+
+        private TMP_Text _uiText;
+        private int _itemIndex;
+
+        #endregion
     }
 }

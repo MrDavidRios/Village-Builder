@@ -288,10 +288,7 @@ namespace DavidRios.Building
             if (stage > 0)
                 GetComponent<BoxCollider>().size = Vector3.one;
 
-            if (stage == stageAmount && stageAmount > 0)
-            {
-                DestroyScript();
-            }
+            if (stage == stageAmount && stageAmount > 0) DestroyScript();
         }
 
         public ItemBundle[] ReturnRequiredResources()

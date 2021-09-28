@@ -77,15 +77,15 @@ namespace DavidRios.UI
         private void Update()
         {
             anyPanelsOpen = CheckIfPanelsOpen();
-        
+
             //If the build menu toggle key was pressed, open/close the build menu.
             ToggleBuildMenu();
         }
-    
+
         private void ToggleBuildMenu()
         {
-            if (!InputHandler.Pressed(InputHandler.PlayerControllerInstance.Default.BuildMenuToggle)) return;
-        
+            if (!InputHandler.Pressed(InputHandler.playerControllerInstance.Default.BuildMenuToggle)) return;
+
             if (MainPanels["BuildingPanel"].activeInHierarchy)
                 ClosePanel("BuildingPanel");
             else

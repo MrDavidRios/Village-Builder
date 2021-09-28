@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections;
 using DavidRios.Building;
-using DavidRios.Camera;
 using DavidRios.Input;
 using DavidRios.UI;
 using Terrain;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace TileOperations
@@ -44,8 +42,6 @@ namespace TileOperations
 
         public Camera mainCamera;
 
-        private int _villagerRole;
-
         //Building Info
         private Building _buildingInfo;
 
@@ -54,6 +50,9 @@ namespace TileOperations
 
         //Raycasting
         private RaycastHit _hit;
+
+        //Input
+        private PlayerController.DefaultActions _input;
         private JobManager _jobManager;
         private PlacementGrid _placementGrid;
         private Ray _ray;
@@ -62,12 +61,11 @@ namespace TileOperations
         //Scripts
         private TerrainData _terrainData;
         private TerrainGenerator _terrainGenerator;
-        
-        //Input
-        private PlayerController.DefaultActions _input;
 
         //Integers
         private Vector2Int _tileIndex;
+
+        private int _villagerRole;
 
         private void Start()
         {
@@ -80,7 +78,7 @@ namespace TileOperations
                 return;
 
             //The ray goes from the camera's position on the screen to the mouse cursor's position
-            _ray = mainCamera.ScreenPointToRay(InputHandler.MousePosition);
+            _ray = mainCamera.ScreenPointToRay(InputHandler.mousePosition);
 
             //This code won't run if the mouse is hovering over the UI or if a building is being placed
             if (!EventSystem.current.IsPointerOverGameObject() && !PositionBuildingTemplate.PlacingBuilding &&
@@ -155,7 +153,8 @@ namespace TileOperations
                             {
                                 PositionSelectionCursorCustom(SelectedObject.transform.position, true);
 
-                                _buildingInfo = BuildingOperations.GetBuildingScriptableObject(SelectedObject.transform);
+                                _buildingInfo =
+                                    BuildingOperations.GetBuildingScriptableObject(SelectedObject.transform);
 
                                 float buildingWidth = _buildingInfo.width;
 
@@ -259,8 +258,8 @@ namespace TileOperations
                 new Vector3(_terrainGenerator.worldSize / 2, -0.75f, _terrainGenerator.worldSize / 2);
             terrainCollider.size = new Vector3(_terrainGenerator.worldSize, 1.5f, _terrainGenerator.worldSize);
 
-            _input = InputHandler.PlayerControllerInstance.Default;
-            
+            _input = InputHandler.playerControllerInstance.Default;
+
             //Set necessary variables
             CanSelect = true;
         }
@@ -445,7 +444,8 @@ namespace TileOperations
                             _uiManagerScript.MiscUIElements["TemplateClearButton"].GetComponent<Button>().onClick
                                 .AddListener(() =>
                                     StartCoroutine(PositionBuildingTemplate.RemoveTemplate(SelectedObject.transform,
-                                        _uiManagerScript.MiscUIElements["TemplateClearButton"].GetComponent<Button>())));
+                                        _uiManagerScript.MiscUIElements["TemplateClearButton"]
+                                            .GetComponent<Button>())));
                             _uiManagerScript.ShowMiscUI("TemplateClearButton");
                         }
                         //If the current stage isn't 0 or the building's labor amount is greater than 0, then hide the template clear button.

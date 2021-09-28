@@ -5,8 +5,8 @@ namespace DavidRios.UI
 {
     public class ButtonSettings : MonoBehaviour, IPointerExitHandler
     {
-        private Animator _buttonAnimator;
         private static readonly int OpenSettings = Animator.StringToHash("OpenSettings");
+        private Animator _buttonAnimator;
 
         private void Awake()
         {

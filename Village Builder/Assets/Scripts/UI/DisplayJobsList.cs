@@ -188,7 +188,8 @@ namespace DavidRios.UI
             Debug.Log("Job removed; job index & job type: " +
                       (jobListDisplay.transform.childCount - listedJobs.IndexOf(job) - 1) + ", " + job.jobType);
 
-            Destroy(jobListDisplay.GetChild(jobListDisplay.transform.childCount - listedJobs.IndexOf(job) - 1).gameObject);
+            Destroy(jobListDisplay.GetChild(jobListDisplay.transform.childCount - listedJobs.IndexOf(job) - 1)
+                .gameObject);
 
             listedJobs.Remove(job);
 
@@ -248,7 +249,7 @@ namespace DavidRios.UI
             Villager selectedVillager = null;
 
             if (villager == null)
-                selectedVillager = this._selectedVillager;
+                selectedVillager = _selectedVillager;
             else
                 selectedVillager = villager;
 

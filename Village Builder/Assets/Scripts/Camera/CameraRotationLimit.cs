@@ -1,5 +1,4 @@
-﻿using DavidRios.Input;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace DavidRios.Camera
@@ -24,7 +23,7 @@ namespace DavidRios.Camera
         private float _leftRight;
         private float _rotLeftRight;
         private float _rotUpDown;
-        
+
         public void CameraRotate()
         {
             _euler = transform.localEulerAngles;

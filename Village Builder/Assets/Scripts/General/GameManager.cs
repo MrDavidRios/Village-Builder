@@ -58,7 +58,7 @@ public class GameManager : MonoBehaviour
         #endregion
     }
     
-    private void Start() => _input = InputHandler.PlayerControllerInstance.Default;
+    private void Start() => _input = InputHandler.playerControllerInstance.Default;
 
     private void Update()
     {

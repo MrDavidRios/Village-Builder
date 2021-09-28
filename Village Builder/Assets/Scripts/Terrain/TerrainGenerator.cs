@@ -114,7 +114,7 @@ namespace Terrain
         public TerrainData Generate()
         {
             CreateMeshComponents();
-            
+
             var numTilesPerLine = Mathf.CeilToInt(worldSize);
             var min = centralize ? -numTilesPerLine / 2f : 0;
             var map = HeightmapGenerator.GenerateHeightmap(terrainNoise, numTilesPerLine);

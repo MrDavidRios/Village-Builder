@@ -30,10 +30,7 @@ namespace DavidRios.UI
                 return null;
 
             //For every result returned, output the name of the GameObject on the Canvas hit by the Ray
-            foreach (var result in results)
-            {
-                return result.gameObject;
-            }
+            foreach (var result in results) return result.gameObject;
 
             return null;
         }

@@ -31,6 +31,8 @@ namespace DavidRios.Building.Building_Types
 
         private readonly Dictionary<int, int> numberOfItemsSpawnedPerPlot = new Dictionary<int, int>();
 
+        private readonly Dictionary<int, Queue<ItemBundle>> updateQueue = new Dictionary<int, Queue<ItemBundle>>();
+
         private GameObject[] plotObjects;
 
         public List<List<Item>> plots = new List<List<Item>>();
@@ -41,8 +43,6 @@ namespace DavidRios.Building.Building_Types
         ///     Made primarily to update city info resource values. Accounts for both the addition and removal of resources.
         /// </summary>
         public EventHandler<StorageUpdateArgs> storageUpdated;
-
-        private readonly Dictionary<int, Queue<ItemBundle>> updateQueue = new Dictionary<int, Queue<ItemBundle>>();
 
         //Ensures 'Awake' method only called when the building has been placed.
         private void Awake()

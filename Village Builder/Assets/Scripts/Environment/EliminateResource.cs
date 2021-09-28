@@ -4,7 +4,10 @@ public class EliminateResource : MonoBehaviour
 {
     private Resource resource;
 
-    private void Awake() => resource = transform.GetChild(0).GetComponent<Resource>();
+    private void Awake()
+    {
+        resource = transform.GetChild(0).GetComponent<Resource>();
+    }
 
     public void EliminateSelf()
     {
@@ -20,5 +23,8 @@ public class EliminateResource : MonoBehaviour
         }
     }
 
-    public void DeleteHarvestMarker() => Destroy(transform.GetChild(0).GetChild(0).gameObject);
+    public void DeleteHarvestMarker()
+    {
+        Destroy(transform.GetChild(0).GetChild(0).gameObject);
+    }
 }
