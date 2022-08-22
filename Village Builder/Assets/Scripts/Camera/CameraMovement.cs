@@ -212,8 +212,6 @@ namespace DavidRios.Camera
             //Get the right mouse button
             if (InputHandler.Held(_input.RightClick) && !InputHandler.Held(_input.LeftClick))
             {
-                Debug.Log("Right click held.");
-
                 _cameraRotationLimit.CameraRotate();
             }
 
