@@ -49,8 +49,6 @@ namespace DavidRios.Input
 
         public static bool Held(InputAction inputAction)
         {
-            Debug.Log(inputAction.name + "; Phase: " + inputAction.phase);
-
             return inputAction.phase == InputActionPhase.Performed;
         }
 
@@ -61,7 +59,7 @@ namespace DavidRios.Input
 
         public static bool HeldSimultaneously(InputAction inputAction1, InputAction inputAction2)
         {
-            return inputAction1.phase == InputActionPhase.Started && inputAction2.phase == InputActionPhase.Started;
+            return inputAction1.phase == InputActionPhase.Performed && inputAction2.phase == InputActionPhase.Performed;
         }
 
         public static bool PressedSimultaneously(InputAction inputAction1, InputAction inputAction2)
