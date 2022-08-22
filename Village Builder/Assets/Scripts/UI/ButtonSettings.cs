@@ -1,23 +1,27 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ButtonSettings : MonoBehaviour, IPointerExitHandler
+namespace DavidRios.UI
 {
-    private Animator buttonAnimator;
-
-    private void Awake()
+    public class ButtonSettings : MonoBehaviour, IPointerExitHandler
     {
-        buttonAnimator = GetComponent<Animator>();
-    }
+        private static readonly int OpenSettings = Animator.StringToHash("OpenSettings");
+        private Animator _buttonAnimator;
 
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        if (buttonAnimator.GetBool("OpenSettings"))
-            buttonAnimator.SetBool("OpenSettings", false);
-    }
+        private void Awake()
+        {
+            _buttonAnimator = GetComponent<Animator>();
+        }
 
-    public void ToggleOpenSettingsBool()
-    {
-        buttonAnimator.SetBool("OpenSettings", !buttonAnimator.GetBool("OpenSettings"));
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            if (_buttonAnimator.GetBool(OpenSettings))
+                _buttonAnimator.SetBool(OpenSettings, false);
+        }
+
+        public void ToggleOpenSettingsBool()
+        {
+            _buttonAnimator.SetBool(OpenSettings, !_buttonAnimator.GetBool(OpenSettings));
+        }
     }
 }

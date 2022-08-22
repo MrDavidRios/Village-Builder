@@ -1,9 +1,7 @@
-﻿using System;
-using DavidRios.Building;
+﻿using DavidRios.Building;
 using DavidRios.Input;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 
 namespace DavidRios.Camera
 {
@@ -33,18 +31,18 @@ namespace DavidRios.Camera
             {
                 //Set 'fov' to the camera's 'fieldOfView' value; this is necessary to perform calculations and then set the camera's FOV to this value once all of the calculations are done.
                 var fov = _mainCamera.fieldOfView;
-                
+
                 //Gets the 'fov' value by getting the movement value from the scroll wheel.
-                fov += (InputHandler.ScrollValue / sensitivity) * -1;
+                fov += InputHandler.scrollValue / sensitivity * -1;
 
                 //Restricts the 'fov' value by making sure that it's within the bounds (minFov and maxFOV)
                 fov = Mathf.Clamp(fov, minFov, maxFov);
-                
+
                 //TODO: Use DOTween to animate this value
                 _mainCamera.fieldOfView = fov;
 
                 //Reset Field of View when 'R' is pressed
-                if (InputHandler.Pressed(InputHandler.PlayerControllerInstance.Default.ResetRotate))
+                if (InputHandler.Pressed(InputHandler.playerControllerInstance.Default.ResetRotate))
                     ResetFOV();
             }
         }
@@ -58,8 +56,14 @@ namespace DavidRios.Camera
                 _mainCamera.fieldOfView += cameraButtonZoomRate * Time.unscaledDeltaTime;
         }
 
-        public void CameraZoomOut() => _mainCamera.fieldOfView += fovIncrementAmount;
+        public void CameraZoomOut()
+        {
+            _mainCamera.fieldOfView += fovIncrementAmount;
+        }
 
-        private void ResetFOV() => _mainCamera.fieldOfView = maxFov;
+        private void ResetFOV()
+        {
+            _mainCamera.fieldOfView = maxFov;
+        }
     }
 }

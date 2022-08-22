@@ -4,104 +4,107 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ResourcePanelOpenArgs
+namespace DavidRios.UI
 {
-    public int buttonIndex;
-    public bool open;
-}
-
-public class ReactiveButton : MonoBehaviour, IPointerClickHandler, IPointerExitHandler
-{
-    //UI
-    private Button buttonComponent;
-    private bool duplicateCall;
-
-    //Floats
-    private float moveTime;
-
-    //Booleans
-    private bool moving;
-
-    //Vector2s
-    private Vector2 originalPosition;
-    private RectTransform rectTransform;
-
-    // Start is called before the first frame update
-    private void Start()
+    public class ResourcePanelOpenArgs
     {
-        buttonComponent = GetComponent<Button>();
-        rectTransform = GetComponent<RectTransform>();
-
-        moveTime = transform.parent.GetComponent<ReactiveButtonManager>().buttonMoveTime;
-
-        originalPosition = rectTransform.anchoredPosition;
+        public int ButtonIndex;
+        public bool Open;
     }
 
-    private void OnDisable()
+    public class ReactiveButton : MonoBehaviour, IPointerClickHandler, IPointerExitHandler
     {
-        moving = false;
-        duplicateCall = false;
+        //UI
+        private Button _buttonComponent;
+        private bool _duplicateCall;
 
-        rectTransform.anchoredPosition = originalPosition;
-    }
+        //Floats
+        private float _moveTime;
 
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        GetComponent<Animator>().SetBool("open", !GetComponent<Animator>().GetBool("open"));
+        //Booleans
+        private bool _moving;
 
-        ToggleResourcesPanel?.Invoke(this,
-            new ResourcePanelOpenArgs
-                {open = GetComponent<Animator>().GetBool("open"), buttonIndex = transform.GetSiblingIndex()});
-    }
+        //Vector2s
+        private Vector2 _originalPosition;
+        private RectTransform _rectTransform;
 
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        ToggleResourcesPanel?.Invoke(this,
-            new ResourcePanelOpenArgs {open = false, buttonIndex = transform.GetSiblingIndex()});
-
-        GetComponent<Animator>().SetBool("open", false);
-
-        GetComponent<Animator>().ResetTrigger("Highlighted");
-    }
-
-    //Event
-    public event EventHandler<ResourcePanelOpenArgs> ToggleResourcesPanel;
-
-    //Smoothly move to position
-    public IEnumerator MoveToPosition(float yOffset)
-    {
-        if (moving)
+        // Start is called before the first frame update
+        private void Start()
         {
-            duplicateCall = true;
-            yield return new WaitUntil(() => !moving);
+            _buttonComponent = GetComponent<Button>();
+            _rectTransform = GetComponent<RectTransform>();
+
+            _moveTime = transform.parent.GetComponent<ReactiveButtonManager>().buttonMoveTime;
+
+            _originalPosition = _rectTransform.anchoredPosition;
         }
 
-        moving = true;
-
-        var startPos = rectTransform.anchoredPosition;
-        var endPos = Vector2.zero;
-
-        if (yOffset < 0)
-            endPos = new Vector2(rectTransform.anchoredPosition.x, originalPosition.y + yOffset);
-        else
-            endPos = originalPosition;
-
-        var elapsedTime = 0f;
-
-        //Debug.Log(Mathf.Abs(rectTransform.anchoredPosition.y - endPos.y));
-
-        while (Mathf.Abs(rectTransform.anchoredPosition.y - endPos.y) > 0.5f && !duplicateCall)
+        private void OnDisable()
         {
-            elapsedTime += Time.unscaledDeltaTime;
+            _moving = false;
+            _duplicateCall = false;
 
-            elapsedTime = Mathf.Clamp(elapsedTime, 0f, moveTime);
-
-            rectTransform.anchoredPosition = Vector2.Lerp(startPos, endPos, elapsedTime / moveTime);
-
-            yield return null;
+            _rectTransform.anchoredPosition = _originalPosition;
         }
 
-        moving = false;
-        duplicateCall = false;
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            GetComponent<Animator>().SetBool("open", !GetComponent<Animator>().GetBool("open"));
+
+            ToggleResourcesPanel?.Invoke(this,
+                new ResourcePanelOpenArgs
+                    {Open = GetComponent<Animator>().GetBool("open"), ButtonIndex = transform.GetSiblingIndex()});
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            ToggleResourcesPanel?.Invoke(this,
+                new ResourcePanelOpenArgs {Open = false, ButtonIndex = transform.GetSiblingIndex()});
+
+            GetComponent<Animator>().SetBool("open", false);
+
+            GetComponent<Animator>().ResetTrigger("Highlighted");
+        }
+
+        //Event
+        public event EventHandler<ResourcePanelOpenArgs> ToggleResourcesPanel;
+
+        //Smoothly move to position
+        public IEnumerator MoveToPosition(float yOffset)
+        {
+            if (_moving)
+            {
+                _duplicateCall = true;
+                yield return new WaitUntil(() => !_moving);
+            }
+
+            _moving = true;
+
+            var startPos = _rectTransform.anchoredPosition;
+            var endPos = Vector2.zero;
+
+            if (yOffset < 0)
+                endPos = new Vector2(_rectTransform.anchoredPosition.x, _originalPosition.y + yOffset);
+            else
+                endPos = _originalPosition;
+
+            var elapsedTime = 0f;
+
+            //Debug.Log(Mathf.Abs(rectTransform.anchoredPosition.y - endPos.y));
+
+            while (Mathf.Abs(_rectTransform.anchoredPosition.y - endPos.y) > 0.5f && !_duplicateCall)
+            {
+                elapsedTime += Time.unscaledDeltaTime;
+
+                elapsedTime = Mathf.Clamp(elapsedTime, 0f, _moveTime);
+
+                _rectTransform.anchoredPosition = Vector2.Lerp(startPos, endPos, elapsedTime / _moveTime);
+
+                yield return null;
+            }
+
+            _moving = false;
+            _duplicateCall = false;
+        }
     }
 }

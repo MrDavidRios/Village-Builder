@@ -12,10 +12,10 @@ namespace DavidRios.Building
 
         [Header("Extra Settings")] public bool centerInTiles;
 
-        private float depth = 1f;
-
         //Scripts
         private TerrainGenerator _terrainGenerator;
+
+        private float depth = 1f;
 
         private float width = 1f;
 

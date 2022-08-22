@@ -46,7 +46,7 @@ namespace DavidRios.Building
         public static bool EnoughResources(ItemBundle[] requiredItems)
         {
             for (var i = 0; i < requiredItems.Length; i++)
-                if (CityInfo._cityResources[ItemInfo.GetItemIndex(requiredItems[i].item.itemType)].amount <
+                if (CityInfo.CityResources[ItemInfo.GetItemIndex(requiredItems[i].item.itemType)].amount <
                     requiredItems[i].amount)
                     return false;
 

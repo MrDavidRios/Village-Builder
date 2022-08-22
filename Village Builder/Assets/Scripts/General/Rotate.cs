@@ -4,9 +4,9 @@ public class Rotate : MonoBehaviour
 {
     public enum RotationAxis
     {
-        X_Axis,
-        Y_Axis,
-        Z_Axis
+        XAxis,
+        YAxis,
+        ZAxis
     }
 
     public RotationAxis rotationAxis;
@@ -17,15 +17,15 @@ public class Rotate : MonoBehaviour
     {
         switch (rotationAxis)
         {
-            case RotationAxis.X_Axis:
+            case RotationAxis.XAxis:
                 transform.Rotate(speed * Time.unscaledDeltaTime, 0f, 0f);
                 break;
 
-            case RotationAxis.Y_Axis:
+            case RotationAxis.YAxis:
                 transform.Rotate(0f, speed * Time.unscaledDeltaTime, 0f);
                 break;
 
-            case RotationAxis.Z_Axis:
+            case RotationAxis.ZAxis:
                 transform.Rotate(0f, 0f, speed * Time.unscaledDeltaTime);
                 break;
         }

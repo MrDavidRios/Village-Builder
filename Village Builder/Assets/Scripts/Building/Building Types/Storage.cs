@@ -31,6 +31,8 @@ namespace DavidRios.Building.Building_Types
 
         private readonly Dictionary<int, int> numberOfItemsSpawnedPerPlot = new Dictionary<int, int>();
 
+        private readonly Dictionary<int, Queue<ItemBundle>> updateQueue = new Dictionary<int, Queue<ItemBundle>>();
+
         private GameObject[] plotObjects;
 
         public List<List<Item>> plots = new List<List<Item>>();
@@ -41,8 +43,6 @@ namespace DavidRios.Building.Building_Types
         ///     Made primarily to update city info resource values. Accounts for both the addition and removal of resources.
         /// </summary>
         public EventHandler<StorageUpdateArgs> storageUpdated;
-
-        private readonly Dictionary<int, Queue<ItemBundle>> updateQueue = new Dictionary<int, Queue<ItemBundle>>();
 
         //Ensures 'Awake' method only called when the building has been placed.
         private void Awake()
@@ -116,7 +116,7 @@ namespace DavidRios.Building.Building_Types
                 if (itemsLeftToStore > 0)
                 {
                     amountOfItemsLeftInPlot =
-                        GetRemainingPlotSpace(matchingPlotIndices[i]) / ItemInfo.itemSizes[itemType];
+                        GetRemainingPlotSpace(matchingPlotIndices[i]) / ItemInfo.ItemSizes[itemType];
 
                     //Ignore this entire process if the plot is full.
                     if (amountOfItemsLeftInPlot > 0)
@@ -329,7 +329,7 @@ namespace DavidRios.Building.Building_Types
                     if (doesPlotMatch)
                     {
                         //Get remaining amount of items available to fit in the plot
-                        var amountOfSpaceItemTakesUp = ItemInfo.itemSizes[itemType];
+                        var amountOfSpaceItemTakesUp = ItemInfo.ItemSizes[itemType];
                         var amountOfItemsThatCanFit =
                             (plotCapacity - numberOfItemsSpawnedPerPlot[plotIndex] * amountOfSpaceItemTakesUp) /
                             amountOfSpaceItemTakesUp;
@@ -476,7 +476,7 @@ namespace DavidRios.Building.Building_Types
 
             for (var i = 0; i < matchingPlots.Count; i++) remainingSpace += GetRemainingPlotSpace(matchingPlots[i]);
 
-            return remainingSpace / ItemInfo.itemSizes[itemType];
+            return remainingSpace / ItemInfo.ItemSizes[itemType];
         }
 
         /// <summary>
@@ -543,7 +543,7 @@ namespace DavidRios.Building.Building_Types
         private bool IsPlotFull(int plotIndex)
         {
             //If plotIndex is 1, then it will return plots[0].Count (number of items in plot)
-            if (plots[plotIndex - 1].Count * ItemInfo.itemSizes[ReturnPlotItemType(plotIndex)] < plotCapacity)
+            if (plots[plotIndex - 1].Count * ItemInfo.ItemSizes[ReturnPlotItemType(plotIndex)] < plotCapacity)
                 return false;
             return true;
         }
@@ -565,7 +565,7 @@ namespace DavidRios.Building.Building_Types
             if (numberOfItemsInPlot == 0)
                 return plotCapacity;
 
-            var itemTypeSize = ItemInfo.itemSizes[ReturnPlotItemType(plotIndex)];
+            var itemTypeSize = ItemInfo.ItemSizes[ReturnPlotItemType(plotIndex)];
 
             return plotCapacity - numberOfItemsInPlot * itemTypeSize;
         }

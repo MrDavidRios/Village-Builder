@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
-public class CityInfoUI : MonoBehaviour
+namespace DavidRios.UI
 {
+    public class CityInfoUI : MonoBehaviour
+    {
+    }
 }

@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
 
 public static class ItemInfo
 {
-    public static Dictionary<string, int> itemSizes = new Dictionary<string, int>
+    public static readonly Dictionary<string, int> ItemSizes = new Dictionary<string, int>
     {
         {"Log", 2},
         {"Stone", 1},
@@ -32,8 +32,7 @@ public static class ItemInfo
             case "Food":
                 return 6;
             default:
-                Debug.LogError("Invalid item type: " + itemType);
-                return -1;
+                throw new ArgumentOutOfRangeException();
         }
     }
 }

@@ -49,7 +49,7 @@ namespace UnityEngine.PostProcessing
 
             var sampleScale = 0.5f + logh - logh_i;
             material.SetFloat(Uniforms._SampleScale, sampleScale);
-            
+
             if (bloom.antiFlicker)
                 material.EnableKeyword("ANTI_FLICKER");
 

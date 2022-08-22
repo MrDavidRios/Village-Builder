@@ -1,34 +1,37 @@
 ﻿using UnityEngine;
 
-public class GeneralButtons : MonoBehaviour
+namespace DavidRios.UI
 {
-    //Scripts
-    private GameManager gameManager;
-    private UIManager UIManagerScript;
-
-    private void Awake()
+    public class GeneralButtons : MonoBehaviour
     {
-        gameManager = FindObjectOfType<GameManager>();
-        UIManagerScript = FindObjectOfType<UIManager>();
-    }
+        //Scripts
+        private GameManager _gameManager;
+        private UIManager _uiManagerScript;
 
-    public void ResumeButton()
-    {
-        gameManager.ResumeGame();
-    }
+        private void Awake()
+        {
+            _gameManager = FindObjectOfType<GameManager>();
+            _uiManagerScript = FindObjectOfType<UIManager>();
+        }
 
-    public void PauseButton()
-    {
-        gameManager.PauseGame();
-    }
+        public void ResumeButton()
+        {
+            _gameManager.ResumeGame();
+        }
 
-    public void SettingsButton()
-    {
-        gameManager.ToggleSettingsMenu();
-    }
+        public void PauseButton()
+        {
+            _gameManager.PauseGame();
+        }
 
-    public void QuitButton()
-    {
-        gameManager.QuitGame();
+        public void SettingsButton()
+        {
+            _gameManager.ToggleSettingsMenu();
+        }
+
+        public void QuitButton()
+        {
+            _gameManager.QuitGame();
+        }
     }
 }

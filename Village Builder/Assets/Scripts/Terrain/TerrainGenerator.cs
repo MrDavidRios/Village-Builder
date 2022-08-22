@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DavidRios.Terrain;
 using UnityEngine;
 using UnityEngine.Rendering;
 

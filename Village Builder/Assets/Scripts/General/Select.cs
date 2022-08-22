@@ -2,11 +2,11 @@
 using System.Collections;
 using DavidRios.Building;
 using DavidRios.Input;
+using DavidRios.UI;
 using Terrain;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace TileOperations
@@ -40,9 +40,7 @@ namespace TileOperations
 
         public Vector2 selectionPos;
 
-        public Camera mainCamera;
-
-        private int _villagerRole;
+        private Camera _mainCamera;
 
         //Building Info
         private Building _buildingInfo;
@@ -52,6 +50,9 @@ namespace TileOperations
 
         //Raycasting
         private RaycastHit _hit;
+
+        //Input
+        private PlayerController.DefaultActions _input;
         private JobManager _jobManager;
         private PlacementGrid _placementGrid;
         private Ray _ray;
@@ -60,12 +61,11 @@ namespace TileOperations
         //Scripts
         private TerrainData _terrainData;
         private TerrainGenerator _terrainGenerator;
-        
-        //Input
-        private PlayerController.DefaultActions _input;
 
         //Integers
         private Vector2Int _tileIndex;
+
+        private int _villagerRole;
 
         private void Start()
         {
@@ -78,14 +78,14 @@ namespace TileOperations
                 return;
 
             //The ray goes from the camera's position on the screen to the mouse cursor's position
-            _ray = mainCamera.ScreenPointToRay(InputHandler.MousePosition);
+            _ray = _mainCamera.ScreenPointToRay(InputHandler.mousePosition);
 
             //This code won't run if the mouse is hovering over the UI or if a building is being placed
             if (!EventSystem.current.IsPointerOverGameObject() && !PositionBuildingTemplate.PlacingBuilding &&
                 !SelectionLocked)
             {
                 //If the raycast hit something with a collider, run the code inside this 'if' statement
-                if (Physics.Raycast(_ray, out _hit, GlobalRules._maxRaycastDistance, selectable))
+                if (Physics.Raycast(_ray, out _hit, GlobalRules.MAXRaycastDistance, selectable))
                 {
                     //Left-Click
                     if (InputHandler.Pressed(_input.LeftClick))
@@ -102,104 +102,101 @@ namespace TileOperations
                         {
                             //Terrain Layer (Tiles)
                             case 8:
-                            {
-                                var tilePos = _placementGrid.GetNearestPointOnGrid(_hit.point);
+                                {
+                                    var tilePos = _placementGrid.GetNearestPointOnGrid(_hit.point);
 
-                                //Find the x and y indexes of the tile
-                                _tileIndex = GetTileIndex(tilePos);
+                                    //Find the x and y indexes of the tile
+                                    _tileIndex = GetTileIndex(tilePos);
 
-                                //Change the scale of the selection cursor
-                                ScaleSelectionCursor(new Vector3(0.5f, 0.5f, 0.5f));
+                                    //Change the scale of the selection cursor
+                                    ScaleSelectionCursor(new Vector3(0.5f, 0.5f, 0.5f));
 
-                                //Is this tile a water tile?
-                                if (Environment.tileType[_tileIndex.x, _tileIndex.y] == "Water")
-                                    //If the tile is a water tile, move the cursor down 0.4 units because water tiles are lower than land tiles.
-                                    PositionSelectionCursor(tilePos + new Vector3(0f, -0.4f, 0f), _tileIndex);
-                                else
-                                    PositionSelectionCursor(tilePos, _tileIndex);
+                                    //Is this tile a water tile?
+                                    if (Environment.tileType[_tileIndex.x, _tileIndex.y] == "Water")
+                                        //If the tile is a water tile, move the cursor down 0.4 units because water tiles are lower than land tiles.
+                                        PositionSelectionCursor(tilePos + new Vector3(0f, -0.4f, 0f), _tileIndex);
+                                    else
+                                        PositionSelectionCursor(tilePos, _tileIndex);
 
-                                SelectedObject = _terrainGenerator.gameObject;
-                                break;
-                            }
+                                    SelectedObject = _terrainGenerator.gameObject;
+                                    break;
+                                }
 
                             //Resource Layer (Trees, rocks, etc.)
                             case 9:
-                            {
-                                //Differentiate between different resource types
-                                switch (SelectedObject.tag)
                                 {
-                                    case "Tree":
-                                        ScaleSelectionCursor(new Vector3(0.75f, 0.75f, 0.75f));
-                                        break;
-                                    case "Stone":
-                                        ScaleSelectionCursor(SelectedObject.transform.localScale);
-                                        break;
-                                    case "Iron":
-                                        break;
-                                    case "Bronze":
-                                        break;
-                                    case "Gold":
-                                        break;
-                                    default:
-                                        Debug.Log("Invalid tag specified: " + SelectedObject.tag);
-                                        break;
-                                }
+                                    //Differentiate between different resource types
+                                    switch (SelectedObject.tag)
+                                    {
+                                        case "Tree":
+                                            ScaleSelectionCursor(new Vector3(0.75f, 0.75f, 0.75f));
+                                            break;
+                                        case "Stone":
+                                            ScaleSelectionCursor(SelectedObject.transform.localScale);
+                                            break;
+                                        case "Iron":
+                                            break;
+                                        case "Bronze":
+                                            break;
+                                        case "Gold":
+                                            break;
+                                        default:
+                                            throw new ArgumentOutOfRangeException();
+                                    }
 
-                                PositionSelectionCursor(SelectedObject.transform.position, true);
-                                break;
-                            }
+                                    PositionSelectionCursor(SelectedObject.transform.position, true);
+                                    break;
+                                }
 
                             //Buildings Layer
                             case 10:
-                            {
-                                PositionSelectionCursorCustom(SelectedObject.transform.position, true);
+                                {
+                                    PositionSelectionCursorCustom(SelectedObject.transform.position, true);
 
-                                _buildingInfo = BuildingOperations.GetBuildingScriptableObject(SelectedObject.transform);
+                                    _buildingInfo =
+                                        BuildingOperations.GetBuildingScriptableObject(SelectedObject.transform);
 
-                                float buildingWidth = _buildingInfo.width;
+                                    float buildingWidth = _buildingInfo.width;
 
-                                ScaleSelectionCursor(new Vector3(buildingWidth / 2f, buildingWidth / 2f,
-                                    buildingWidth / 2f));
-                                ModifySelectionCursorSideDistance(1.25f, 1.5f);
-                                break;
-                            }
+                                    ScaleSelectionCursor(new Vector3(buildingWidth / 2f, buildingWidth / 2f,
+                                        buildingWidth / 2f));
+                                    ModifySelectionCursorSideDistance(1.25f, 1.5f);
+                                    break;
+                                }
 
                             //Villagers Layer
                             case 11:
-                            {
-                                StartCoroutine(FollowSelected(SelectedObject));
+                                {
+                                    StartCoroutine(FollowSelected(SelectedObject));
 
-                                ScaleSelectionCursor(new Vector3(0.5f, 0.5f, 0.5f));
-                                break;
-                            }
+                                    ScaleSelectionCursor(new Vector3(0.5f, 0.5f, 0.5f));
+                                    break;
+                                }
 
                             //Piles Layer
                             case 12:
-                            {
-                                //Differentiate between different resource types
-                                switch (SelectedObject.tag)
                                 {
-                                    case "Log":
-                                        ScaleSelectionCursor(new Vector3(0.3f, 0.3f, 0.3f));
-                                        break;
-                                    default:
-                                        Debug.Log("Invalid tag specified: " + SelectedObject.tag);
-                                        break;
+                                    //Differentiate between different resource types
+                                    switch (SelectedObject.tag)
+                                    {
+                                        case "Log":
+                                            ScaleSelectionCursor(new Vector3(0.3f, 0.3f, 0.3f));
+                                            break;
+                                        default:
+                                            Debug.Log("Invalid tag specified: " + SelectedObject.tag);
+                                            break;
+                                    }
+
+                                    PositionSelectionCursor(SelectedObject.transform.position, true);
+                                    break;
                                 }
 
-                                PositionSelectionCursor(SelectedObject.transform.position, true);
-                                break;
-                            }
-
                             default:
-                            {
-                                Debug.LogError("Error: Invalid Layer ID given: " + _hit.transform.gameObject.layer);
-                                break;
-                            }
+                                throw new ArgumentOutOfRangeException();
                         }
 
-                        if (!_uiManagerScript.mainPanels["SelectionPanel"].activeInHierarchy)
-                            _uiManagerScript.mainPanels["SelectionPanel"].SetActive(true);
+                        if (!_uiManagerScript.MainPanels["SelectionPanel"].activeInHierarchy)
+                            _uiManagerScript.MainPanels["SelectionPanel"].SetActive(true);
                     }
                 }
                 else
@@ -240,6 +237,8 @@ namespace TileOperations
         private void Initialize()
         {
             //Cache necessary scripts
+            _mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+
             _terrainGenerator = FindObjectOfType<TerrainGenerator>();
             _terrainData = FindObjectOfType<TerrainData>();
             _placementGrid = FindObjectOfType<PlacementGrid>();
@@ -261,8 +260,8 @@ namespace TileOperations
                 new Vector3(_terrainGenerator.worldSize / 2, -0.75f, _terrainGenerator.worldSize / 2);
             terrainCollider.size = new Vector3(_terrainGenerator.worldSize, 1.5f, _terrainGenerator.worldSize);
 
-            _input = InputHandler.PlayerControllerInstance.Default;
-            
+            _input = InputHandler.playerControllerInstance.Default;
+
             //Set necessary variables
             CanSelect = true;
         }
@@ -282,255 +281,256 @@ namespace TileOperations
             {
                 //Terrain
                 case 8:
-                {
-                    //Cached data
-                    var tileType = Environment.tileType[_tileIndex.x, _tileIndex.y];
-                    var fertility = Environment.fertility[_tileIndex.x, _tileIndex.y];
-
-                    string fertilityLevel;
-
-                    //Change the display of the tile's fertility based on the tile's actual fertility value
-                    switch (fertility)
                     {
-                        case 0:
-                        default:
-                            fertilityLevel = "Infertile";
-                            break;
-                        case 1:
-                            fertilityLevel = "Low Fertility";
-                            break;
-                        case 2:
-                            fertilityLevel = "Fertile";
-                            break;
-                        case 3:
-                            fertilityLevel = "Very Fertile";
-                            break;
+                        //Cached data
+                        var tileType = Environment.tileType[_tileIndex.x, _tileIndex.y];
+                        var fertility = Environment.fertility[_tileIndex.x, _tileIndex.y];
+
+                        string fertilityLevel;
+
+                        //Change the display of the tile's fertility based on the tile's actual fertility value
+                        switch (fertility)
+                        {
+                            case 0:
+                            default:
+                                fertilityLevel = "Infertile";
+                                break;
+                            case 1:
+                                fertilityLevel = "Low Fertility";
+                                break;
+                            case 2:
+                                fertilityLevel = "Fertile";
+                                break;
+                            case 3:
+                                fertilityLevel = "Very Fertile";
+                                break;
+                        }
+
+                        //Change the title of the selection panel to the type of tile that's selected.
+                        _uiManagerScript.ChangeText("SelectedTitle", tileType);
+
+                        //If the tile is a water/shore tile, then find the depth. Once that's found, set the selection panel's subtitle to the depth of the water tile.
+                        if (tileType == "Water" || tileType == "Shore")
+                        {
+                            //UV basically represents the color of the tile and is represented by x and y values.
+                            var uvY = Environment.uvs[_tileIndex.x, _tileIndex.y].y;
+                            var waterDepth = "Shallow";
+
+                            //Depending on the darkness of the water (uvY) the depth of the water can be found.
+                            if (uvY < 0.8f && uvY >= 0.5f)
+                                waterDepth = "Medium Depth";
+                            else if (uvY < 0.5f && uvY >= 0.4f)
+                                waterDepth = "Deep";
+                            else if (uvY < 0.4f)
+                                waterDepth = "Deeper";
+
+                            //Change the selection panel's subtitle to the depth of the selected water tile
+                            _uiManagerScript.ChangeText("Subtitle1", waterDepth);
+                        }
+
+                        //If the tile is grass or sand display the fertility of the tile
+                        if (tileType == "Grass" || tileType == "Sand")
+                            _uiManagerScript.ChangeText("Subtitle1", fertilityLevel);
+
+                        //If the tile is a fishing tile, display the fact that it has fish
+                        if (Environment.fishingTile[_tileIndex.x, _tileIndex.y])
+                            _uiManagerScript.ChangeText("Subtitle1", "Good fishing spot");
+
+                        //Show the first subtitle
+                        ShowSubtitles(1);
+
+                        break;
                     }
-
-                    //Change the title of the selection panel to the type of tile that's selected.
-                    _uiManagerScript.ChangeText("SelectedTitle", tileType);
-
-                    //If the tile is a water/shore tile, then find the depth. Once that's found, set the selection panel's subtitle to the depth of the water tile.
-                    if (tileType == "Water" || tileType == "Shore")
-                    {
-                        //UV basically represents the color of the tile and is represented by x and y values.
-                        var uvY = Environment.uvs[_tileIndex.x, _tileIndex.y].y;
-                        var waterDepth = "Shallow";
-
-                        //Depending on the darkness of the water (uvY) the depth of the water can be found.
-                        if (uvY < 0.8f && uvY >= 0.5f)
-                            waterDepth = "Medium Depth";
-                        else if (uvY < 0.5f && uvY >= 0.4f)
-                            waterDepth = "Deep";
-                        else if (uvY < 0.4f)
-                            waterDepth = "Deeper";
-
-                        //Change the selection panel's subtitle to the depth of the selected water tile
-                        _uiManagerScript.ChangeText("Subtitle1", waterDepth);
-                    }
-
-                    //If the tile is grass or sand display the fertility of the tile
-                    if (tileType == "Grass" || tileType == "Sand")
-                        _uiManagerScript.ChangeText("Subtitle1", fertilityLevel);
-
-                    //If the tile is a fishing tile, display the fact that it has fish
-                    if (Environment.fishingTile[_tileIndex.x, _tileIndex.y])
-                        _uiManagerScript.ChangeText("Subtitle1", "Good fishing spot");
-
-                    //Show the first subtitle
-                    ShowSubtitles(1);
-
-                    break;
-                }
 
                 //Resource
                 case 9:
-                {
-                    var resourceType = SelectedObject.tag;
-
-                    _uiManagerScript.ChangeText("SelectedTitle", resourceType);
-
-                    switch (resourceType)
                     {
-                        case "Tree":
-                        {
-                            if (!SelectedObject.GetComponent<Resource>().beingHarvested)
-                                _uiManagerScript.ShowMiscUI("ChopTreeButton");
-                            else
-                                _uiManagerScript.HideMiscUI("ChopTreeButton");
+                        var resourceType = SelectedObject.tag;
 
-                            if (SelectedObject.transform.localScale.x > 1.0f)
-                                _uiManagerScript.ChangeText("Subtitle1", "Medium Tree");
-                            else
-                                _uiManagerScript.ChangeText("Subtitle1", "Small Tree");
+                        _uiManagerScript.ChangeText("SelectedTitle", resourceType);
 
-                            if (SelectedObject.transform.localScale.x > 1.2f)
-                                _uiManagerScript.ChangeText("Subtitle1", "Large Tree");
+                        switch (resourceType)
+                        {
+                            case "Tree":
+                                {
+                                    if (!SelectedObject.GetComponent<Resource>().beingHarvested)
+                                        _uiManagerScript.ShowMiscUI("ChopTreeButton");
+                                    else
+                                        _uiManagerScript.HideMiscUI("ChopTreeButton");
 
-                            _uiManagerScript.ChangeText("Subtitle2",
-                                "Wood amount: " + SelectedObject.GetComponent<Resource>().resourceAmount);
-                            break;
-                        }
-                        case "Stone":
-                        {
-                            if (SelectedObject.transform.localScale.x > 0.6f)
-                                _uiManagerScript.ChangeText("Subtitle1", "Medium Rock");
-                            else
-                                _uiManagerScript.ChangeText("Subtitle1", "Small Rock");
+                                    if (SelectedObject.transform.localScale.x > 1.0f)
+                                        _uiManagerScript.ChangeText("Subtitle1", "Medium Tree");
+                                    else
+                                        _uiManagerScript.ChangeText("Subtitle1", "Small Tree");
 
-                            if (SelectedObject.transform.localScale.x > 0.7f)
-                                _uiManagerScript.ChangeText("Subtitle1", "Large Rock");
+                                    if (SelectedObject.transform.localScale.x > 1.2f)
+                                        _uiManagerScript.ChangeText("Subtitle1", "Large Tree");
 
-                            _uiManagerScript.ChangeText("Subtitle2",
-                                "Stone amount: " + SelectedObject.GetComponent<Resource>().resourceAmount);
-                            break;
+                                    _uiManagerScript.ChangeText("Subtitle2",
+                                        "Wood amount: " + SelectedObject.GetComponent<Resource>().resourceAmount);
+                                    break;
+                                }
+                            case "Stone":
+                                {
+                                    if (SelectedObject.transform.localScale.x > 0.6f)
+                                        _uiManagerScript.ChangeText("Subtitle1", "Medium Rock");
+                                    else
+                                        _uiManagerScript.ChangeText("Subtitle1", "Small Rock");
+
+                                    if (SelectedObject.transform.localScale.x > 0.7f)
+                                        _uiManagerScript.ChangeText("Subtitle1", "Large Rock");
+
+                                    _uiManagerScript.ChangeText("Subtitle2",
+                                        "Stone amount: " + SelectedObject.GetComponent<Resource>().resourceAmount);
+                                    break;
+                                }
+                            case "Iron":
+                                {
+                                    break;
+                                }
+                            case "Bronze":
+                                {
+                                    break;
+                                }
+                            case "Gold":
+                                {
+                                    break;
+                                }
                         }
-                        case "Iron":
-                        {
-                            break;
-                        }
-                        case "Bronze":
-                        {
-                            break;
-                        }
-                        case "Gold":
-                        {
-                            break;
-                        }
+
+                        ShowSubtitles(2);
+                        break;
                     }
-
-                    ShowSubtitles(2);
-                    break;
-                }
 
                 //Building
                 case 10:
-                {
-                    _uiManagerScript.ChangeText("SelectedTitle", SelectedObject.name);
-
-                    if (SelectedObject.GetComponent<UnderConstruction>() == null)
                     {
-                        var buildingType = BuildingOperations.GetBuildingScriptableObject(SelectedObject.transform)
-                            .buildingType;
-                        string subtitle1Text;
+                        _uiManagerScript.ChangeText("SelectedTitle", SelectedObject.name);
 
-                        switch (buildingType)
+                        if (SelectedObject.GetComponent<UnderConstruction>() == null)
                         {
-                            case "Storage":
-                                subtitle1Text = "Good for storing things";
-                                break;
-                            case "House":
-                                subtitle1Text = "Good for villagers to live in";
-                                break;
-                            case "Road":
-                                subtitle1Text = "Helps villagers walk faster.";
-                                break;
-                            default:
-                                Debug.LogError("Invalid building type: " + buildingType);
-                                subtitle1Text = "?";
-                                break;
-                        }
+                            var buildingType = BuildingOperations.GetBuildingScriptableObject(SelectedObject.transform)
+                                .buildingType;
+                            string subtitle1Text;
 
-                        _uiManagerScript.ChangeText("Subtitle1", subtitle1Text);
+                            switch (buildingType)
+                            {
+                                case "Storage":
+                                    subtitle1Text = "Good for storing things";
+                                    break;
+                                case "House":
+                                    subtitle1Text = "Good for villagers to live in";
+                                    break;
+                                case "Road":
+                                    subtitle1Text = "Helps villagers walk faster.";
+                                    break;
+                                default:
+                                    Debug.LogError("Invalid building type: " + buildingType);
+                                    subtitle1Text = "?";
+                                    break;
+                            }
 
-                        _uiManagerScript.HideMiscUI("TemplateClearButton");
-                    }
-                    else
-                    {
-                        var underConstructionScript = SelectedObject.GetComponent<UnderConstruction>();
+                            _uiManagerScript.ChangeText("Subtitle1", subtitle1Text);
 
-                        //If the building's current stage is 0, that means that it is still a template.
-                        if (underConstructionScript.currentStage == 0 && !underConstructionScript.grassCleared &&
-                            !underConstructionScript.beingDeposited && underConstructionScript.laborAmount == 0 &&
-                            !_uiManagerScript.miscUIElements["TemplateClearButton"].activeInHierarchy)
-                        {
-                            _uiManagerScript.miscUIElements["TemplateClearButton"].GetComponent<Button>().onClick
-                                .AddListener(() =>
-                                    StartCoroutine(PositionBuildingTemplate.RemoveTemplate(SelectedObject.transform,
-                                        _uiManagerScript.miscUIElements["TemplateClearButton"].GetComponent<Button>())));
-                            _uiManagerScript.ShowMiscUI("TemplateClearButton");
-                        }
-                        //If the current stage isn't 0 or the building's labor amount is greater than 0, then hide the template clear button.
-                        else if (underConstructionScript.currentStage != 0 || underConstructionScript.laborAmount > 0 ||
-                                 underConstructionScript.grassCleared || underConstructionScript.beingDeposited)
-                        {
                             _uiManagerScript.HideMiscUI("TemplateClearButton");
                         }
+                        else
+                        {
+                            var underConstructionScript = SelectedObject.GetComponent<UnderConstruction>();
 
-                        _uiManagerScript.ChangeText("Subtitle1", "Under Construction");
+                            //If the building's current stage is 0, that means that it is still a template.
+                            if (underConstructionScript.currentStage == 0 && !underConstructionScript.grassCleared &&
+                                !underConstructionScript.beingDeposited && underConstructionScript.laborAmount == 0 &&
+                                !_uiManagerScript.MiscUIElements["TemplateClearButton"].activeInHierarchy)
+                            {
+                                _uiManagerScript.MiscUIElements["TemplateClearButton"].GetComponent<Button>().onClick
+                                    .AddListener(() =>
+                                        StartCoroutine(PositionBuildingTemplate.RemoveTemplate(SelectedObject.transform,
+                                            _uiManagerScript.MiscUIElements["TemplateClearButton"]
+                                                .GetComponent<Button>())));
+                                _uiManagerScript.ShowMiscUI("TemplateClearButton");
+                            }
+                            //If the current stage isn't 0 or the building's labor amount is greater than 0, then hide the template clear button.
+                            else if (underConstructionScript.currentStage != 0 || underConstructionScript.laborAmount > 0 ||
+                                     underConstructionScript.grassCleared || underConstructionScript.beingDeposited)
+                            {
+                                _uiManagerScript.HideMiscUI("TemplateClearButton");
+                            }
+
+                            _uiManagerScript.ChangeText("Subtitle1", "Under Construction");
+                        }
+
+                        ShowSubtitles(1);
+                        break;
                     }
-
-                    ShowSubtitles(1);
-                    break;
-                }
 
                 //Villager
                 case 11:
-                {
-                    var villager = SelectedObject.GetComponent<Villager>();
-
-                    _uiManagerScript.ChangeText("SelectedTitle", villager._name);
-
-                    _uiManagerScript.ChangeText("Subtitle1", "Gender: " + villager._sex);
-
-                    if (villager.customJobDescription == "")
-                        _uiManagerScript.ChangeText("Subtitle2",
-                            "Currently " + VillagerPropertiesGenerator.CurrentJobDescription(villager));
-                    else
-                        _uiManagerScript.ChangeText("Subtitle2", villager.customJobDescription);
-
-                    //Only change dropdown value if the villager's role changes. Check later if this is necessary.
-                    if ((int) Enum.Parse(typeof(VillagerRoles), villager._role) != _villagerRole)
                     {
-                        _villagerRole = (int) Enum.Parse(typeof(VillagerRoles), villager._role);
+                        var villager = SelectedObject.GetComponent<Villager>();
 
-                        _uiManagerScript.UpdateDropdown("RoleSelector",
-                            _villagerRole - 1 /*VillagerRoles Enum begins at 1*/);
+                        _uiManagerScript.ChangeText("SelectedTitle", villager._name);
+
+                        _uiManagerScript.ChangeText("Subtitle1", "Gender: " + villager._sex);
+
+                        if (villager.customJobDescription == "")
+                            _uiManagerScript.ChangeText("Subtitle2",
+                                "Currently " + VillagerPropertiesGenerator.CurrentJobDescription(villager));
+                        else
+                            _uiManagerScript.ChangeText("Subtitle2", villager.customJobDescription);
+
+                        //Only change dropdown value if the villager's role changes. Check later if this is necessary.
+                        if ((int)Enum.Parse(typeof(VillagerRoles), villager._role) != _villagerRole)
+                        {
+                            _villagerRole = (int)Enum.Parse(typeof(VillagerRoles), villager._role);
+
+                            _uiManagerScript.UpdateDropdown("RoleSelector",
+                                _villagerRole - 1 /*VillagerRoles Enum begins at 1*/);
+                        }
+
+                        ShowSubtitles(2);
+
+                        _uiManagerScript.ShowMiscUI("JobsViewButton");
+                        break;
                     }
-
-                    ShowSubtitles(2);
-
-                    _uiManagerScript.ShowMiscUI("JobsViewButton");
-                    break;
-                }
 
                 //Piles Layer
                 case 12:
-                {
-                    //Differentiate between different resource types
-                    switch (SelectedObject.tag)
                     {
-                        case "Log":
-                            _uiManagerScript.ChangeText("SelectedTitle", "Pile of Logs");
+                        //Differentiate between different resource types
+                        switch (SelectedObject.tag)
+                        {
+                            case "Log":
+                                _uiManagerScript.ChangeText("SelectedTitle", "Pile of Logs");
 
-                            _uiManagerScript.ChangeText("Subtitle1", "It's a pile of logs.");
-                            _uiManagerScript.ChangeText("Subtitle2",
-                                "Number of logs: " + SelectedObject.GetComponent<ItemPile>().amountOfItems);
-                            break;
-                        default:
-                            Debug.Log("Invalid tag specified: " + SelectedObject.tag);
-                            break;
+                                _uiManagerScript.ChangeText("Subtitle1", "It's a pile of logs.");
+                                _uiManagerScript.ChangeText("Subtitle2",
+                                    "Number of logs: " + SelectedObject.GetComponent<ItemPile>().amountOfItems);
+                                break;
+                            default:
+                                Debug.Log("Invalid tag specified: " + SelectedObject.tag);
+                                break;
+                        }
+
+                        var itemPileScript = SelectedObject.GetComponent<ItemPile>();
+
+                        //Add a 0 before the minutes/seconds if they are less than 10 so the output is always xx:yy.
+                        var formattedMinutes = itemPileScript.despawnMinutes < 10
+                            ? "0" + itemPileScript.despawnMinutes
+                            : itemPileScript.despawnMinutes.ToString();
+                        var formattedSeconds = itemPileScript.despawnSeconds < 10
+                            ? "0" + itemPileScript.despawnSeconds
+                            : itemPileScript.despawnSeconds.ToString();
+
+                        _uiManagerScript.ChangeText("ExtraDisplay",
+                            "Despawns in: " + formattedMinutes + ":" + formattedSeconds);
+
+                        if (itemPileScript.beingPickedUp)
+                            _uiManagerScript.ChangeText("ExtraDisplay", "Being picked up.");
+
+                        ShowSubtitles(3);
+                        break;
                     }
-
-                    var itemPileScript = SelectedObject.GetComponent<ItemPile>();
-
-                    //Add a 0 before the minutes/seconds if they are less than 10 so the output is always xx:yy.
-                    var formattedMinutes = itemPileScript.despawnMinutes < 10
-                        ? "0" + itemPileScript.despawnMinutes
-                        : itemPileScript.despawnMinutes.ToString();
-                    var formattedSeconds = itemPileScript.despawnSeconds < 10
-                        ? "0" + itemPileScript.despawnSeconds
-                        : itemPileScript.despawnSeconds.ToString();
-
-                    _uiManagerScript.ChangeText("ExtraDisplay",
-                        "Despawns in: " + formattedMinutes + ":" + formattedSeconds);
-
-                    if (itemPileScript.beingPickedUp)
-                        _uiManagerScript.ChangeText("ExtraDisplay", "Being picked up.");
-
-                    ShowSubtitles(3);
-                    break;
-                }
             }
 
             _uiManagerScript.OpenPanel("SelectionPanel");
@@ -542,51 +542,51 @@ namespace TileOperations
             {
                 //Terrain
                 case 8:
-                {
-                    break;
-                }
+                    {
+                        break;
+                    }
 
                 //Resource
                 case 9:
-                {
-                    switch (SelectedObject.tag)
                     {
-                        case "Tree":
-                            if (InputHandler.Pressed(_input.ChopTree))
-                                _jobManager.ChopSelectedTree();
-                            break;
-                        case "Stone":
-                            break;
-                    }
+                        switch (SelectedObject.tag)
+                        {
+                            case "Tree":
+                                if (InputHandler.Pressed(_input.ChopTree))
+                                    _jobManager.ChopSelectedTree();
+                                break;
+                            case "Stone":
+                                break;
+                        }
 
-                    break;
-                }
+                        break;
+                    }
 
                 //Building
                 case 10:
-                {
-                    if (InputHandler.Pressed(_input.Delete))
-                        if (_uiManagerScript.miscUIElements["TemplateClearButton"].activeInHierarchy)
-                            _uiManagerScript.miscUIElements["TemplateClearButton"].GetComponent<Button>().onClick
-                                .Invoke();
-                    break;
-                }
+                    {
+                        if (InputHandler.Pressed(_input.Delete))
+                            if (_uiManagerScript.MiscUIElements["TemplateClearButton"].activeInHierarchy)
+                                _uiManagerScript.MiscUIElements["TemplateClearButton"].GetComponent<Button>().onClick
+                                    .Invoke();
+                        break;
+                    }
 
                 //Villager
                 case 11:
-                {
-                    //Open/Close Jobs panel if the 'J' key is pressed.
-                    if (InputHandler.Pressed(_input.JobsMenuToggle))
                     {
-                        if (!_uiManagerScript.mainPanels["JobsPanel"].activeInHierarchy)
-                            StartCoroutine(_displayJobsList.DisplayVillagerJobs("SelectTile.cs"));
+                        //Open/Close Jobs panel if the 'J' key is pressed.
+                        if (InputHandler.Pressed(_input.JobsMenuToggle))
+                        {
+                            if (!_uiManagerScript.MainPanels["JobsPanel"].activeInHierarchy)
+                                StartCoroutine(_displayJobsList.DisplayVillagerJobs("SelectTile.cs"));
 
-                        _uiManagerScript.ToggleUIObject(_uiManagerScript.mainPanels["JobsPanel"]);
-                        _uiManagerScript.ToggleUIObject(_uiManagerScript.mainPanels["SelectionDescriptionPanel"]);
+                            _uiManagerScript.ToggleUIObject(_uiManagerScript.MainPanels["JobsPanel"]);
+                            _uiManagerScript.ToggleUIObject(_uiManagerScript.MainPanels["SelectionDescriptionPanel"]);
+                        }
+
+                        break;
                     }
-
-                    break;
-                }
             }
 
             //Lock
@@ -726,10 +726,10 @@ namespace TileOperations
         public Vector2Int GetTileIndex(Vector3 tilePos)
         {
             for (var y = 0; y < _terrainGenerator.worldSize; y++)
-            for (var x = 0; x < _terrainGenerator.worldSize; x++)
-                //Check if it's land
-                if (Environment.tileCentres[x, y] == new Vector3(tilePos.x, Environment.tileCentres[x, y].y, tilePos.z))
-                    return new Vector2Int(x, y);
+                for (var x = 0; x < _terrainGenerator.worldSize; x++)
+                    //Check if it's land
+                    if (Environment.tileCentres[x, y] == new Vector3(tilePos.x, Environment.tileCentres[x, y].y, tilePos.z))
+                        return new Vector2Int(x, y);
 
             //If the tile can't be found, return an impossible value, signaling an error.
             return new Vector2Int(-1, -1);
@@ -757,8 +757,8 @@ namespace TileOperations
         {
             if (SelectionLocked != lockSelection)
             {
-                _uiManagerScript.ToggleUIObject(_uiManagerScript.miscUIElements["LockButton"]);
-                _uiManagerScript.ToggleUIObject(_uiManagerScript.miscUIElements["UnlockButton"]);
+                _uiManagerScript.ToggleUIObject(_uiManagerScript.MiscUIElements["LockButton"]);
+                _uiManagerScript.ToggleUIObject(_uiManagerScript.MiscUIElements["UnlockButton"]);
             }
 
             SelectionLocked = lockSelection;

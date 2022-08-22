@@ -5,7 +5,6 @@ using DavidRios.Input;
 using DavidRios.Utils;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace DavidRios.Building
@@ -22,7 +21,13 @@ namespace DavidRios.Building
 
         //Hotkeys
         public KeyCode positionLockKey;
-        
+
+        //Camera
+        private UnityEngine.Camera _mainCamera;
+
+        //LayerMasks
+        public LayerMask terrainLayer;
+
         //Building Objects
         private Building _building;
         private Vector3 _cachedBuildingPos = Vector3.zero;
@@ -33,42 +38,41 @@ namespace DavidRios.Building
 
         //Scripts
         private PlacementGrid _grid;
-        
-        //Input
-        private PlayerController.DefaultActions _input;
 
         //Raycast
         private RaycastHit _hit;
 
-        private bool _isSqaure;
+        //Input
+        private PlayerController.DefaultActions _input;
 
-        //Camera
-        [SerializeField] private UnityEngine.Camera mainCamera;
+        private bool _isSqaure;
 
         private bool _placeable, _placingBuilding, _positionLocked;
         private Ray _ray;
 
         private TemplateActions _templateActions;
 
-        //Vector3s
-        public List<Vector3> OccupiedTileCentres { get; private set; }
-    
         private Vector3 _templatePos;
 
-        //LayerMasks
-        public LayerMask terrainLayer;
+        //Vector3s
+        public List<Vector3> OccupiedTileCentres { get; private set; }
 
         private void Awake()
         {
             OccupiedTileCentres = new List<Vector3>();
-            
+
             _grid = FindObjectOfType<PlacementGrid>();
-            
+
             _templateActions = GetComponent<TemplateActions>();
             _checkTiles = GetComponent<CheckTiles>();
+
+            _mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<UnityEngine.Camera>();
         }
 
-        private void Start() => _input = InputHandler.PlayerControllerInstance.Default;
+        private void Start()
+        {
+            _input = InputHandler.playerControllerInstance.Default;
+        }
 
         private void Update()
         {
@@ -80,9 +84,9 @@ namespace DavidRios.Building
                 _placingBuilding = true;
 
                 //Only fire a Raycast if the mouse is over ground
-                _ray = mainCamera.ScreenPointToRay(InputHandler.MousePosition);
+                _ray = _mainCamera.ScreenPointToRay(InputHandler.mousePosition);
 
-                if (Physics.Raycast(_ray, out _hit, GlobalRules._maxRaycastDistance, terrainLayer))
+                if (Physics.Raycast(_ray, out _hit, GlobalRules.MAXRaycastDistance, terrainLayer))
                 {
                     _building = BuildingOperations.GetBuildingScriptableObject(TemplateBuilding.transform);
 
@@ -165,7 +169,7 @@ namespace DavidRios.Building
 
         private bool CanBeginPlacingBuilding()
         {
-            //Return true if the template exists, the cursor isn't currently over UI, and if there are enough resources to construct the building. 
+            //Return true if the template exists, the cursor isn't currently over UI, and if there are enough resources to construct the building.
             return TemplateBuilding && !CursorHoveringOverUI() &&
                    StorageManager.EnoughResources(TemplateBuilding.GetComponent<UnderConstruction>().requiredItems);
         }
@@ -182,10 +186,10 @@ namespace DavidRios.Building
             if (InputHandler.Pressed(_input.ResetRotate) && !Rotating)
                 StartCoroutine(TemplateActions.RotateTemplate(90f, 0.5f));
 
-            if (InputHandler.ScrollValue > 0)
+            if (InputHandler.scrollValue > 0)
                 StartCoroutine(TemplateActions.RotateTemplate(90f, 0.5f));
 
-            if (InputHandler.ScrollValue < 0)
+            if (InputHandler.scrollValue < 0)
                 StartCoroutine(TemplateActions.RotateTemplate(-90f, 0.5f));
         }
 
@@ -200,9 +204,9 @@ namespace DavidRios.Building
             //Set all occupied tiles as walkable now that the building is no longer there
             for (var i = 0; i < occupiedTiles.Count; i++)
             {
-                Environment.walkable[(int) occupiedTiles[i].x, (int) occupiedTiles[i].y] = true;
-                Environment.buildingPlaced[(int) occupiedTiles[i].x, (int) occupiedTiles[i].y] = false;
-                Environment.ModifyWalkableTiles((int) occupiedTiles[i].x, (int) occupiedTiles[i].y);
+                Environment.walkable[(int)occupiedTiles[i].x, (int)occupiedTiles[i].y] = true;
+                Environment.buildingPlaced[(int)occupiedTiles[i].x, (int)occupiedTiles[i].y] = false;
+                Environment.ModifyWalkableTiles((int)occupiedTiles[i].x, (int)occupiedTiles[i].y);
             }
 
             //If this is called from a button, then remove all of its listeners.
@@ -254,13 +258,13 @@ namespace DavidRios.Building
                                         storagesToUse[j].GetComponent<Storage>()
                                             .QueueItemsForDeposit(
                                                 new ItemBundle
-                                                    {item = villager.items[0], amount = villager.items.Count},
+                                                { item = villager.items[0], amount = villager.items.Count },
                                                 villager._index);
 
                                         villager.moveJobCancelled = false;
 
                                         jobManager.AssignJobGroup("Deposit", storagesToUse[j].transform.position,
-                                            new Transform[1] {storagesToUse[j]}, new int[1] {villager.items.Count},
+                                            new Transform[1] { storagesToUse[j] }, new int[1] { villager.items.Count },
                                             villager._index);
                                     }
                                 }
@@ -306,13 +310,13 @@ namespace DavidRios.Building
                                 for (var j = 0; j < storagesToUse.Length; j++)
                                 {
                                     storagesToUse[j].GetComponent<Storage>().QueueItemsForDeposit(
-                                        new ItemBundle {item = villager.items[0], amount = villager.items.Count},
+                                        new ItemBundle { item = villager.items[0], amount = villager.items.Count },
                                         villager._index);
 
                                     villager.moveJobCancelled = false;
 
                                     jobManager.AssignJobGroup("Deposit", storagesToUse[j].transform.position,
-                                        new Transform[1] {storagesToUse[j]}, new int[1] {villager.items.Count},
+                                        new Transform[1] { storagesToUse[j] }, new int[1] { villager.items.Count },
                                         villager._index);
                                 }
                             }
