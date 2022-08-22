@@ -49,7 +49,9 @@ namespace DavidRios.Input
 
         public static bool Held(InputAction inputAction)
         {
-            return inputAction.phase == InputActionPhase.Started;
+            Debug.Log(inputAction.name + "; Phase: " + inputAction.phase);
+
+            return inputAction.phase == InputActionPhase.Performed;
         }
 
         public static bool Pressed(InputAction inputAction)

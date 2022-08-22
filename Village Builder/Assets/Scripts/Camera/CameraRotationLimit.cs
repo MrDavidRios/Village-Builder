@@ -10,9 +10,9 @@ namespace DavidRios.Camera
         /// </summary>
 
         //Floats
-        public float speed = 10.0F;
+        public float speed = 10.0f;
 
-        public float rotSpeed = 150.0F;
+        public float rotSpeed = 150.0f;
         public float minY;
         public float maxY = -90.0f;
 

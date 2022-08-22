@@ -33,7 +33,6 @@ namespace DavidRios.Camera
 
         //Booleans
         private bool _isPanning; //Is the camera being panned?
-        private bool _isRotating; //Is the camera being rotated?
         private float _zAxisMovement; //Z-Axis movement
 
         //Positions
@@ -212,13 +211,11 @@ namespace DavidRios.Camera
 
             //Get the right mouse button
             if (InputHandler.Held(_input.RightClick) && !InputHandler.Held(_input.LeftClick))
-                _isRotating = true;
-            else
-                _isRotating = false;
+            {
+                Debug.Log("Right click held.");
 
-            //Rotate camera along X and Y axis
-            if (_isRotating)
                 _cameraRotationLimit.CameraRotate();
+            }
 
             //Move the camera on its XY plane
             if (_isPanning)
